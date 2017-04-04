@@ -1,0 +1,19 @@
+{
+  "name": "agent-js-jasmine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "conf.example.js",
+  "dependencies": {
+    "reportportal-client": "3.0.0"
+  },
+  "devDependencies": {
+    "restler": "3.4.0",
+    "node-rest-client": "1.5.1",
+    "q": "1.4.1",
+    "lodash": "^3.10.1",
+    "protractor": "^3.0.0",
+    "mkdir":""
+  },
+  "author": "",
+  "license": "ISC"
+}
