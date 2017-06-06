@@ -1,4 +1,6 @@
 # agent-js-jasmine
+[![Build Status](https://travis-ci.org/reportportal/agent-js-jasmine.svg?branch=master)](https://travis-ci.org/reportportal/agent-js-jasmine)[![Code Coverage](https://codecov.io/gh/reportportal/agent-js-jasmine/branch/master/graph/badge.svg)](https://codecov.io/gh/reportportal/agent-js-jasmine)[![npm version](https://badge.fury.io/js/agent-js-jasmine.svg)](https://badge.fury.io/js/agent-js-jasmine)
+
 Agent for integration Jasmine + Protractor with ReportPortal.     
 [ReportPortal](http://reportportal.io/)<br>
 [ReportPortal on GitHub](https://github.com/reportportal)

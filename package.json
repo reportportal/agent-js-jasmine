@@ -7,13 +7,25 @@
     "reportportal-client": "3.0.0"
   },
   "devDependencies": {
-    "restler": "3.4.0",
-    "node-rest-client": "1.5.1",
-    "q": "1.4.1",
+    "jasmine": "^2.6.0",
     "lodash": "^3.10.1",
+    "mkdir": "",
+    "node-rest-client": "1.5.1",
+    "nyc": "^11.0.1",
     "protractor": "^3.0.0",
-    "mkdir":""
+    "q": "1.4.1",
+    "restler": "3.4.0"
+  },
+  "scripts": {
+    "test": "nyc jasmine",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
+  },
+  "nyc": {
+    "exclude": [
+      "**/*spec.js"
+    ]
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": "https://github.com/reportportal/agent-js-jasmine"
 }
