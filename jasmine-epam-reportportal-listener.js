@@ -31,8 +31,8 @@ class ReportPortal {
         this.totalSpecsToDo = info.totalSpecsDefined;
         var _self = this;
         var request = {
-            name: _self.reportPortal._formatName(_self.reportPortal.config.launch),
-            start_time: _self.reportPortal._now(),
+            name: _self.reportPortal.helpers.formatName(_self.reportPortal.config.launch),
+            start_time: _self.reportPortal.helpers.now(),
             description: _self.reportPortal.config.description === undefined ? "" : _self.reportPortal.config.description,
             tags: _self.reportPortal.config.tags
         };
@@ -55,9 +55,9 @@ class ReportPortal {
             this.controller.registerSuiteStarted(suite.id);
             var itemId = this.launch.then(function (launchId) {
                 var request = {
-                    name: reportPortal._formatName(suite.description),
+                    name: reportPortal.helpers.formatName(suite.description),
                     launch_id: launchId.id,
-                    start_time: reportPortal._now(),
+                    start_time: reportPortal.helpers.now(),
                     type: "SUITE",
                     description: suite.fullName,
                     tags: reportPortal.config.tags
@@ -71,9 +71,9 @@ class ReportPortal {
             var itemId = this.launch.then(function (launchId) {
                 return parentSuite._self.then(function (parentId) {
                     var request = {
-                        name: reportPortal._formatName(suite.description),
+                        name: reportPortal.helpers.formatName(suite.description),
                         launch_id: launchId.id,
-                        start_time: reportPortal._now(),
+                        start_time: reportPortal.helpers.now(),
                         type: "TEST",
                         description: suite.fullName,
                         tags: reportPortal.config.tags
@@ -92,9 +92,9 @@ class ReportPortal {
         var testId = this.launch.then(function (launchId) {
             return parentSuite._self.then(function (parentId) {
                 var request = {
-                    name: reportPortal._formatName(spec.description),
+                    name: reportPortal.helpers.formatName(spec.description),
                     launch_id: launchId.id,
-                    start_time: reportPortal._now(),
+                    start_time: reportPortal.helpers.now(),
                     type: "STEP",
                     description: spec.fullName,
                     tags: reportPortal.config.tags
@@ -132,7 +132,7 @@ class ReportPortal {
                 itemId.then(function (id) {
                     var request = {
                         item_id: id.id,
-                        time: _self.reportPortal._now(),
+                        time: _self.reportPortal.helpers.now(),
                         level: "ERROR",
                         message: failures.join('<br>')
                     };
@@ -146,7 +146,7 @@ class ReportPortal {
                 return itemId.then(function (id) {
                     var json = [{
                         item_id: id.id,
-                        time: _self.reportPortal._now(),
+                        time: _self.reportPortal.helpers.now(),
                         level:  "INFO",
                         message: spec.fullName,
                         file: { name: spec.fullName }
@@ -157,7 +157,7 @@ class ReportPortal {
                 return itemId.then(function (id) {
                     var request = {
                         status: itemStatus,
-                        end_time: _self.reportPortal._now()
+                        end_time: _self.reportPortal.helpers.now()
                     };
                     return reportPortal.finishTestItem(id.id, request);
                 });
@@ -182,7 +182,7 @@ class ReportPortal {
             return itemId.then(function (id) {
                 var request = {
                     status:  "passed",
-                    end_time: _self.reportPortal._now()
+                    end_time: _self.reportPortal.helpers.now()
                 };
                 return reportPortal.finishTestItem(id.id, request);
             });
@@ -203,7 +203,7 @@ class ReportPortal {
                         return finished.then(function (done) {
                             return _self.launch.then(function (lid) {
                                 var request = {
-                                    end_time: _self.reportPortal._now()
+                                    end_time: _self.reportPortal.helpers.now()
                                 };
                                 return reportPortal.finishLaunch(lid.id, request).then(function (result) {
                                     console.log("FINISHED JASMINE LAUNCH");
