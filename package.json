@@ -1,20 +1,20 @@
 {
   "name": "agent-js-jasmine",
-  "version": "1.0.0",
-  "description": "",
-  "main": "conf.example.js",
+  "version": "2.0.1",
+  "description": "Agent for integration Jasmine + Protractor with ReportPortal.",
+  "main": "jasmine-epam-reportportal-listener.js",
   "dependencies": {
-    "reportportal-client": "3.0.0"
+    "reportportal-client": "4.0.0",
+    "q": "1.4.1",
+    "lodash": "^3.10.1",
+    "mkdir": ""
   },
   "devDependencies": {
     "codecov": "^2.2.0",
     "jasmine": "^2.6.0",
-    "lodash": "^3.10.1",
-    "mkdir": "",
     "node-rest-client": "1.5.1",
     "nyc": "^11.0.1",
     "protractor": "^3.0.0",
-    "q": "1.4.1",
     "restler": "3.4.0"
   },
   "scripts": {
@@ -29,5 +29,8 @@
   },
   "author": "",
   "license": "ISC",
-  "repository": "https://github.com/reportportal/agent-js-jasmine"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reportportal/agent-js-jasmine.git"
+  }
 }

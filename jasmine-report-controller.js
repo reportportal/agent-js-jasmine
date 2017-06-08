@@ -1,7 +1,6 @@
 'use strict';
 
 var _ = require('lodash');
-var uuid = require('node-uuid');
 var fs = require('fs');
 var mkdirp = require('mkdir');
 
@@ -104,7 +103,7 @@ class JasmineReportController{
             return ('undefined' !== typeof item._parent) && item._parent === rootRef;
         });
     }
-    
+
     totalFinishes(){
         return _.map(this.getFlatReport(), function(item){
             return item.finished;
