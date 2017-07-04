@@ -49,7 +49,7 @@ attachPicturesToLogs | It is 'true' or 'false', if set 'true' then attempts will
 ### Protractor integration
 Update your configuration file as follows:
 ```javascript
-var ReportportalAgent = require('../../lib/reportportal-agent.js');
+var ReportportalAgent = require('agent-js-jasmine');
 
 var agent = new ReportportalAgent({
     token: "00000000-0000-0000-0000-000000000000",
@@ -61,7 +61,7 @@ var agent = new ReportportalAgent({
 ...
 exports.config = {
     ...
-    onPrepare(){
+    onPrepare() {
         ...
         jasmine.getEnv().addReporter(agent.getJasmineReporter());
     },
