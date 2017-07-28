@@ -1,0 +1,16 @@
+{
+  "name": "protractor-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "protractor": "protractor simpleConfig.js",
+    "webdriver-update": "webdriver-manager update",
+    "webdriver-start": "webdriver-manager start"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "protractor": "^5.1.2"
+  }
+}
