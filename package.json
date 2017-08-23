@@ -6,11 +6,15 @@
     {
       "name": "Alexey Krylov",
       "email": "lexecon117@gmail.com"
+    },
+    {
+      "name": "Uladzimir Paliakou",
+      "email": "to.polyakov.vova@gmail.com"
     }
   ],
   "main": "./lib/reportportal-agent",
   "dependencies": {
-    "reportportal-client": "^5.0.0"
+    "reportportal-client": "^5.1.0"
   },
   "devDependencies": {
     "codecov": "^2.2.0",
