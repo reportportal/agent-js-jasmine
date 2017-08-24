@@ -47,9 +47,10 @@ attachPicturesToLogs | It is 'true' or 'false', if set 'true' then attempts will
 
 ## Integrations
 ### Protractor integration
-### Launch agent in single thread mode.
-    If you launch protractor in single tread mode , just add agent initialization to the onPrepare function.
-    Add agent.getJasmineReporter to the  jasmine.getEnv().addReporter() as an argument. You can see this in the example bellow.
+#### Launch agent in single thread mode.
+
+If you launch protractor in single tread mode , just add agent initialization to the onPrepare function.
+Add agent.getJasmineReporter to the  jasmine.getEnv().addReporter() as an argument. You can see this in the example bellow.
 Update your configuration file as follows:
 ```javascript
 var ReportportalAgent = require('agent-js-jasmine');
@@ -73,13 +74,14 @@ exports.config = {
     }
 };
 ```
-#### Settings for the multi threaded launch
 
-### Launch agents in multi thread mode.
-    For launching agents in multi thread mode firstly parent launch must be created and it ID
+#### Launch agents in multi thread mode.
+
+ For launching agents in multi thread mode firstly parent launch must be created and it ID
  must be sent to the child launches , so they would send data to the right place, and wouldn't create new
  launch instances at the Report Portal.
-    The main problem is that node.js is a single threaded platform. And for providing multi treading launch with browsers protractor generate
+ 
+ The main problem is that node.js is a single threaded platform. And for providing multi treading launch with browsers protractor generate
  new processes  of node, which can't interact with each other, so Singelton objects or functions can't be created for synchronizing
  it work. Only primitive types could be sent as args to the new processes before launch. The way of resolving this problem is
  to create launch file that would generate a Parent Launch and send launch's ID to protractor as argument. Then protractor would
@@ -146,8 +148,8 @@ protractorSpecFile.js file
         jasmine.getEnv().addReporter(agent.getJasmineReporter());
     },
 ```
-## Link to the jasmine issue , that it doesn't work well with async functions
-[jasmine issue](https://github.com/jasmine/jasmine/issues/842)
+Link to the jasmine issue , that it doesn't work well with async functions
+[jasmine issue](https://github.com/jasmine/jasmine/issues/842), 
 [protractor's community](https://github.com/angular/protractor/issues/1938)
 
 # Copyright Notice
