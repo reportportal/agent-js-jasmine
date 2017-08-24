@@ -53,19 +53,19 @@ If you launch protractor in single tread mode , just add agent initialization to
 Add agent.getJasmineReporter to the  jasmine.getEnv().addReporter() as an argument. You can see this in the example bellow.
 Update your configuration file as follows:
 ```javascript
-var ReportportalAgent = require('agent-js-jasmine');
+const ReportportalAgent = require('agent-js-jasmine');
 
 ...
-exports.config = {
-    ...
-    onPrepare: ()=> {
-    let agent = new ReportportalAgent({
+const agent = new ReportportalAgent({
         token: "00000000-0000-0000-0000-000000000000",
         endpoint: "http://your-instance.com:8080/api/v1",
         launch: "LAUNCH_NAME",
         project: "PROJECT_NAME",
         attachPicturesToLogs: false
     });
+exports.config = {
+    ...
+    onPrepare: ()=> {
         ...
         jasmine.getEnv().addReporter(agent.getJasmineReporter());
     },
