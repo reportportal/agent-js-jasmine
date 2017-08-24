@@ -14,8 +14,8 @@ exports.config = {
         }
     ],
     specs: ['testAngularPage.js', 'testGithubPage.js'],
-    onPrepare(){
-        agent = new ReportportalAgent({
+    onPrepare() {
+        const agent = new ReportportalAgent({
             token: "00000000-0000-0000-0000-000000000000",
             endpoint: "http://your-instance.com:8080/api/v1",
             launch: "LAUNCH_NAME",
@@ -29,7 +29,10 @@ exports.config = {
          https://github.com/angular/protractor/issues/1938
          So it needed to wait until requests would be sent to the Report Portal.
          */
-        afterAll((done) => agent.getAllClientPromises(agent.tempLaunchId).then(()=> done()));
+        afterAll = (done) => {
+            agent.getPromiseFinishAllItems(agent.tempLaunchId)
+                .then( ()=> done() );
+        };
 
         jasmine.getEnv().addReporter(agent.getJasmineReporter());
     }
