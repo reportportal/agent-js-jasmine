@@ -86,68 +86,103 @@ exports.config = {
  it work. Only primitive types could be sent as args to the new processes before launch. The way of resolving this problem is
  to create launch file that would generate a Parent Launch and send launch's ID to protractor as argument. Then protractor would
  launch jasmine-agents with parent ID.
- Look throug example of the Launch File with protractor-flake module at the 'Settings fot the multi threaded launch' section or at the examples folder.
+ Look through example of the Launch File with protractor-flake module at the 'Settings fot the multi threaded launch' section or at the examples folder.
  Any node runner could be used!
+ 
+1. Install 'protractor-flake':
+```bash
+npm install protractor-flake --save-dev
+```
+ 
+2. Create a config file as in example below:
 
- Create a main launch file as in example below:
-
-launchFile.js
-
+reportportalConf.js
 ```javascript
-'use strict';
-/* global process */
+module.exports = {
+    token: "00000000-0000-0000-0000-000000000000",
+    endpoint: "http://your-instance.com:8080/api/v1",
+    launch: "LAUNCH_NAME",
+    project: "PROJECT_NAME",
+    attachPicturesToLogs: false
+}
+```
+
+3. Create a main launch file as in example below:
+
+protractorLaunchFile.js
+```javascript
 const protractorFlake = require('protractor-flake');
 const AgentJasmine = require('agent-js-jasmine');
-const agent = new AgentJasmine({
-               token: "00000000-0000-0000-0000-000000000000",
-               endpoint: "http://your-instance.com:8080/api/v1",
-               launch: "LAUNCH_NAME",
-               project: "PROJECT_NAME",
-               attachPicturesToLogs: false,
-               tags: ["your", "tags"],
-               description: "DESCRIPTION"
-});
-    agent.startLaunch().then((realID) =>{
-            protractorFlake({
-                protractorArgs: [
-                    './protractorSpecFile.js',
-                    '--params.id',
-                    realID.id
-                ]
-            }, (status, output) => {
-                // Close the report after all tests finish
-               agent.getExitPromise().then(() =>{
-                   process.exit(status);
-               });
+const reportportalConfig = require('./reportportalConf');
+const agent = new AgentJasmine(reportportalConfig);
 
-             });
+agent.getLaunchStartPromise().then((launchData) =>{
+    protractorFlake({
+        maxAttempts: 1,
+        protractorArgs: [
+            './multiThreadConf.js',
+            '--params.id',
+            launchData.id
+        ]
+    }, (status) => {
+        agent.getExitPromise().then(() =>{
+            process.exit(status);
+        });
     });
+});
 ```
 
-Then create protractor's spec file as in example below:
+4. Then create protractor's spec file as in example below:
 
-protractorSpecFile.js file
+multiThreadConf.js file
 
 ```javascript
- onPrepare(){
-        agent = new AgentJasmine({
-            token: "00000000-0000-0000-0000-000000000000",
-            endpoint: "http://your-instance.com:8080/api/v1",
-            launch: "LAUNCH_NAME",
-            project: "PROJECT_NAME",
-            attachPicturesToLogs: false,
-            id : browser.params.id
-        });
-
-
-        /*Its a hack. There is an issue since 2015. That Jasmine doesn't wait for report's async functions.
-         So it needed to wait until requests would be sent to the Report Portal.
-         */
-        afterAll((done) => agent. getAllClientPromises(agent.tempLaunchId).then(()=> done()));
-
-        jasmine.getEnv().addReporter(agent.getJasmineReporter());
-    },
+ const ReportportalAgent = require('agent-js-jasmine');
+ const reportportalConfig = require('./reportportalConf');
+ 
+ exports.config = {
+     multiCapabilities: [
+         {
+             name: 'normal',
+             browserName: 'chrome',
+             maxInstances: 2,
+             shardTestFiles: true,
+             chromeOptions: {
+                 args: ['--window-size=1024,768', '--disable-infobars']
+             }
+         }
+     ],
+     specs: ['testAngularPage.js', 'testGithubPage.js'],
+     onPrepare() {
+         const config = Object.assign({
+             id: browser.params.id
+         }, reportportalConfig);
+         const agent = new ReportportalAgent(config);
+         /*Its a hack. There is an issue since 2015. That Jasmine doesn't wait for report's async functions.
+          links to the issues https://github.com/jasmine/jasmine/issues/842
+          https://github.com/angular/protractor/issues/1938
+          So it needed to wait until requests would be sent to the Report Portal.
+          */
+         afterAll((done) => agent.getPromiseFinishAllItems(agent.tempLaunchId).then(()=> done()));
+         jasmine.getEnv().addReporter(agent.getJasmineReporter());
+     }
+ 
+ };
 ```
+
+5. Update script section for your package.json:
+```javascript
+"scripts": {
+    "protractor-multi": "node protractorLaunchFile.js"
+ }
+```
+
+6. Run your protractor:
+```bash
+npm run protractor-multi
+```
+
+
 Link to the jasmine issue , that it doesn't work well with async functions
 [jasmine issue](https://github.com/jasmine/jasmine/issues/842), 
 [protractor's community](https://github.com/angular/protractor/issues/1938)

@@ -1,5 +1,5 @@
 const ReportportalAgent = require('../../lib/reportportal-agent.js');
-
+const reportportalConfig = require('./reportportalConf');
 
 exports.config = {
     multiCapabilities: [
@@ -15,25 +15,16 @@ exports.config = {
     ],
     specs: ['testAngularPage.js', 'testGithubPage.js'],
     onPrepare() {
-        const agent = new ReportportalAgent({
-            token: "00000000-0000-0000-0000-000000000000",
-            endpoint: "http://your-instance.com:8080/api/v1",
-            launch: "LAUNCH_NAME",
-            project: "PROJECT_NAME",
-            attachPicturesToLogs: false,
-            id : browser.params.id
-        });
-
+        const config = Object.assign({
+            id: browser.params.id
+        }, reportportalConfig);
+        const agent = new ReportportalAgent(config);
         /*Its a hack. There is an issue since 2015. That Jasmine doesn't wait for report's async functions.
          links to the issues https://github.com/jasmine/jasmine/issues/842
          https://github.com/angular/protractor/issues/1938
          So it needed to wait until requests would be sent to the Report Portal.
          */
-        afterAll = (done) => {
-            agent.getPromiseFinishAllItems(agent.tempLaunchId)
-                .then( ()=> done() );
-        };
-
+        afterAll((done) => agent.getPromiseFinishAllItems(agent.tempLaunchId).then(()=> done()));
         jasmine.getEnv().addReporter(agent.getJasmineReporter());
     }
 
