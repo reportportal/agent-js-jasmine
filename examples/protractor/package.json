@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "protractor": "protractor simpleConfig.js",
+    "protractor-mulr":"node protractorLaunchFile.js",
     "webdriver-update": "webdriver-manager update",
     "webdriver-start": "webdriver-manager start"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "protractor": "^5.1.2"
+    "protractor": "^5.1.2",
+    "protractor-flake": "^2.5.0"
   }
 }
