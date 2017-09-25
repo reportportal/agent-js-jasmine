@@ -1,6 +1,6 @@
 {
-  "name": "agent-js-jasmine",
-  "version": "3.0.0",
+  "name": "reportportal-agent-jasmine",
+  "version": "1.0.0",
   "description": "Agent for integration Jasmine with ReportPortal.",
   "contributors": [
     {
