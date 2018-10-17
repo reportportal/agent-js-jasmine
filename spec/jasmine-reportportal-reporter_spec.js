@@ -22,7 +22,8 @@ describe("jasmine Report Portal reporter", function() {
     describe("suiteStarted", function() {
         it("must send a request to the agent", function() {
             spyOn(reporter.client, 'startTestItem').and.returnValue({
-                tempId: '3452'
+                tempId: '3452',
+				promise: Promise.resolve()
             });
             reporter.suiteStarted({
                 description: 'test description',
@@ -36,7 +37,8 @@ describe("jasmine Report Portal reporter", function() {
         });
         it("must create an element in parentIds", function() {
             spyOn(reporter.client, 'startTestItem').and.returnValue({
-                tempId: '3452'
+                tempId: '3452',
+				promise: Promise.resolve()
             });
             reporter.suiteStarted({
                 description: 'test description',
@@ -49,9 +51,12 @@ describe("jasmine Report Portal reporter", function() {
         it("must send a request to the agent", function() {
             let tempId = 'ferw3452';
             spyOn(reporter.client, 'startTestItem').and.returnValue({
-                tempId
+                tempId,
+				promise: Promise.resolve()
             });
-            spyOn(reporter.client, 'finishTestItem');
+            spyOn(reporter.client, 'finishTestItem').and.returnValue({
+				promise: Promise.resolve()
+            });;
             reporter.suiteStarted({
                 description: 'test description',
                 fullName: 'test name'
