@@ -3,5 +3,6 @@ module.exports = {
     endpoint: "http://your-instance.com:8080/api/v1",
     launch: "LAUNCH_NAME",
     project: "PROJECT_NAME",
-    attachPicturesToLogs: false
+    attachPicturesToLogs: false,
+    tags: ["Ninja","MyCoolTag"]
 }
