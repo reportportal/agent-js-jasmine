@@ -12,6 +12,7 @@ exports.config = {
             launch: "LAUNCH_NAME",
             project: "PROJECT_NAME",
             attachPicturesToLogs: false,
+            tags: ["Ninja","MyCoolTag"]
         });
 
         jasmine.getEnv().addReporter(agent.getJasmineReporter());
