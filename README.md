@@ -17,12 +17,20 @@ var ReportportalAgent = require('agent-js-jasmine');
 var agent = new ReportportalAgent({
     // client settings
     token: "00000000-0000-0000-0000-000000000000",
-    endpoint: "http://your-instance.com:8080/api/v1",
+    endpoint: "http://your.reportportal.server/api/v1",
     launch: "LAUNCH_NAME",
     project: "PROJECT_NAME",
     // agent settings
     attachPicturesToLogs: true,
-    tags: ["Ninja","MyCoolTag"]
+    attributes: [
+        {
+            "key": "YourKey",
+            "value": "YourValue"
+        },
+        {
+            "value": "YourValue"
+        },
+    ]
 });
 ```
 3. Add a reporter to Jasmine:
@@ -59,11 +67,19 @@ const ReportportalAgent = require('agent-js-jasmine');
 ...
 const agent = new ReportportalAgent({
         token: "00000000-0000-0000-0000-000000000000",
-        endpoint: "http://your-instance.com:8080/api/v1",
+        endpoint: "http://your.reportportal.server/api/v1",
         launch: "LAUNCH_NAME",
         project: "PROJECT_NAME",
         attachPicturesToLogs: false,
-        tags: ["Ninja","MyCoolTag"]
+        attributes: [
+            {
+                "key": "YourKey",
+                "value": "YourValue"
+            },
+            {
+                "value": "YourValue"
+            },
+        ]
     });
 exports.config = {
     ...
@@ -102,11 +118,19 @@ reportportalConf.js
 ```javascript
 module.exports = {
     token: "00000000-0000-0000-0000-000000000000",
-    endpoint: "http://your-instance.com:8080/api/v1",
+    endpoint: "http://your.reportportal.server/api/v1",
     launch: "LAUNCH_NAME",
     project: "PROJECT_NAME",
     attachPicturesToLogs: false,
-    tags: ["Ninja","MyCoolTag"]
+    attributes: [
+        {
+            "key": "YourKey",
+            "value": "YourValue"
+        },
+        {
+            "value": "YourValue"
+        },
+    ]
 }
 ```
 
