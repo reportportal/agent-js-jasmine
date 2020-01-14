@@ -7,5 +7,9 @@ describe('angularjs homepage', function() {
         browser.get('http://angularjs.org/');
         expect(browser.getTitle()).toContain('notAngular');
     });
+    xit('should have the correct title, skipped', function() {
+        browser.get('http://angularjs.org/');
+        expect(browser.getTitle()).toContain('notAngular');
+    });
 });
 

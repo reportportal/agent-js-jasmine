@@ -1,8 +1,17 @@
 module.exports = {
     token: "00000000-0000-0000-0000-000000000000",
-    endpoint: "http://your-instance.com:8080/api/v1",
+    endpoint: "http://your.reportportal.server/api/v1",
     launch: "LAUNCH_NAME",
     project: "PROJECT_NAME",
+    description: 'YOUR_DESCRIPTION',
     attachPicturesToLogs: false,
-    tags: ["Ninja","MyCoolTag"]
+    attributes: [
+        {
+            key: "yourKey",
+            value: "yourValue"
+        },
+        {
+            value: "yourValue"
+        }
+    ]
 }
