@@ -7,11 +7,11 @@ module.exports = {
     attachPicturesToLogs: false,
     attributes: [
         {
-            key: "yourKey",
-            value: "yourValue"
+            key: 'yourKey',
+            value: 'yourValue'
         },
         {
-            value: "yourValue"
+            value: 'yourValue'
         }
     ]
 }
