@@ -17,7 +17,7 @@
     "reportportal-client": "^5.5.0"
   },
   "devDependencies": {
-    "codecov": "^2.2.0",
+    "codecov": "^3.6.5",
     "jasmine": "^2.6.0",
     "nyc": "^11.0.1"
   },
