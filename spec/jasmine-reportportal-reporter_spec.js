@@ -1,24 +1,30 @@
 describe("jasmine Report Portal reporter", function() {
     const Reporter = require("../lib/jasmine-reportportal-reporter");
+
     let reporter;
     let tempLaunchId = 'ewrf35432r';
+
     beforeEach(function() {
         let client = {
             startTestItem() {},
             finishTestItem() {},
         };
+
         reporter = new Reporter({
             client: client,
             tempLaunchId: tempLaunchId,
         });
     });
+
     it("must be properly initialized", function() {
         expect(reporter.parentIds.length).toBe(0);
     });
+
     it("should be escape markdown", function() {
         let escapeString = reporter.escapeMarkdown('_test*');
         expect(escapeString).toBe('\\_test\\*');
     });
+
     describe("suiteStarted", function() {
         it("must send a request to the agent", function() {
             spyOn(reporter.client, 'startTestItem').and.returnValue({
@@ -35,6 +41,7 @@ describe("jasmine Report Portal reporter", function() {
                 name: 'test name'
             }, tempLaunchId, null);
         });
+
         it("must create an element in parentIds", function() {
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId: '3452',
@@ -47,6 +54,7 @@ describe("jasmine Report Portal reporter", function() {
             expect(reporter.parentIds.length).toBe(1);
         });
     });
+
     describe("suiteDone", function() {
         it("must send a request to the agent", function() {
             let tempId = 'ferw3452';

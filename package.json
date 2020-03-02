@@ -14,7 +14,7 @@
   ],
   "main": "./lib/reportportal-agent",
   "dependencies": {
-    "reportportal-client": "^5.5.0"
+    "reportportal-client": "git://github.com/reportportal/client-javascript.git#master"
   },
   "devDependencies": {
     "codecov": "^2.2.0",
