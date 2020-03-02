@@ -67,6 +67,45 @@ Example:
   "rerunOf": "f68f39f9-279c-4e8d-ac38-1216dffcc59c"
 ```
 
+### Report static attributes 
+To report attributes you need to do the following:
+1. Add PublicReportingAPI into your test file. 
+```javascript
+const PublicReportingAPI = require('reportportal-client/lib/publicReportingAPI');
+```
+2. Inside of your suite or spec call PublicReportingAPI.addAttributes() with attributes as a parameter, which should be as follows:
+```javascript
+[
+    {
+        "key": "YourKey",
+        "value": "YourValue"
+    },
+    {
+        "value": "YourValue"
+    },
+]
+```
+In general, it will look like this
+```javascript
+const PublicReportingAPI = require('reportportal-client/lib/publicReportingAPI');
+
+describe('A suite', function() {
+    PublicReportingAPI.addAttributes([{
+        key: 'suiteKey',
+        value: 'suiteValue'
+    }]);
+
+    it('contains spec with an expectation', function() {
+        PublicReportingAPI.addAttributes([{
+            key: 'specKey',
+            value: 'specValue'
+        }]);
+        
+        expect(true).toBe(true);
+    });
+});
+```
+
 ## Integrations
 ### Protractor integration
 #### Launch agent in single thread mode.
