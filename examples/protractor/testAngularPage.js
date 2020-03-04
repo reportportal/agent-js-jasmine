@@ -1,4 +1,4 @@
-const PublicReportingAPI = require('reportportal-client/lib/publicReportingAPI');
+const { PublicReportingAPI } = require('../../lib/reportportal-agent');
 
 describe('angularjs homepage', function() {
     PublicReportingAPI.addAttributes([{
