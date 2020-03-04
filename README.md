@@ -12,7 +12,7 @@ npm i agent-js-jasmine --save-dev
 ```
 2. Create an agent instance:
 ```javascript
-var ReportportalAgent = require('agent-js-jasmine');
+var { ReportportalAgent } = require('agent-js-jasmine');
 
 var agent = new ReportportalAgent({
     // client settings
@@ -71,7 +71,7 @@ Example:
 To report attributes you need to do the following:
 1. Add PublicReportingAPI into your test file. 
 ```javascript
-const PublicReportingAPI = require('reportportal-client/lib/publicReportingAPI');
+const { PublicReportingAPI } = require('agent-js-jasmine');
 ```
 2. Inside of your suite or spec call PublicReportingAPI.addAttributes() with attributes as a parameter, which should be as follows:
 ```javascript
@@ -87,7 +87,7 @@ const PublicReportingAPI = require('reportportal-client/lib/publicReportingAPI')
 ```
 In general, it will look like this
 ```javascript
-const PublicReportingAPI = require('reportportal-client/lib/publicReportingAPI');
+const { PublicReportingAPI } = require('agent-js-jasmine');
 
 describe('A suite', function() {
     PublicReportingAPI.addAttributes([{
@@ -114,7 +114,7 @@ If you launch protractor in single tread mode , just add agent initialization to
 Add agent.getJasmineReporter to the  jasmine.getEnv().addReporter() as an argument. You can see this in the example bellow.
 Update your configuration file as follows:
 ```javascript
-const ReportportalAgent = require('agent-js-jasmine');
+const { ReportportalAgent } = require('agent-js-jasmine');
 
 ...
 const agent = new ReportportalAgent({
@@ -216,7 +216,7 @@ agent.getLaunchStartPromise().then((launchData) =>{
 multiThreadConf.js file
 
 ```javascript
- const ReportportalAgent = require('agent-js-jasmine');
+ const { ReportportalAgent } = require('agent-js-jasmine');
  const reportportalConfig = require('./reportportalConf');
  
  exports.config = {

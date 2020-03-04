@@ -1,8 +1,8 @@
 describe("Report Portal agent", function() {
-    const Agent = require("../lib/reportportal-agent");
+    const { ReportportalAgent } = require("../lib/reportportal-agent");
 
     beforeEach(function() {
-        agent = new Agent({});
+        agent = new ReportportalAgent({});
     });
 
     it("must be properly initialized", function() {
