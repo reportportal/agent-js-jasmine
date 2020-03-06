@@ -18,16 +18,27 @@
   },
   "devDependencies": {
     "codecov": "^2.2.0",
+    "istanbul": "^0.4.5",
     "jasmine": "^2.6.0",
-    "nyc": "^11.0.1"
+    "jasmine-console-reporter": "^3.1.0",
+    "jasmine-node": "^3.0.0",
+    "jasmine-supertest": "^1.0.0",
+    "nyc": "^11.0.1",
+    "supertest": "^4.0.2"
   },
   "scripts": {
+    "test-cover": "istanbul cover --include-all-sources spec/specs.js && istanbul check-coverage",
+    "test-jasmine": "jasmine",
     "test": "nyc jasmine",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "see-coverage": "nyc report --reporter=html --dir=coverage"
   },
   "nyc": {
+    "include": [
+      "lib/*.js"
+    ],
     "exclude": [
+      "examples/protractor/*.js",
       "**/*spec.js"
     ]
   },
