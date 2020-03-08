@@ -30,7 +30,7 @@ describe('jasmine Report Portal reporter', function() {
         expect(reporter.parentIds.length).toBe(0);
     });
 
-    it('should be escape markdown', function() {
+    it('should escape markdown', function() {
         const escapeString = reporter.escapeMarkdown('_test*');
 
         expect(escapeString).toBe('\\_test\\*');

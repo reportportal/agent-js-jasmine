@@ -1,4 +1,5 @@
 const { ReportportalAgent } = require('../lib/reportportal-agent');
+const JasmineReportportalReporter = require('../lib/jasmine-reportportal-reporter');
 const reporterOptions = {
     token: '00000000-0000-0000-0000-000000000000',
     endpoint: 'endpoint',
@@ -24,7 +25,7 @@ const options = Object.assign(reporterOptions, {
 describe('Report Portal agent', function() {
     let agent;
 
-    beforeEach(function() {
+    beforeAll(function () {
         agent = new ReportportalAgent(options);
     });
 
@@ -36,6 +37,7 @@ describe('Report Portal agent', function() {
     it('getJasmineReporter should return instance of JasmineReportportalReporter', function() {
         const instanceJasmineReportportalReporter = agent.getJasmineReporter();
 
+        expect(instanceJasmineReportportalReporter).toEqual(jasmine.any(JasmineReportportalReporter));
         expect(instanceJasmineReportportalReporter).toBeDefined();
         expect(instanceJasmineReportportalReporter.client).toBeDefined();
         expect(instanceJasmineReportportalReporter.parentIds).toEqual([]);
