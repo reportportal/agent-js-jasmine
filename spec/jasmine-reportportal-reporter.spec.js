@@ -59,6 +59,29 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
+    describe('setDescription', function () {
+        it('additionalCustomParams should not be empty if setDescription\' parameter is not empty', function () {
+            const expectedAdditionalCustomParams = {
+                customParams: 'value',
+                description: 'text description'
+            };
+            reporter.additionalCustomParams = { customParams: 'value' };
+
+            reporter.setDescription({ text: 'text description' });
+
+            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+        });
+
+        it('additionalCustomParams should be empty if setDescription\' parameter and additionalCustomParams are empty', function () {
+            const expectedAdditionalCustomParams = {};
+            reporter.additionalCustomParams = {};
+
+            reporter.setDescription();
+
+            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+        });
+    });
+
     describe('getTopLevelType', function () {
         it('should return level type \'test\' if parentIds is not empty', function () {
             reporter.parentIds = [0, 1];
@@ -79,7 +102,7 @@ describe('jasmine Report Portal reporter', function() {
 
     describe('suiteStarted', function() {
         it('should send a request to the agent', function() {
-            reporter.additionalCustomParams = { attributes: { key: 'value' } };
+            reporter.additionalCustomParams = { attributes: { key: 'value' }, description: 'text description' };
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId: '3452',
 				promise: Promise.resolve()
@@ -92,9 +115,9 @@ describe('jasmine Report Portal reporter', function() {
 
             expect(reporter.client.startTestItem).toHaveBeenCalledWith({
                 type: 'SUITE',
-                description: 'test description',
                 name: 'test name',
-                attributes: { key: 'value' }
+                attributes: { key: 'value' },
+                description: 'text description'
             }, tempLaunchId, null);
         });
 
@@ -193,7 +216,7 @@ describe('jasmine Report Portal reporter', function() {
 
         it('should call method finishTestItem with the appropriate parameter, status is pending', function() {
             promise = Promise.resolve(null);
-            reporter.additionalCustomParams = { attributes: { key: 'value' } };
+            reporter.additionalCustomParams = { attributes: { key: 'value' }, description: 'text description' };
             spyOn(reporter.client, 'sendLog').and.returnValue({
                 tempId: 'sendLog',
                 promise: Promise.resolve('ok')
@@ -210,7 +233,8 @@ describe('jasmine Report Portal reporter', function() {
             promise.then(function () {
                 expect(reporter.client.finishTestItem).toHaveBeenCalledWith(null, {
                     status: 'skipped',
-                    attributes: { key: 'value' }
+                    attributes: { key: 'value' },
+                    description: 'text description'
                 });
             });
             expect(reporter.additionalCustomParams).toEqual({});

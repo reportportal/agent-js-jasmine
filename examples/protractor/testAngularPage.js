@@ -5,12 +5,14 @@ describe('angularjs homepage', function() {
         key: 'homepageKey1',
         value: 'homepageValue1'
     }]);
+    PublicReportingAPI.addDescription('Homepage description');
 
     it('should have a title', function() {
         PublicReportingAPI.addAttributes([{
             key: 'titleKey1',
             value: 'titleValue1'
         }]);
+        PublicReportingAPI.addDescription('Title one description');
 
         browser.get('http://angularjs.org/');
         expect(browser.getTitle()).toContain('AngularJS');
@@ -21,6 +23,7 @@ describe('angularjs homepage', function() {
             key: 'titleKey2',
             value: 'titleValue2'
         }]);
+        PublicReportingAPI.addDescription('Title two description');
 
         browser.get('http://angularjs.org/');
         expect(browser.getTitle()).toContain('notAngular');
