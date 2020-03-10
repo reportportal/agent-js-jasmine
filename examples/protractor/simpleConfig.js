@@ -1,4 +1,4 @@
-const { ReportportalAgent } = require('../../lib/reportportal-agent.js');
+const ReportportalAgent = require('../../lib/reportportal-agent.js');
 const reportportalConfig = require('./reportportalConf');
 let agent;
 
