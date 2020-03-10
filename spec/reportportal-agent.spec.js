@@ -1,4 +1,4 @@
-const { ReportportalAgent } = require('../lib/reportportal-agent');
+const ReportportalAgent = require('../lib/reportportal-agent');
 const JasmineReportportalReporter = require('../lib/jasmine-reportportal-reporter');
 const SpecificUtils = require('../lib/specificUtils');
 const reporterOptions = {

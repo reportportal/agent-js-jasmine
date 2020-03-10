@@ -40,11 +40,14 @@ describe('jasmine Report Portal reporter', function() {
         it('additionalCustomParams should not be empty if setAttributes\' parameter is not empty', function () {
             const expectedAdditionalCustomParams = {
                 customParams: 'value',
-                key: 'value'
+                attributes: [
+                    { key: 'key', value: 'value' },
+                    { key: 'key1', value: 'value2' }
+                ]
             };
             reporter.additionalCustomParams = { customParams: 'value' };
 
-            reporter.setAttributes({ key: 'value' });
+            reporter.setAttributes({ attributes: [{ key: 'key', value: 'value' }, { key: 'key1', value: 'value2' }]});
 
             expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
         });
@@ -102,7 +105,7 @@ describe('jasmine Report Portal reporter', function() {
 
     describe('suiteStarted', function() {
         it('should send a request to the agent', function() {
-            reporter.additionalCustomParams = { attributes: { key: 'value' }, description: 'text description' };
+            reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }], description: 'text description' };
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId: '3452',
 				promise: Promise.resolve()
@@ -116,7 +119,7 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.client.startTestItem).toHaveBeenCalledWith({
                 type: 'SUITE',
                 name: 'test name',
-                attributes: { key: 'value' },
+                attributes: [{ key: 'key', value: 'value' }],
                 description: 'text description'
             }, tempLaunchId, null);
         });
@@ -216,7 +219,7 @@ describe('jasmine Report Portal reporter', function() {
 
         it('should call method finishTestItem with the appropriate parameter, status is pending', function() {
             promise = Promise.resolve(null);
-            reporter.additionalCustomParams = { attributes: { key: 'value' }, description: 'text description' };
+            reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }], description: 'text description' };
             spyOn(reporter.client, 'sendLog').and.returnValue({
                 tempId: 'sendLog',
                 promise: Promise.resolve('ok')
@@ -233,7 +236,7 @@ describe('jasmine Report Portal reporter', function() {
             promise.then(function () {
                 expect(reporter.client.finishTestItem).toHaveBeenCalledWith(null, {
                     status: 'skipped',
-                    attributes: { key: 'value' },
+                    attributes: [{ key: 'key', value: 'value' }],
                     description: 'text description'
                 });
             });
@@ -242,7 +245,7 @@ describe('jasmine Report Portal reporter', function() {
 
         it('should call method finishTestItem with the appropriate parameter, status is disabled', function() {
             promise = Promise.resolve(null);
-            reporter.additionalCustomParams = { attributes: { key: 'value' } };
+            reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }] };
             spyOn(reporter.client, 'sendLog').and.returnValue({
                 tempId: 'sendLog',
                 promise: Promise.resolve('ok')
@@ -257,14 +260,14 @@ describe('jasmine Report Portal reporter', function() {
             });
 
             promise.then(function () {
-                expect(reporter.client.finishTestItem).toHaveBeenCalledWith( null, { status: 'skipped', attributes: { key: 'value' } });
+                expect(reporter.client.finishTestItem).toHaveBeenCalledWith( null, { status: 'skipped', attributes: [{ key: 'key', value: 'value' }] });
             });
             expect(reporter.additionalCustomParams).toEqual({});
         });
 
         it('should call methods finishTestItem and sendLog with the appropriate parameter, status should be failed, message should not be empty', function() {
             promise = Promise.resolve(null);
-            reporter.additionalCustomParams = { attributes: { key: 'value' } };
+            reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }] };
             spyOn(reporter.client, 'sendLog').and.returnValue({
                 tempId: 'sendLog',
                 promise: Promise.resolve('ok')
@@ -285,7 +288,7 @@ describe('jasmine Report Portal reporter', function() {
 stackTrace: stack`,
                     level: 'ERROR'
                 }, null);
-                expect(reporter.client.finishTestItem).toHaveBeenCalledWith(null, { status: 'failed', attributes: { key: 'value' } });
+                expect(reporter.client.finishTestItem).toHaveBeenCalledWith(null, { status: 'failed', attributes: [{ key: 'key', value: 'value' }] });
             });
             expect(reporter.additionalCustomParams).toEqual({});
         });
