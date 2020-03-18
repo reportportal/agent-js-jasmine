@@ -1,5 +1,6 @@
 const { ReportportalAgent } = require('../lib/reportportal-agent');
 const JasmineReportportalReporter = require('../lib/jasmine-reportportal-reporter');
+const SpecificUtils = require('../lib/specificUtils');
 const reporterOptions = {
     token: '00000000-0000-0000-0000-000000000000',
     endpoint: 'endpoint',
@@ -32,6 +33,16 @@ describe('Report Portal agent', function() {
     it('should be properly initialized', function() {
         expect(agent.tempLaunchId).toBeDefined();
         expect(agent.client).toBeDefined();
+    });
+
+    it('should call SpecificUtils', function() {
+        spyOn(SpecificUtils, 'getLaunchObj').and.returnValue({
+            attributes: []
+        });
+
+        agent = new ReportportalAgent(options);
+
+        expect(SpecificUtils.getLaunchObj).toHaveBeenCalled();
     });
 
     it('getJasmineReporter should return instance of JasmineReportportalReporter', function() {
