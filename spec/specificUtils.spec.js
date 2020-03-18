@@ -52,4 +52,96 @@ describe('Specific Utils', function() {
             expect(value).toEqual(null);
         });
     });
+
+    describe('getLaunchObj', function () {
+        it('should return launchObj only with system attribute and description if parameter doesn\'t set', function() {
+            const expectedLaunchObj = {
+                attributes: [{
+                    key: 'agent',
+                    value: 'agentName|agentVersion',
+                    system: true,
+                }],
+                description: undefined
+            };
+            spyOn(SpecificUtils, 'getSystemAttributes').and.returnValue([
+                {
+                    key: 'agent',
+                    value: 'agentName|agentVersion',
+                    system: true,
+                }
+            ]);
+
+            const launchObj = SpecificUtils.getLaunchObj({});
+
+            expect(launchObj).toEqual(expectedLaunchObj);
+        });
+
+        it('should return correct launchObj with attribute, description if parameter has description and custom attributes', function() {
+            const expectedLaunchObj = {
+                attributes: [{
+                    key: 'key',
+                    value: 'value',
+                }, {
+                    key: 'agent',
+                    value: 'agentName|agentVersion',
+                    system: true,
+                }],
+                description: 'description'
+            };
+            spyOn(SpecificUtils, 'getSystemAttributes').and.returnValue([
+                {
+                    key: 'agent',
+                    value: 'agentName|agentVersion',
+                    system: true,
+                }
+            ]);
+
+            const launchObj = SpecificUtils.getLaunchObj({
+                attributes: [{
+                    key: 'key',
+                    value: 'value',
+                }],
+                description: 'description'
+            });
+
+            expect(launchObj).toEqual(expectedLaunchObj);
+        });
+
+        it('should return correct launchObj with attribute, description, id, rerun, rerunOf if parameter has description, attributes, id, rerun, rerunOf', function() {
+            const expectedLaunchObj = {
+                attributes: [{
+                    key: 'key',
+                    value: 'value',
+                }, {
+                    key: 'agent',
+                    value: 'agentName|agentVersion',
+                    system: true,
+                }],
+                description: 'description',
+                id: 'id',
+                rerun: true,
+                rerunOf: '00000000-0000-0000-0000-000000000000',
+            };
+            spyOn(SpecificUtils, 'getSystemAttributes').and.returnValue([
+                {
+                    key: 'agent',
+                    value: 'agentName|agentVersion',
+                    system: true,
+                }
+            ]);
+
+            const launchObj = SpecificUtils.getLaunchObj({
+                attributes: [{
+                    key: 'key',
+                    value: 'value',
+                }],
+                description: 'description',
+                id: 'id',
+                rerun: true,
+                rerunOf: '00000000-0000-0000-0000-000000000000',
+            });
+
+            expect(launchObj).toEqual(expectedLaunchObj);
+        });
+    });
 });
