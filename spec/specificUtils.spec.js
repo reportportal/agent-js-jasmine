@@ -1,55 +1,57 @@
 const SpecificUtils = require('../lib/specificUtils');
 
 describe('Specific Utils', function() {
-    it('should return promise if browser is false, promise resolve should be null', function() {
-        browser = false;
+    describe('takeScreenshot', function () {
+        it('should return promise if browser is false, promise resolve should be null', function() {
+            browser = false;
 
-        const promise = SpecificUtils.takeScreenshot('fileName');
+            const promise = SpecificUtils.takeScreenshot('fileName');
 
-        expect(promise.then).toBeDefined();
-        promise.then(function (value) {
-            expect(value).toEqual(null);
-        });
-    });
-
-    it('should call browser.takeScreenshot if browser is true', function() {
-        browser = jasmine.createSpyObj('browser', {
-            'takeScreenshot': new Promise(function() {})
+            expect(promise.then).toBeDefined();
+            promise.then(function (value) {
+                expect(value).toEqual(null);
+            });
         });
 
-        SpecificUtils.takeScreenshot('fileName');
+        it('should call browser.takeScreenshot if browser is true', function() {
+            browser = jasmine.createSpyObj('browser', {
+                'takeScreenshot': new Promise(function() {})
+            });
 
-        expect(browser.takeScreenshot).toHaveBeenCalled();
-    });
+            SpecificUtils.takeScreenshot('fileName');
 
-    it('if browser is true and browser.takeScreenshot is successful, promise resolve should be object', function() {
-        const expectedPromiseResolvedObj = {
-            name: 'fileName',
-            type: 'image/png',
-            content: 'png'
-        };
-        browser = jasmine.createSpyObj('browser', {
-            'takeScreenshot': Promise.resolve('png')
+            expect(browser.takeScreenshot).toHaveBeenCalled();
         });
 
-        const promise = SpecificUtils.takeScreenshot('fileName');
+        it('if browser is true and browser.takeScreenshot is successful, promise resolve should be object', function() {
+            const expectedPromiseResolvedObj = {
+                name: 'fileName',
+                type: 'image/png',
+                content: 'png'
+            };
+            browser = jasmine.createSpyObj('browser', {
+                'takeScreenshot': Promise.resolve('png')
+            });
 
-        expect(browser.takeScreenshot).toHaveBeenCalled();
-        promise.then(function (value) {
-            expect(value).toEqual(expectedPromiseResolvedObj);
+            const promise = SpecificUtils.takeScreenshot('fileName');
+
+            expect(browser.takeScreenshot).toHaveBeenCalled();
+            promise.then(function (value) {
+                expect(value).toEqual(expectedPromiseResolvedObj);
+            });
         });
-    });
 
-    it('if browser is true and browser.takeScreenshot is unsuccessful, promise resolve should be null', function() {
-        browser = jasmine.createSpyObj('browser', {
-            'takeScreenshot': Promise.reject()
-        });
+        it('if browser is true and browser.takeScreenshot is unsuccessful, promise resolve should be null', function() {
+            browser = jasmine.createSpyObj('browser', {
+                'takeScreenshot': Promise.reject()
+            });
 
-        const promise = SpecificUtils.takeScreenshot('fileName');
+            const promise = SpecificUtils.takeScreenshot('fileName');
 
-        expect(browser.takeScreenshot).toHaveBeenCalled();
-        promise.then(function (value) {
-            expect(value).toEqual(null);
+            expect(browser.takeScreenshot).toHaveBeenCalled();
+            promise.then(function (value) {
+                expect(value).toEqual(null);
+            });
         });
     });
 

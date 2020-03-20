@@ -35,7 +35,7 @@ describe('Report Portal agent', function() {
         expect(agent.client).toBeDefined();
     });
 
-    it('should call SpecificUtils', function() {
+    it('should call SpecificUtils.getLaunchObj', function() {
         spyOn(SpecificUtils, 'getLaunchObj').and.returnValue({
             attributes: []
         });
