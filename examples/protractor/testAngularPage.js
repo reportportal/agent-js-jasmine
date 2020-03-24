@@ -5,6 +5,10 @@ describe('angularjs homepage', function() {
         key: 'homepageKey1',
         value: 'homepageValue1'
     }]);
+    PublicReportingAPI.addAttributes([{
+        key: 'homepageKey2',
+        value: 'homepageValue2'
+    }]);
     PublicReportingAPI.addDescription('Homepage description');
 
     it('should have a title', function() {
