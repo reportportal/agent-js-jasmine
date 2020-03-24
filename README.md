@@ -103,6 +103,11 @@ describe('A suite', function() {
 });
 ```
 
+Note: 
+
+At the moment, using PublicReportingAPI.addAttributes and PublicReportingAPI.addDescription methods in nested describes works inappropriate way,
+these methods affect the root describe.
+
 ## Integrations
 ### Protractor integration
 #### Launch agent in single thread mode.

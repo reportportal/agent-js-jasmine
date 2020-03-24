@@ -36,8 +36,8 @@ describe('jasmine Report Portal reporter', function() {
         expect(escapeString).toBe('\\_test\\*');
     });
 
-    describe('setAttributes', function () {
-        it('additionalCustomParams should not be empty if setAttributes\' parameter is not empty', function () {
+    describe('addAttributes', function () {
+        it('additionalCustomParams should not be empty if addAttributes\' parameter is not empty', function () {
             const expectedAdditionalCustomParams = {
                 customParams: 'value',
                 attributes: [
@@ -47,16 +47,32 @@ describe('jasmine Report Portal reporter', function() {
             };
             reporter.additionalCustomParams = { customParams: 'value' };
 
-            reporter.setAttributes({ attributes: [{ key: 'key', value: 'value' }, { key: 'key1', value: 'value2' }]});
+            reporter.addAttributes({ attributes: [{ key: 'key', value: 'value' }, { key: 'key1', value: 'value2' }]});
 
             expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
         });
 
-        it('additionalCustomParams should be empty if setAttributes\' parameter and additionalCustomParams are empty', function () {
+        it('additionalCustomParams should be correct if we call addAttributes with attributes few times', function () {
+            const expectedAdditionalCustomParams = {
+                attributes: [
+                    { key: 'key', value: 'value' },
+                    { key: 'key1', value: 'value1' },
+                    { key: 'key2', value: 'value2' }
+                ]
+            };
+            reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }] };
+
+            reporter.addAttributes({ attributes: [{ key: 'key1', value: 'value1' }]});
+            reporter.addAttributes({ attributes: [{ key: 'key2', value: 'value2' }]});
+
+            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+        });
+
+        it('additionalCustomParams should be empty if addAttributes\' parameter and additionalCustomParams are empty', function () {
             const expectedAdditionalCustomParams = {};
             reporter.additionalCustomParams = {};
 
-            reporter.setAttributes();
+            reporter.addAttributes();
 
             expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
         });
