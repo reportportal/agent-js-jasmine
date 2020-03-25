@@ -75,6 +75,15 @@ const PublicReportingAPI = require('agent-js-jasmine/lib/publicReportingAPI');
 ```
 2. Inside of your suite or spec call PublicReportingAPI.addDescription(), PublicReportingAPI.addAttributes()
 
+For a suite it should look like this, where "SuiteTitle" is a title(description) of your suite (for correct working, all suite titles must be unique)
+
+Method | Parameter
+--------- | -----------
+PublicReportingAPI.addDescription | {"text": "String", "suite": "SuiteTitle"}
+PublicReportingAPI.addAttributes | [{ "key": "String", "value": "String", "suite": "SuiteTitle"}]
+
+For a spec it should look like this
+
 Method | Parameter
 --------- | -----------
 PublicReportingAPI.addDescription | "String"
@@ -87,9 +96,10 @@ const PublicReportingAPI = require('agent-js-jasmine/lib/publicReportingAPI');
 describe('A suite', function() {
     PublicReportingAPI.addAttributes([{
         key: 'suiteKey',
-        value: 'suiteValue'
+        value: 'suiteValue',
+        suite: 'A suite',
     }]);
-    PublicReportingAPI.addDescription('Suite description');
+    PublicReportingAPI.addDescription({ text: 'Suite description', suite: 'A suite' });
 
     it('contains spec with an expectation', function() {
         PublicReportingAPI.addAttributes([{
@@ -102,11 +112,6 @@ describe('A suite', function() {
     });
 });
 ```
-
-Note: 
-
-At the moment, using PublicReportingAPI.addAttributes and PublicReportingAPI.addDescription methods in nested describes works inappropriate way,
-these methods affect the root describe.
 
 ## Integrations
 ### Protractor integration

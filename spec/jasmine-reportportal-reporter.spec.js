@@ -91,6 +91,15 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
         });
 
+        it('suiteAdditionalCustomParams.suiteDescription should not be empty if setDescription\' parameter has suite property', function () {
+            const expectedSuiteDescription = [{ text: 'text description', suite: 'suite' }];
+
+            reporter.setDescription({ text: { text: 'text description', suite: 'suite' } });
+
+            expect(reporter.suiteAdditionalCustomParams.suiteDescription).toEqual(expectedSuiteDescription);
+            expect(reporter.additionalCustomParams).toEqual({});
+        });
+
         it('additionalCustomParams should be empty if setDescription\' parameter and additionalCustomParams are empty', function () {
             const expectedAdditionalCustomParams = {};
             reporter.additionalCustomParams = {};
@@ -98,6 +107,56 @@ describe('jasmine Report Portal reporter', function() {
             reporter.setDescription();
 
             expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+        });
+    });
+
+    describe('getSuiteAttributesBySuite', function () {
+        it('should return correct array of suiteAttributes', function () {
+            reporter.suiteAdditionalCustomParams.suiteAttributes = [{
+                key: 'key',
+                value: 'value',
+                suite: 'suite',
+            }];
+
+            const suiteAttributes = reporter.getSuiteAttributesBySuite('suite');
+
+            expect(suiteAttributes).toEqual([{ key: 'key', value: 'value' }]);
+        });
+
+        it('should return empty array of suiteAttributes if there is no suitable suite', function () {
+            reporter.suiteAdditionalCustomParams.suiteAttributes = [{
+                key: 'key',
+                value: 'value',
+                suite: 'suite',
+            }];
+
+            const suiteAttributes = reporter.getSuiteAttributesBySuite('suite1');
+
+            expect(suiteAttributes).toEqual([]);
+        });
+    });
+
+    describe('getSuiteDescriptionBySuite', function () {
+        it('should return correct array of suiteDescription', function () {
+            reporter.suiteAdditionalCustomParams.suiteDescription = [{
+                text: 'text',
+                suite: 'suite',
+            }];
+
+            const suiteDescription = reporter.getSuiteDescriptionBySuite('suite');
+
+            expect(suiteDescription).toEqual(['text']);
+        });
+
+        it('should return empty array of suiteDescription if there is no suitable suite', function () {
+            reporter.suiteAdditionalCustomParams.suiteDescription = [{
+                text: 'text',
+                suite: 'suite',
+            }];
+
+            const suiteDescription = reporter.getSuiteDescriptionBySuite('suite1');
+
+            expect(suiteDescription).toEqual([]);
         });
     });
 
@@ -121,14 +180,17 @@ describe('jasmine Report Portal reporter', function() {
 
     describe('suiteStarted', function() {
         it('should send a request to the agent', function() {
-            reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }], description: 'text description' };
+            reporter.suiteAdditionalCustomParams = {
+                suiteAttributes: [{ key: 'key', value: 'value', suite: 'suite' }],
+                suiteDescription: [{ text: 'text description', suite: 'suite' }]
+            };
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId: '3452',
 				promise: Promise.resolve()
             });
 
             reporter.suiteStarted({
-                description: 'test description',
+                description: 'suite',
                 fullName: 'test name'
             });
 
