@@ -73,20 +73,22 @@ To report attributes and description you need to do the following:
 ```javascript
 const PublicReportingAPI = require('agent-js-jasmine/lib/publicReportingAPI');
 ```
-2. Inside of your suite or spec call PublicReportingAPI.addDescription(), PublicReportingAPI.addAttributes()
+2. Inside of your suite or spec call PublicReportingAPI.setDescription(), PublicReportingAPI.addAttributes()
 
-For a suite it should look like this, where "SuiteTitle" is a title(description) of your suite (for correct working, all suite titles must be unique)
-
-Method | Parameter
---------- | -----------
-PublicReportingAPI.addDescription | {"text": "String", "suite": "SuiteTitle"}
-PublicReportingAPI.addAttributes | [{ "key": "String", "value": "String", "suite": "SuiteTitle"}]
-
-For a spec it should look like this
+Parameters for setDescription and addAttributes methods inside of your **suite** should look like this
 
 Method | Parameter
 --------- | -----------
-PublicReportingAPI.addDescription | "String"
+PublicReportingAPI.setDescription | "Your description", "Suite"
+PublicReportingAPI.addAttributes | [{ "key": "String", "value": "String", "suite": "Suite"}]
+
+Where "Suite" is a description of your suite (for correct working, all suite descriptions must be unique)
+
+Inside of your **spec**, method's parameters should look like this
+
+Method | Parameter
+--------- | -----------
+PublicReportingAPI.setDescription | "Your description"
 PublicReportingAPI.addAttributes | [{ "key": "String", "value": "String"}]
 
 In general, it will look like this
@@ -99,14 +101,14 @@ describe('A suite', function() {
         value: 'suiteValue',
         suite: 'A suite',
     }]);
-    PublicReportingAPI.addDescription({ text: 'Suite description', suite: 'A suite' });
+    PublicReportingAPI.setDescription('Suite description', 'A suite');
 
     it('contains spec with an expectation', function() {
         PublicReportingAPI.addAttributes([{
             key: 'specKey',
             value: 'specValue'
         }]);
-        PublicReportingAPI.addDescription('Spec description');
+        PublicReportingAPI.setDescription('Spec description');
         
         expect(true).toBe(true);
     });

@@ -11,7 +11,7 @@ describe('angularjs homepage', function() {
         value: 'homepageValue2',
         suite: 'angularjs homepage',
     }]);
-    PublicReportingAPI.addDescription({ text: 'Homepage description', suite: 'angularjs homepage' });
+    PublicReportingAPI.setDescription('Homepage description', 'angularjs homepage');
 
     describe('describe', function () {
         PublicReportingAPI.addAttributes([{
@@ -19,14 +19,14 @@ describe('angularjs homepage', function() {
             value: 'describeValue',
             suite: 'describe',
         }]);
-        PublicReportingAPI.addDescription({ text: 'Describe description', suite: 'describe' });
+        PublicReportingAPI.setDescription('Describe description', 'describe');
 
         it('spec', function() {
             PublicReportingAPI.addAttributes([{
                 key: 'specKey',
                 value: 'specValue'
             }]);
-            PublicReportingAPI.addDescription('Spec description');
+            PublicReportingAPI.setDescription('Spec description');
 
             expect(true).toBe(true);
         });
@@ -38,14 +38,14 @@ describe('angularjs homepage', function() {
             value: 'describeValue1',
             suite: 'describe1',
         }]);
-        PublicReportingAPI.addDescription({ text: 'Describe1 description', suite: 'describe1' });
+        PublicReportingAPI.setDescription('Describe1 description', 'describe1');
 
         it('spec', function() {
             PublicReportingAPI.addAttributes([{
                 key: 'specKey',
                 value: 'specValue'
             }]);
-            PublicReportingAPI.addDescription('Spec1 description');
+            PublicReportingAPI.setDescription('Spec1 description');
 
             expect(true).toBe(true);
         });
@@ -57,7 +57,7 @@ describe('angularjs homepage', function() {
                 key: 'specKey',
                 value: 'specValue'
             }]);
-            PublicReportingAPI.addDescription('Spec3 description');
+            PublicReportingAPI.setDescription('Spec3 description');
 
             expect(true).toBe(true);
         });
@@ -74,14 +74,14 @@ describe('angularjs homepage', function() {
             value: 'describeValue4',
             suite: 'describe3',
         }]);
-        PublicReportingAPI.addDescription({ text: 'Describe3 description', suite: 'describe3' });
+        PublicReportingAPI.setDescription('Describe3 description', 'describe3');
 
         it('spec', function() {
             PublicReportingAPI.addAttributes([{
                 key: 'specKey',
                 value: 'specValue'
             }]);
-            PublicReportingAPI.addDescription('Spec2 description');
+            PublicReportingAPI.setDescription('Spec2 description');
 
             expect(true).toBe(true);
         });
@@ -95,7 +95,7 @@ describe('angularjs homepage', function() {
             key: 'titleKey2',
             value: 'titleValue2'
         }]);
-        PublicReportingAPI.addDescription('Title one description');
+        PublicReportingAPI.setDescription('Title one description');
 
         browser.get('http://angularjs.org/');
         expect(browser.getTitle()).toContain('AngularJS');
@@ -106,7 +106,7 @@ describe('angularjs homepage', function() {
             key: 'titleKey3',
             value: 'titleValue3'
         }]);
-        PublicReportingAPI.addDescription('Title two description');
+        PublicReportingAPI.setDescription('Title two description');
 
         browser.get('http://angularjs.org/');
         expect(browser.getTitle()).toContain('notAngular');

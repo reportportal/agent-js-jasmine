@@ -92,11 +92,11 @@ describe('jasmine Report Portal reporter', function() {
         });
 
         it('suiteAdditionalCustomParams.suiteDescription should not be empty if setDescription\' parameter has suite property', function () {
-            const expectedSuiteDescription = [{ text: 'text description', suite: 'suite' }];
+            const expectedSuiteDescription = new Map([['suite', 'text description']]);
 
-            reporter.setDescription({ text: { text: 'text description', suite: 'suite' } });
+            reporter.setDescription({ text: 'text description', suite: 'suite' });
 
-            expect(reporter.suiteAdditionalCustomParams.suiteDescription).toEqual(expectedSuiteDescription);
+            expect(reporter.suiteDescription).toEqual(expectedSuiteDescription);
             expect(reporter.additionalCustomParams).toEqual({});
         });
 
@@ -112,7 +112,7 @@ describe('jasmine Report Portal reporter', function() {
 
     describe('getSuiteAttributesBySuite', function () {
         it('should return correct array of suiteAttributes', function () {
-            reporter.suiteAdditionalCustomParams.suiteAttributes = [{
+            reporter.suiteAttributes = [{
                 key: 'key',
                 value: 'value',
                 suite: 'suite',
@@ -124,7 +124,7 @@ describe('jasmine Report Portal reporter', function() {
         });
 
         it('should return empty array of suiteAttributes if there is no suitable suite', function () {
-            reporter.suiteAdditionalCustomParams.suiteAttributes = [{
+            reporter.suiteAttributes = [{
                 key: 'key',
                 value: 'value',
                 suite: 'suite',
@@ -138,25 +138,19 @@ describe('jasmine Report Portal reporter', function() {
 
     describe('getSuiteDescriptionBySuite', function () {
         it('should return correct array of suiteDescription', function () {
-            reporter.suiteAdditionalCustomParams.suiteDescription = [{
-                text: 'text',
-                suite: 'suite',
-            }];
+            reporter.suiteDescription = new Map([['suite', 'text']]);
 
             const suiteDescription = reporter.getSuiteDescriptionBySuite('suite');
 
-            expect(suiteDescription).toEqual(['text']);
+            expect(suiteDescription).toEqual('text');
         });
 
         it('should return empty array of suiteDescription if there is no suitable suite', function () {
-            reporter.suiteAdditionalCustomParams.suiteDescription = [{
-                text: 'text',
-                suite: 'suite',
-            }];
+            reporter.suiteDescription = new Map([['suite', 'text']]);
 
             const suiteDescription = reporter.getSuiteDescriptionBySuite('suite1');
 
-            expect(suiteDescription).toEqual([]);
+            expect(suiteDescription).toEqual(undefined);
         });
     });
 
@@ -180,10 +174,8 @@ describe('jasmine Report Portal reporter', function() {
 
     describe('suiteStarted', function() {
         it('should send a request to the agent', function() {
-            reporter.suiteAdditionalCustomParams = {
-                suiteAttributes: [{ key: 'key', value: 'value', suite: 'suite' }],
-                suiteDescription: [{ text: 'text description', suite: 'suite' }]
-            };
+            reporter.suiteAttributes = [{ key: 'key', value: 'value', suite: 'suite' }];
+            reporter.suiteDescription = new Map([['suite', 'text description']]);
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId: '3452',
 				promise: Promise.resolve()

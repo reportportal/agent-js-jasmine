@@ -10,11 +10,19 @@ describe('PublicReportingAPI', function() {
         expect(ClientPublicReportingAPI.addAttributes).toHaveBeenCalledWith([{ key: 'key', value: 'value' }]);
     });
 
-    it('should call clientPublicReportingApi.addDescription method with text as parameter', function() {
+    it('should call clientPublicReportingApi.addDescription method with text and undefined as parameters, if suite doesn\'t set', function() {
         spyOn(ClientPublicReportingAPI, 'addDescription').and.returnValue(() => {});
 
-        PublicReportingAPI.addDescription('text');
+        PublicReportingAPI.setDescription('text');
 
-        expect(ClientPublicReportingAPI.addDescription).toHaveBeenCalledWith('text');
+        expect(ClientPublicReportingAPI.addDescription).toHaveBeenCalledWith('text', undefined);
+    });
+
+    it('should call clientPublicReportingApi.addDescription method with text and suite as parameters', function() {
+        spyOn(ClientPublicReportingAPI, 'addDescription').and.returnValue(() => {});
+
+        PublicReportingAPI.setDescription('text', 'suite');
+
+        expect(ClientPublicReportingAPI.addDescription).toHaveBeenCalledWith('text', 'suite');
     });
 });
