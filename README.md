@@ -75,21 +75,31 @@ const PublicReportingAPI = require('agent-js-jasmine/lib/publicReportingAPI');
 ```
 2. Inside of your suite or spec call PublicReportingAPI.setDescription(), PublicReportingAPI.addAttributes()
 
-Parameters for setDescription and addAttributes methods inside of your **suite** should look like this
+**setDescription** method inside of your **suite**
 
-Method | Parameter
---------- | -----------
-PublicReportingAPI.setDescription | "Your description", "Suite"
-PublicReportingAPI.addAttributes | [{ "key": "String", "value": "String", "suite": "Suite"}]
+Parameter | Required | Description | Examples
+--------- | ----------- | ----------- | -----------
+description | true | "string" - text description for your suite | "Your description"
+suite | true | "string" - description of your suite (all suite descriptions must be unique) | "Suite"
 
-Where "Suite" is a description of your suite (for correct working, all suite descriptions must be unique)
+**addAttributes** method inside of your **suite**
 
-Inside of your **spec**, method's parameters should look like this
+Parameter | Required | Description | Examples
+--------- | ----------- | ----------- | -----------
+attributes | true | attributes, pairs of key and value | [{ "key": "YourKey", "value": "YourValue" }]
+suite | true | "string" - description of your suite (all suite descriptions must be unique) | "Suite"
 
-Method | Parameter
---------- | -----------
-PublicReportingAPI.setDescription | "Your description"
-PublicReportingAPI.addAttributes | [{ "key": "String", "value": "String"}]
+**setDescription** method inside of your **spec**
+
+Parameter | Required | Description | Examples
+--------- | ----------- | ----------- | -----------
+description | true | "string" - text description for your suite | "Your description"
+
+**addAttributes** method inside of your **spec**
+
+Parameter | Required | Description | Examples
+--------- | ----------- | ----------- | -----------
+attributes | true | attributes, pairs of key and value | [{ "key": "YourKey", "value": "YourValue" }]
 
 In general, it will look like this
 ```javascript
@@ -99,8 +109,7 @@ describe('A suite', function() {
     PublicReportingAPI.addAttributes([{
         key: 'suiteKey',
         value: 'suiteValue',
-        suite: 'A suite',
-    }]);
+    }], 'A suite');
     PublicReportingAPI.setDescription('Suite description', 'A suite');
 
     it('contains spec with an expectation', function() {

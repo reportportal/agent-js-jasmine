@@ -4,21 +4,18 @@ describe('angularjs homepage', function() {
     PublicReportingAPI.addAttributes([{
         key: 'homepageKey1',
         value: 'homepageValue1',
-        suite: 'angularjs homepage',
-    }]);
+    }], 'angularjs homepage');
     PublicReportingAPI.addAttributes([{
         key: 'homepageKey2',
         value: 'homepageValue2',
-        suite: 'angularjs homepage',
-    }]);
+    }], 'angularjs homepage');
     PublicReportingAPI.setDescription('Homepage description', 'angularjs homepage');
 
     describe('describe', function () {
         PublicReportingAPI.addAttributes([{
             key: 'describeKey',
             value: 'describeValue',
-            suite: 'describe',
-        }]);
+        }], 'describe');
         PublicReportingAPI.setDescription('Describe description', 'describe');
 
         it('spec', function() {
@@ -36,8 +33,7 @@ describe('angularjs homepage', function() {
         PublicReportingAPI.addAttributes([{
             key: 'describeKey1',
             value: 'describeValue1',
-            suite: 'describe1',
-        }]);
+        }], 'describe1');
         PublicReportingAPI.setDescription('Describe1 description', 'describe1');
 
         it('spec', function() {
@@ -67,13 +63,11 @@ describe('angularjs homepage', function() {
         PublicReportingAPI.addAttributes([{
             key: 'describeKey3',
             value: 'describeValue3',
-            suite: 'describe3',
-        }]);
+        }], 'describe3');
         PublicReportingAPI.addAttributes([{
             key: 'describeKey4',
             value: 'describeValue4',
-            suite: 'describe3',
-        }]);
+        }], 'describe3');
         PublicReportingAPI.setDescription('Describe3 description', 'describe3');
 
         it('spec', function() {
