@@ -145,5 +145,14 @@ describe('Specific Utils', function() {
 
             expect(launchObj).toEqual(expectedLaunchObj);
         });
+
+        describe('getAgentInfo', function () {
+            it('should contain version and name properties', function() {
+                const agentParams = SpecificUtils.getAgentInfo();
+
+                expect(Object.keys(agentParams)).toContain('version');
+                expect(Object.keys(agentParams)).toContain('name');
+            });
+        });
     });
 });

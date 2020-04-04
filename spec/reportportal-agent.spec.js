@@ -35,14 +35,19 @@ describe('Report Portal agent', function() {
         expect(agent.client).toBeDefined();
     });
 
-    it('should call SpecificUtils.getLaunchObj', function() {
+    it('should call SpecificUtils.getLaunchObj and SpecificUtils.getAgentParams', function() {
         spyOn(SpecificUtils, 'getLaunchObj').and.returnValue({
             attributes: []
+        });
+        spyOn(SpecificUtils, 'getAgentInfo').and.returnValue({
+            version: 'version',
+            name: 'name'
         });
 
         agent = new ReportportalAgent(options);
 
         expect(SpecificUtils.getLaunchObj).toHaveBeenCalled();
+        expect(SpecificUtils.getAgentInfo).toHaveBeenCalled();
     });
 
     it('getJasmineReporter should return instance of JasmineReportportalReporter', function() {
