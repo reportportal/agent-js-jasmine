@@ -73,12 +73,33 @@ To report attributes and description you need to do the following:
 ```javascript
 const PublicReportingAPI = require('agent-js-jasmine/lib/publicReportingAPI');
 ```
-2. Inside of your suite or spec call PublicReportingAPI.addDescription(), PublicReportingAPI.addAttributes()
+2. Inside of your suite or spec call PublicReportingAPI.setDescription(), PublicReportingAPI.addAttributes()
 
-Method | Parameter
---------- | -----------
-PublicReportingAPI.addDescription | "String"
-PublicReportingAPI.addAttributes | [{ "key": "String", "value": "String"}]
+**setDescription** method inside of your **suite**
+
+Parameter | Required | Description | Examples
+--------- | ----------- | ----------- | -----------
+description | true | "string" - text description for your suite | "Your description"
+suite | true | "string" - description of your suite (all suite descriptions must be unique) | "Suite"
+
+**addAttributes** method inside of your **suite**
+
+Parameter | Required | Description | Examples
+--------- | ----------- | ----------- | -----------
+attributes | true | attributes, pairs of key and value | [{ "key": "YourKey", "value": "YourValue" }]
+suite | true | "string" - description of your suite (all suite descriptions must be unique) | "Suite"
+
+**setDescription** method inside of your **spec**
+
+Parameter | Required | Description | Examples
+--------- | ----------- | ----------- | -----------
+description | true | "string" - text description for your suite | "Your description"
+
+**addAttributes** method inside of your **spec**
+
+Parameter | Required | Description | Examples
+--------- | ----------- | ----------- | -----------
+attributes | true | attributes, pairs of key and value | [{ "key": "YourKey", "value": "YourValue" }]
 
 In general, it will look like this
 ```javascript
@@ -87,26 +108,21 @@ const PublicReportingAPI = require('agent-js-jasmine/lib/publicReportingAPI');
 describe('A suite', function() {
     PublicReportingAPI.addAttributes([{
         key: 'suiteKey',
-        value: 'suiteValue'
-    }]);
-    PublicReportingAPI.addDescription('Suite description');
+        value: 'suiteValue',
+    }], 'A suite');
+    PublicReportingAPI.setDescription('Suite description', 'A suite');
 
     it('contains spec with an expectation', function() {
         PublicReportingAPI.addAttributes([{
             key: 'specKey',
             value: 'specValue'
         }]);
-        PublicReportingAPI.addDescription('Spec description');
+        PublicReportingAPI.setDescription('Spec description');
         
         expect(true).toBe(true);
     });
 });
 ```
-
-Note: 
-
-At the moment, using PublicReportingAPI.addAttributes and PublicReportingAPI.addDescription methods in nested describes works inappropriate way,
-these methods affect the root describe.
 
 ## Integrations
 ### Protractor integration
