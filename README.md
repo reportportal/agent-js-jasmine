@@ -67,13 +67,18 @@ Example:
   "rerunOf": "f68f39f9-279c-4e8d-ac38-1216dffcc59c"
 ```
 
-### Report static attributes, description 
-To report attributes and description you need to do the following:
-1. Add PublicReportingAPI into your test file. 
+### Additional reporting functionality
+
+The agent provides an API to extend the functionality of Jasmine.
+
+Add PublicReportingAPI into your test file to use additional reporting features.
+
 ```javascript
 const PublicReportingAPI = require('agent-js-jasmine/lib/publicReportingAPI');
 ```
-2. Inside of your suite or spec call PublicReportingAPI.setDescription(), PublicReportingAPI.addAttributes()
+
+#### Report static attributes, description
+Inside of your suite or spec call PublicReportingAPI.setDescription(), PublicReportingAPI.addAttributes()
 
 **setDescription** method inside of your **suite**
 
@@ -101,23 +106,76 @@ Parameter | Required | Description | Examples
 --------- | ----------- | ----------- | -----------
 attributes | true | attributes, pairs of key and value | [{ "key": "YourKey", "value": "YourValue" }]
 
-In general, it will look like this
+#### Report logs and attachments
+PublicReportingAPI provides the following methods for reporting logs into the current suite/spec.
+
+* log(*level*, *message* , *file*, *suite*). Reports *message* and optional *file* with specified log *level* as a log of the current suite/spec.<br/>
+*level* should be equal to one the following values: *TRACE*, *DEBUG*, *INFO*, *WARN*, *ERROR*, *FATAL*.<br/>
+*suite* it's description of your suite (all suite descriptions must be unique) ***REQUIRED INSIDE OF YOUR SUITE, OPTIONAL FOR SPEC*** <br/>
+*file* should be an object (***REQUIRED INSIDE OF YOUR SUITE,*** if there is no file object, set ***NULL***) : <br/>
+```javascript
+{
+  name: "filename",
+  type: "image/png",  // media type
+  content: data,  // file content represented as 64base string
+}
+```
+* trace (*message* , *file*, *suite*). Reports *message* and optional *file* as a log of the current suite/spec with trace log level.
+* debug (*message* , *file*, *suite*). Reports *message* and optional *file* as a log of the current suite/spec with debug log level.
+* info (*message* , *file*, *suite*). Reports *message* and optional *file* as log of the current suite/spec with info log level.
+* warn (*message* , *file*, *suite*). Reports *message* and optional *file* as a log of the current suite/spec with warning log level.
+* error (*message* , *file*, *suite*). Reports *message* and optional *file* as a log of the current suite/spec with error log level.
+* fatal (*message* , *file*, *suite*). Reports *message* and optional *file* as a log of the current suite/spec with fatal log level.
+
+PublicReportingAPI provides the corresponding methods for reporting logs into the launch.
+* launchLog (*level*, *message* , *file*). Reports *message* and optional *file* with the specified log *level* as a log of the current launch.
+* launchTrace (*message* , *file*). Reports *message* and optional *file* as a log of the launch with trace log level.
+* launchDebug (*message* , *file*). Reports *message* and optional *file* as a log of the launch with debug log level.
+* launchInfo (*message* , *file*). Reports *message* and optional *file* as log of the launch with info log level.
+* launchWarn (*message* , *file*). Reports *message* and optional *file* as a log of the launch with warning log level.
+* launchError (*message* , *file*). Reports *message* and optional *file* as a log of the launch with error log level.
+* launchFatal (*message* , *file*). Reports *message* and optional *file* as a log of the launch with fatal log level.
+
+**Example:**
 ```javascript
 const PublicReportingAPI = require('agent-js-jasmine/lib/publicReportingAPI');
 
 describe('A suite', function() {
+    const suiteAttachment = {
+      name: 'attachment.png',
+      type: 'image/png',
+      content: data.toString('base64'),
+    }
     PublicReportingAPI.addAttributes([{
         key: 'suiteKey',
         value: 'suiteValue',
     }], 'A suite');
     PublicReportingAPI.setDescription('Suite description', 'A suite');
+    PublicReportingAPI.debug('Debug log message for suite "suite"', null, 'A suite');
+    PublicReportingAPI.info('Info log message for suite "suite"', suiteAttachment, 'A suite');
+    PublicReportingAPI.warn('Warning for suite "suite"', null, 'A suite');
+    PublicReportingAPI.error('Error log message for suite "suite"', null, 'A suite');
+    PublicReportingAPI.fatal('Fatal log message for suite "suite"', suiteAttachment, 'A suite');
 
-    it('contains spec with an expectation', function() {
+    it('spec', function() {
+        const specAttachment = {
+          name: 'attachment.png',
+          type: 'image/png',
+          content: data.toString('base64'),
+        }
         PublicReportingAPI.addAttributes([{
             key: 'specKey',
             value: 'specValue'
         }]);
         PublicReportingAPI.setDescription('Spec description');
+        PublicReportingAPI.log('INFO', 'Info log message for spec "spec" with attachment', specAttachment);
+        PublicReportingAPI.launchLog('ERROR', 'Error log message for current launch with attachment', specAttachment);
+        PublicReportingAPI.trace('Trace log message for spec "spec"', specAttachment);
+        PublicReportingAPI.debug('Debug log message for spec "spec"');
+        PublicReportingAPI.info('Info log message for spec "spec" with attachment');
+        PublicReportingAPI.warn('Warning for spec "spec"');
+        PublicReportingAPI.error('Error log message for spec "spec"');
+        PublicReportingAPI.fatal('Fatal log message for spec "spec"');
         
         expect(true).toBe(true);
     });

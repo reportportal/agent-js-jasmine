@@ -5,6 +5,7 @@ describe('jasmine Report Portal reporter', function() {
     let reporter;
     let tempLaunchId = 'ewrf35432r';
     let promise;
+    let baseTime;
 
     beforeEach(function() {
         let client = {
@@ -12,7 +13,9 @@ describe('jasmine Report Portal reporter', function() {
             finishTestItem() {},
             sendLog() {},
         };
+        baseTime = new Date(2020, 4, 8);
 
+        jasmine.clock().mockDate(baseTime);
         reporter = new Reporter({
             client: client,
             tempLaunchId: tempLaunchId,
@@ -141,6 +144,97 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
+    describe('addTestItemLog', function () {
+        it('additionalCustomParams should not be empty if addTestItemLog\' parameter is not empty', function () {
+            const expectedAdditionalCustomParams = {
+                customParams: 'value',
+                logs: [
+                    { level: 'level', file: null, message: 'message' }
+                ]
+            };
+            reporter.additionalCustomParams = { customParams: 'value' };
+
+            reporter.addTestItemLog({ log: { level: 'level', file: null, message: 'message' } });
+
+            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+        });
+
+        it('additionalCustomParams should be correct if we call addTestItemLog with logs few times', function () {
+            const expectedAdditionalCustomParams = {
+                logs: [
+                    { level: 'level', file: null, message: 'message' },
+                    { level: 'level1', file: null, message: 'message1' }
+                ]
+            };
+
+            reporter.addTestItemLog({ log: { level: 'level', file: null, message: 'message' } });
+            reporter.addTestItemLog({ log: { level: 'level1', file: null, message: 'message1' } });
+
+            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+        });
+
+        it('suiteLogs should not be empty if addTestItemLog\' parameter has suite property', function () {
+            const logs = { level: 'level', file: null, message: 'message' };
+            const expectedSuiteLogs = new Map([['suite', [logs]]]);
+
+            reporter.addTestItemLog({ log: logs, suite: 'suite' });
+
+            expect(reporter.suiteLogs).toEqual(expectedSuiteLogs);
+            expect(reporter.additionalCustomParams).toEqual({});
+        });
+
+        it('suiteLogs should be correct if addTestItemLog\' parameter has suite property and we call addTestItemLog few times', function () {
+            const logsOne = { level: 'levelOne', file: null, message: 'message one' };
+            const logsTwo = { level: 'levelTwo', file: null, message: 'message two' };
+            const expectedSuiteLogs = new Map([['suite', [logsOne].concat([logsTwo])]]);
+
+            reporter.addTestItemLog({ log: logsOne, suite: 'suite' });
+            reporter.addTestItemLog({ log: logsTwo, suite: 'suite' });
+
+            expect(reporter.suiteLogs).toEqual(expectedSuiteLogs);
+            expect(reporter.additionalCustomParams).toEqual({});
+        });
+    });
+
+    describe('sendLaunchLog', function () {
+        it('should call sendLog with tempLaunchId and log', function () {
+            const log = { level: 'level', file: null, message: 'message' };
+            spyOn(reporter, 'sendLog');
+
+            reporter.sendLaunchLog(log);
+
+            expect(reporter.sendLog).toHaveBeenCalledWith(tempLaunchId, log);
+        });
+    });
+
+    describe('sendLog', function () {
+        it('should call client.sendLog with correct parameters', function () {
+            const log = { level: 'level', file: null, message: 'message' };
+            spyOn(reporter.client, 'sendLog');
+
+            reporter.sendLog(tempLaunchId, log);
+
+            expect(reporter.client.sendLog).toHaveBeenCalledWith(tempLaunchId, {
+                message: 'message',
+                level: 'level',
+                time: baseTime.valueOf()
+            }, null);
+        });
+
+        it('should call client.sendLog with default parameters if sendLog doesn\'t have all parameter', function () {
+            const log = { level: 'level' };
+            spyOn(reporter.client, 'sendLog');
+
+            reporter.sendLog(tempLaunchId, log);
+
+            expect(reporter.client.sendLog).toHaveBeenCalledWith(tempLaunchId, {
+                message: '',
+                level: 'level',
+                time: baseTime.valueOf()
+            }, undefined);
+        });
+    });
+
     describe('getSuiteAttributesBySuite', function () {
         it('should return correct array of suiteAttributes', function () {
             const attributes = [{
@@ -191,7 +285,7 @@ describe('jasmine Report Portal reporter', function() {
 
             const levelType = reporter.getTopLevelType();
 
-            expect(levelType).toBe('TEST');
+            expect(levelType).toBe('test');
         });
 
         it('should return level type \'suite\' if parentIds is empty', function () {
@@ -199,7 +293,7 @@ describe('jasmine Report Portal reporter', function() {
 
             const levelType = reporter.getTopLevelType();
 
-            expect(levelType).toBe('SUITE');
+            expect(levelType).toBe('suite');
         });
     });
 
@@ -209,12 +303,19 @@ describe('jasmine Report Portal reporter', function() {
                 key: 'key',
                 value: 'value',
             }];
+            const logs = [{
+                level: 'level', file: null, message: 'message'
+            }, {
+                level: 'level', file: null, message: 'message'
+            }];
             reporter.suiteAttributes = new Map([['suite', attributes]]);
             reporter.suiteDescription = new Map([['suite', 'text description']]);
+            reporter.suiteLogs = new Map([['suite', logs]]);
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId: '3452',
 				promise: Promise.resolve()
             });
+            spyOn(reporter, 'sendLog');
 
             reporter.suiteStarted({
                 description: 'suite',
@@ -222,11 +323,14 @@ describe('jasmine Report Portal reporter', function() {
             });
 
             expect(reporter.client.startTestItem).toHaveBeenCalledWith({
-                type: 'SUITE',
+                type: 'suite',
                 name: 'test name',
                 attributes: [{ key: 'key', value: 'value' }],
                 description: 'text description'
             }, tempLaunchId, null);
+            expect(reporter.sendLog).toHaveBeenCalledTimes(2);
+            expect(reporter.sendLog).toHaveBeenCalledWith('3452', logs[0]);
+            expect(reporter.sendLog).toHaveBeenCalledWith('3452', logs[1]);
         });
 
         it('should create an element in parentIds', function() {
@@ -257,7 +361,7 @@ describe('jasmine Report Portal reporter', function() {
             });
 
             expect(reporter.client.startTestItem).toHaveBeenCalledWith({
-                type: 'STEP',
+                type: 'step',
                 description: 'test description',
                 name: 'test name'
             }, tempLaunchId, null);
@@ -317,7 +421,8 @@ describe('jasmine Report Portal reporter', function() {
             promise.then(function () {
                 expect(reporter.client.sendLog).toHaveBeenCalledWith(null, {
                     message: 'full Name',
-                    level: ''
+                    level: '',
+                    time: baseTime.valueOf()
                 }, null);
             });
         });
@@ -391,7 +496,8 @@ describe('jasmine Report Portal reporter', function() {
                 expect(reporter.client.sendLog).toHaveBeenCalledWith(null, {
                     message: `message: error
 stackTrace: stack`,
-                    level: 'ERROR'
+                    level: 'ERROR',
+                    time: baseTime.valueOf()
                 }, null);
                 expect(reporter.client.finishTestItem).toHaveBeenCalledWith(null, { status: 'failed', attributes: [{ key: 'key', value: 'value' }] });
             });
