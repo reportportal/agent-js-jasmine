@@ -148,9 +148,12 @@ describe('jasmine Report Portal reporter', function() {
         it('additionalCustomParams should not be empty if addTestItemLog\' parameter is not empty', function () {
             const expectedAdditionalCustomParams = {
                 customParams: 'value',
-                logs: [
-                    { level: 'level', file: null, message: 'message' }
-                ]
+                logs: [{
+                    level: 'level',
+                    file: null,
+                    message: 'message',
+                    time: baseTime.valueOf()
+                }]
             };
             reporter.additionalCustomParams = { customParams: 'value' };
 
@@ -162,8 +165,8 @@ describe('jasmine Report Portal reporter', function() {
         it('additionalCustomParams should be correct if we call addTestItemLog with logs few times', function () {
             const expectedAdditionalCustomParams = {
                 logs: [
-                    { level: 'level', file: null, message: 'message' },
-                    { level: 'level1', file: null, message: 'message1' }
+                    { level: 'level', file: null, message: 'message', time: baseTime.valueOf() },
+                    { level: 'level1', file: null, message: 'message1', time: baseTime.valueOf() }
                 ]
             };
 

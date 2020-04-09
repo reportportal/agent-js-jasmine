@@ -45,11 +45,11 @@ describe('github homepage', function() {
     PublicReportingAPI.fatal('fatal log, github homepage',null,  'github homepage');
 
     it('test with logs and attachments', async function() {
-        PublicReportingAPI.debug('debug log, test with logs and attachments');
-        PublicReportingAPI.trace('trace log, test with logs and attachments');
-        PublicReportingAPI.warn('warning, test with logs and attachments');
-        PublicReportingAPI.error('error log, test with logs and attachments');
-        PublicReportingAPI.fatal('fatal log, test with logs and attachments');
+        PublicReportingAPI.debug('debug log');
+        PublicReportingAPI.trace('trace log');
+        PublicReportingAPI.warn('warning');
+        PublicReportingAPI.error('error log');
+        PublicReportingAPI.fatal('fatal log');
         expect(true).toEqual(true);
         const readFilesPromises = attachments.map(
             ({ filename, type }) =>
