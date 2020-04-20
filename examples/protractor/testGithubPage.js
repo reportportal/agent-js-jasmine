@@ -30,6 +30,23 @@ const attachments = [
 ];
 
 describe('github homepage', function() {
+    let originalTimeout;
+
+    beforeAll(function() {
+        const func = () => {};
+
+        func();
+    });
+
+    beforeEach(function() {
+        originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 1600000;
+    });
+
+    afterEach( function() {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+    });
+
     PublicReportingAPI.launchLog('INFO', 'info launch log, github homepage');
     PublicReportingAPI.launchInfo('info launch log');
     PublicReportingAPI.launchDebug('debug launch log');

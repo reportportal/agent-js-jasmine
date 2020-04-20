@@ -25,8 +25,10 @@ describe('jasmine Report Portal reporter', function() {
     afterEach(function () {
         promise = null;
         reporter.parentIds = [];
+        reporter.hookIds = null;
         reporter.additionalCustomParams = {};
         reporter.conf.attachPicturesToLogs = false;
+        reporter.conf.reportHooks = false;
     });
 
     it('should be properly initialized', function() {
@@ -37,6 +39,60 @@ describe('jasmine Report Portal reporter', function() {
         const escapeString = reporter.escapeMarkdown('_test*');
 
         expect(escapeString).toBe('\\_test\\*');
+    });
+
+    describe('reportHooks', function () {
+        it('should called installHooks method if conf.reportHooks is true', function() {
+            spyOn(reporter, 'installHooks');
+            reporter.conf.reportHooks = true;
+
+            reporter.reportHooks();
+
+            expect(reporter.installHooks).toHaveBeenCalled();
+        });
+
+        it('should not called installHooks method if conf.reportHooks is false', function() {
+            spyOn(reporter, 'installHooks');
+            reporter.conf.reportHooks = false;
+
+            reporter.reportHooks();
+
+            expect(reporter.installHooks).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('getParentId', function () {
+        it('should return null if getParentId is empty', function() {
+            reporter.parentIds = [];
+
+            const parent = reporter.getParentId();
+
+            expect(parent).toEqual(null);
+        });
+
+        it('should return null if this.parentIds.length - number less then zero', function() {
+            reporter.parentIds = [1, 2, 3];
+
+            const parent = reporter.getParentId(4);
+
+            expect(parent).toEqual(null);
+        });
+
+        it('should return last parent if there is no number as parameter', function() {
+            reporter.parentIds = [1, 2, 3];
+
+            const parent = reporter.getParentId();
+
+            expect(parent).toEqual(3);
+        });
+
+        it('should return correct parent if there is number as parameter', function() {
+            reporter.parentIds = [1, 2, 3];
+
+            const parent = reporter.getParentId(2);
+
+            expect(parent).toEqual(2);
+        });
     });
 
     describe('addAttributes', function () {
@@ -386,6 +442,82 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
+    describe('hookStarted', function() {
+        it('should send a request to the agent, hookIds should be correct', function() {
+            const expectedHookIds = new Map([['beforeAll', '3452']]);
+            spyOn(reporter.client, 'startTestItem').and.returnValue({
+                tempId: '3452',
+                promise: Promise.resolve()
+            });
+
+            reporter.hookStarted('beforeAll');
+
+            expect(reporter.client.startTestItem).toHaveBeenCalledWith({
+                type: 'BEFORE_SUITE',
+                startTime: baseTime.valueOf(),
+                name: 'beforeAll'
+            }, tempLaunchId, null);
+            expect(reporter.hookIds).toEqual(expectedHookIds);
+        });
+    });
+
+    describe('hookDone', function() {
+        it('should call finishTestItem with status PASSED if there is no status in parameter', function() {
+            reporter.hookIds = new Map([['beforeAll', '3452']]);
+            spyOn(reporter.client, 'finishTestItem').and.returnValue({
+                promise: Promise.resolve()
+            });
+
+            reporter.hookDone('beforeAll');
+
+            expect(reporter.client.finishTestItem).toHaveBeenCalledWith('3452', {
+                status: 'passed',
+                endTime: baseTime.valueOf(),
+            });
+            expect(reporter.startTime).toEqual(null);
+        });
+
+        it('should call finishTestItem with status FAILED if it gets from parameter', function() {
+            reporter.hookIds = new Map([['beforeAll', '3452']]);
+            spyOn(reporter.client, 'finishTestItem').and.returnValue({
+                promise: Promise.resolve()
+            });
+
+            reporter.hookDone('beforeAll', 'failed');
+
+            expect(reporter.client.finishTestItem).toHaveBeenCalledWith('3452', {
+                status: 'failed',
+                endTime: baseTime.valueOf(),
+            });
+        });
+
+        it('should call sendLog with message if we get error from parameter', function() {
+            reporter.hookIds = new Map([['beforeAll', '3452']]);
+            spyOn(reporter, 'sendLog');
+            spyOn(reporter.client, 'finishTestItem').and.returnValue({
+                promise: Promise.resolve()
+            });
+
+            reporter.hookDone('beforeAll', 'failed', 'error');
+
+            expect(reporter.sendLog).toHaveBeenCalledWith('3452', {
+                message: 'message: error',
+                level: 'ERROR',
+            });
+        });
+
+        it('should not call finishTestItem if there is no appropriate hook', function() {
+            reporter.hookIds = new Map([['beforeAll', '3452']]);
+            spyOn(reporter.client, 'finishTestItem').and.returnValue({
+                promise: Promise.resolve()
+            });
+
+            reporter.hookDone('beforeEach');
+
+            expect(reporter.client.finishTestItem).not.toHaveBeenCalled();
+        });
+    });
+
     describe('specDone', function() {
         it('should call finishParent, additionalCustomParams should be empty object', function() {
             spyOn(reporter, 'finishParent');
@@ -545,6 +677,16 @@ stackTrace: stack`,
             reporter.suiteDone();
 
             expect(reporter.client.finishTestItem).toHaveBeenCalledWith(tempId, {});
+        });
+
+        describe('installHooks', function () {
+            it('should call makeWrapperAll', function() {
+                spyOn(reporter, 'makeWrapperAll');
+
+                reporter.installHooks();
+
+                expect(reporter.makeWrapperAll).toHaveBeenCalledTimes(4);
+            });
         });
     });
 });
