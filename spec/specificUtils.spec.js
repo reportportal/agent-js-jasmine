@@ -154,5 +154,33 @@ describe('Specific Utils', function() {
                 expect(Object.keys(agentParams)).toContain('name');
             });
         });
+
+        describe('isPromise', function () {
+            it('should return true if obj is promise', function() {
+                const isPromise = SpecificUtils.isPromise(new Promise(() => {}));
+
+                expect(isPromise).toEqual(true);
+            });
+
+            it('should return false if obj is not promise', function() {
+                const isPromise = SpecificUtils.isPromise('string');
+
+                expect(isPromise).toEqual(false);
+            });
+        });
+
+        describe('isHookShouldBeCalled', function () {
+            it('should return true if action is promise', function() {
+                const isHookShouldBeCalled = SpecificUtils.isHookShouldBeCalled(new Promise(() => {}));
+
+                expect(isHookShouldBeCalled).toEqual(true);
+            });
+
+            it('should return true if action is function', function() {
+                const isHookShouldBeCalled = SpecificUtils.isHookShouldBeCalled(() => {});
+
+                expect(isHookShouldBeCalled).toEqual(true);
+            });
+        });
     });
 });

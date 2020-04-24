@@ -52,6 +52,7 @@ Agent settings consist of two parts:
 Parameter | Description
 --------- | -----------
 attachPicturesToLogs | It is 'true' or 'false', if set 'true' then attempts will be made to attach screenshots to the logs. Default: 'true'.
+reportHooks           | *Default: false.* Determines report before and after hooks or not. 
 
 To report [rerun](https://github.com/reportportal/documentation/blob/master/src/md/src/DevGuides/rerun.md) to the report portal you need to specify the following options:
 
