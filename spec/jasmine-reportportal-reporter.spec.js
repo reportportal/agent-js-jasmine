@@ -70,14 +70,6 @@ describe('jasmine Report Portal reporter', function() {
             expect(parent).toEqual(null);
         });
 
-        it('should return null if this.parentIds.length - number less then zero', function() {
-            reporter.parentIds = [1, 2, 3];
-
-            const parent = reporter.getParentId(4);
-
-            expect(parent).toEqual(null);
-        });
-
         it('should return last parent if there is no number as parameter', function() {
             reporter.parentIds = [1, 2, 3];
 
@@ -85,13 +77,31 @@ describe('jasmine Report Portal reporter', function() {
 
             expect(parent).toEqual(3);
         });
+    });
 
-        it('should return correct parent if there is number as parameter', function() {
-            reporter.parentIds = [1, 2, 3];
+    describe('getParentOfParentId', function () {
+        it('should return null if this.parentIds is empty', function() {
+            reporter.parentIds = [];
 
-            const parent = reporter.getParentId(2);
+            const parent = reporter.getParentOfParentId();
 
-            expect(parent).toEqual(2);
+            expect(parent).toEqual(null);
+        });
+
+        it('should return null if this.parentIds.length less then 2', function() {
+            reporter.parentIds = [1];
+
+            const parent = reporter.getParentOfParentId();
+
+            expect(parent).toEqual(null);
+        });
+
+        it('should return correct parent if this.parentIds.length more then 1', function() {
+            reporter.parentIds = [1, 2];
+
+            const parent = reporter.getParentOfParentId();
+
+            expect(parent).toEqual(1);
         });
     });
 
@@ -680,12 +690,12 @@ stackTrace: stack`,
         });
 
         describe('installHooks', function () {
-            it('should call makeWrapperAll', function() {
-                spyOn(reporter, 'makeWrapperAll');
+            it('should call SpecificUtils.makeHooksWrapper', function() {
+                spyOn(SpecificUtils, 'makeHooksWrapper');
 
                 reporter.installHooks();
 
-                expect(reporter.makeWrapperAll).toHaveBeenCalledTimes(4);
+                expect(SpecificUtils.makeHooksWrapper).toHaveBeenCalledTimes(4);
             });
         });
     });
