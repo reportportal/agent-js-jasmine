@@ -50,6 +50,22 @@ describe('PublicReportingAPI', function() {
         expect(ClientPublicReportingAPI.setDescription).toHaveBeenCalledWith('text', 'suite');
     });
 
+    it('should call clientPublicReportingApi.setTestCaseId method with testCaseId and undefined as parameters, if suite doesn\'t set', function() {
+        spyOn(ClientPublicReportingAPI, 'setTestCaseId').and.returnValue(() => {});
+
+        PublicReportingAPI.setTestCaseId('testCaseId');
+
+        expect(ClientPublicReportingAPI.setTestCaseId).toHaveBeenCalledWith('testCaseId', undefined);
+    });
+
+    it('should call clientPublicReportingApi.setTestCaseId method with testCaseId and suite as parameters', function() {
+        spyOn(ClientPublicReportingAPI, 'setTestCaseId').and.returnValue(() => {});
+
+        PublicReportingAPI.setTestCaseId('testCaseId', 'suite');
+
+        expect(ClientPublicReportingAPI.setTestCaseId).toHaveBeenCalledWith('testCaseId', 'suite');
+    });
+
     it('should call clientPublicReportingApi.addLog method with log and suite as parameters', function() {
         spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
 

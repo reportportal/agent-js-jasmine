@@ -10,6 +10,7 @@ describe('angularjs homepage', function() {
         value: 'homepageValue2',
     }], 'angularjs homepage');
     PublicReportingAPI.setDescription('Homepage description', 'angularjs homepage');
+    PublicReportingAPI.setTestCaseId('TestCaseIdForAngularHomepageSuite', 'angularjs homepage');
 
     describe('describe', function () {
         PublicReportingAPI.addAttributes([{
@@ -24,6 +25,7 @@ describe('angularjs homepage', function() {
                 value: 'specValue'
             }]);
             PublicReportingAPI.setDescription('Spec description');
+            PublicReportingAPI.setTestCaseId('TestCaseIdForSpec');
 
             expect(true).toBe(true);
         });

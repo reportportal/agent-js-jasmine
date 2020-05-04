@@ -210,6 +210,38 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
+    describe('setTestCaseId', function () {
+        it('additionalCustomParams should not be empty if setTestCaseId\' parameter is not empty', function () {
+            const expectedAdditionalCustomParams = {
+                customParams: 'value',
+                testCaseId: 'testCaseId'
+            };
+            reporter.additionalCustomParams = { customParams: 'value' };
+
+            reporter.setTestCaseId({ testCaseId: 'testCaseId' });
+
+            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+        });
+
+        it('suiteTestCaseIds should not be empty if setTestCaseId\' parameter has suite property', function () {
+            const expectedSuiteTestCaseIds = new Map([['suite', 'testCaseId']]);
+
+            reporter.setTestCaseId({ testCaseId: 'testCaseId', suite: 'suite' });
+
+            expect(reporter.suiteTestCaseIds).toEqual(expectedSuiteTestCaseIds);
+            expect(reporter.additionalCustomParams).toEqual({});
+        });
+
+        it('additionalCustomParams should be empty if setTestCaseId\' parameter and additionalCustomParams are empty', function () {
+            const expectedAdditionalCustomParams = {};
+            reporter.additionalCustomParams = {};
+
+            reporter.setTestCaseId();
+
+            expect(reporter.additionalCustomParams).toEqual(expectedAdditionalCustomParams);
+        });
+    });
+
     describe('addTestItemLog', function () {
         it('additionalCustomParams should not be empty if addTestItemLog\' parameter is not empty', function () {
             const expectedAdditionalCustomParams = {
@@ -379,6 +411,7 @@ describe('jasmine Report Portal reporter', function() {
             }];
             reporter.suiteAttributes = new Map([['suite', attributes]]);
             reporter.suiteDescription = new Map([['suite', 'text description']]);
+            reporter.suiteTestCaseIds = new Map([['suite', 'testCaseId']]);
             reporter.suiteLogs = new Map([['suite', logs]]);
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId: '3452',
@@ -395,7 +428,8 @@ describe('jasmine Report Portal reporter', function() {
                 type: 'suite',
                 name: 'test name',
                 attributes: [{ key: 'key', value: 'value' }],
-                description: 'text description'
+                description: 'text description',
+                testCaseId: 'testCaseId'
             }, tempLaunchId, null);
             expect(reporter.sendLog).toHaveBeenCalledTimes(2);
             expect(reporter.sendLog).toHaveBeenCalledWith('3452', logs[0]);
@@ -574,7 +608,11 @@ describe('jasmine Report Portal reporter', function() {
 
         it('should call method finishTestItem with the appropriate parameter, status is pending', function() {
             promise = Promise.resolve(null);
-            reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }], description: 'text description' };
+            reporter.additionalCustomParams = {
+                attributes: [{ key: 'key', value: 'value' }],
+                description: 'text description',
+                testCaseId: 'testCaseId',
+            };
             spyOn(reporter.client, 'sendLog').and.returnValue({
                 tempId: 'sendLog',
                 promise: Promise.resolve('ok')
@@ -592,7 +630,8 @@ describe('jasmine Report Portal reporter', function() {
                 expect(reporter.client.finishTestItem).toHaveBeenCalledWith(null, {
                     status: 'skipped',
                     attributes: [{ key: 'key', value: 'value' }],
-                    description: 'text description'
+                    description: 'text description',
+                    testCaseId: 'testCaseId'
                 });
             });
             expect(reporter.additionalCustomParams).toEqual({});
