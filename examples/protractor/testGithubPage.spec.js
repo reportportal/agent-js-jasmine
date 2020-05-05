@@ -29,7 +29,7 @@ const attachments = [
     },
 ];
 
-describe('github homepage', function() {
+describe('testGithubPage', function() {
     let originalTimeout;
 
     beforeAll(function() {
@@ -47,19 +47,19 @@ describe('github homepage', function() {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
     });
 
-    PublicReportingAPI.launchLog('INFO', 'info launch log, github homepage');
+    PublicReportingAPI.launchLog('INFO', 'info launch log, testGithubPage');
     PublicReportingAPI.launchInfo('info launch log');
     PublicReportingAPI.launchDebug('debug launch log');
     PublicReportingAPI.launchTrace('trace launch log');
     PublicReportingAPI.launchWarn('warn launch log');
     PublicReportingAPI.launchError('error launch log');
     PublicReportingAPI.launchFatal('fatal launch log');
-    PublicReportingAPI.debug('debug log, github homepage', null, 'github homepage');
-    PublicReportingAPI.info('debug log, github homepage', null, 'github homepage');
-    PublicReportingAPI.trace('trace log, github homepage', null, 'github homepage');
-    PublicReportingAPI.warn('warning, github homepage', null, 'github homepage');
-    PublicReportingAPI.error('error log, github homepage', null, 'github homepage');
-    PublicReportingAPI.fatal('fatal log, github homepage',null,  'github homepage');
+    PublicReportingAPI.debug('debug log, testGithubPage', null, 'testGithubPage');
+    PublicReportingAPI.info('debug log, testGithubPage', null, 'testGithubPage');
+    PublicReportingAPI.trace('trace log, testGithubPage', null, 'testGithubPage');
+    PublicReportingAPI.warn('warning, testGithubPage', null, 'testGithubPage');
+    PublicReportingAPI.error('error log, testGithubPage', null, 'testGithubPage');
+    PublicReportingAPI.fatal('fatal log, testGithubPage',null,  'testGithubPage');
 
     it('test with logs and attachments', async function() {
         PublicReportingAPI.debug('debug log');

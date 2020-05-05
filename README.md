@@ -309,7 +309,7 @@ multiThreadConf.js file
              }
          }
      ],
-     specs: ['testAngularPage.js', 'testGithubPage.js'],
+     specs: ['testAngularPage.spec.js', 'testGithubPage.spec.js'],
      onPrepare() {
          const config = Object.assign({
              id: browser.params.id

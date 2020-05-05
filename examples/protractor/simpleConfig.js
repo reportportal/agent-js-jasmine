@@ -3,7 +3,7 @@ const reportportalConfig = require('./reportportalConf');
 let agent;
 
 exports.config = {
-    specs: ['testAngularPage.js', 'testGithubPage.js'],
+    specs: ['./*.spec.js'],
     onPrepare(){
         agent = new ReportportalAgent(reportportalConfig);
 
