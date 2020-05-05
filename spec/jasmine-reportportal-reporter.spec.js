@@ -105,6 +105,32 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
+    describe('changeCurrentTestFilePath', function () {
+        it('should assign zero to currentTestFilePathIndex if currentTestFilePathIndex is undefined', function () {
+            reporter.currentTestFilePathIndex = undefined;
+
+            reporter.changeCurrentTestFilePath();
+
+            expect(reporter.currentTestFilePathIndex).toEqual(0);
+        });
+
+        it('should increase by one the currentTestFilePathIndex if currentTestFilePathIndex is not undefined and suite.description is equal to suite.fullName', function () {
+            reporter.currentTestFilePathIndex = 0;
+
+            reporter.changeCurrentTestFilePath({ description: 'text', fullName: 'text' });
+
+            expect(reporter.currentTestFilePathIndex).toEqual(1);
+        });
+
+        it('should not change the currentTestFilePathIndex value if currentTestFilePathIndex is not undefined and suite.description is not equal to suite.fullName', function () {
+            reporter.currentTestFilePathIndex = 0;
+
+            reporter.changeCurrentTestFilePath({ description: 'text', fullName: 'text1' });
+
+            expect(reporter.currentTestFilePathIndex).toEqual(0);
+        });
+    });
+
     describe('addAttributes', function () {
         it('additionalCustomParams should not be empty if addAttributes\' parameter is not empty', function () {
             const expectedAdditionalCustomParams = {
@@ -399,6 +425,14 @@ describe('jasmine Report Portal reporter', function() {
     });
 
     describe('suiteStarted', function() {
+        beforeEach(function () {
+            spyOn(SpecificUtils, 'getCodeRef').and.returnValue(Promise.resolve('codeRef'));
+            spyOn(reporter.client, 'startTestItem').and.returnValue({
+                tempId: '3452',
+                promise: Promise.resolve()
+            });
+        });
+
         it('should send a request to the agent', function() {
             const attributes = [{
                 key: 'key',
@@ -409,14 +443,11 @@ describe('jasmine Report Portal reporter', function() {
             }, {
                 level: 'level', file: null, message: 'message'
             }];
+            const promise = Promise.resolve(null);
             reporter.suiteAttributes = new Map([['suite', attributes]]);
             reporter.suiteDescription = new Map([['suite', 'text description']]);
             reporter.suiteTestCaseIds = new Map([['suite', 'testCaseId']]);
             reporter.suiteLogs = new Map([['suite', logs]]);
-            spyOn(reporter.client, 'startTestItem').and.returnValue({
-                tempId: '3452',
-				promise: Promise.resolve()
-            });
             spyOn(reporter, 'sendLog');
 
             reporter.suiteStarted({
@@ -424,57 +455,63 @@ describe('jasmine Report Portal reporter', function() {
                 fullName: 'test name'
             });
 
-            expect(reporter.client.startTestItem).toHaveBeenCalledWith({
-                type: 'suite',
-                name: 'test name',
-                attributes: [{ key: 'key', value: 'value' }],
-                description: 'text description',
-                testCaseId: 'testCaseId'
-            }, tempLaunchId, null);
-            expect(reporter.sendLog).toHaveBeenCalledTimes(2);
-            expect(reporter.sendLog).toHaveBeenCalledWith('3452', logs[0]);
-            expect(reporter.sendLog).toHaveBeenCalledWith('3452', logs[1]);
+            promise.then(function() {
+                expect(reporter.client.startTestItem).toHaveBeenCalledWith({
+                    type: 'suite',
+                    name: 'suite',
+                    attributes: [{ key: 'key', value: 'value' }],
+                    description: 'text description',
+                    testCaseId: 'testCaseId',
+                    codeRef: 'codeRef'
+                }, tempLaunchId, null);
+                expect(reporter.sendLog).toHaveBeenCalledTimes(2);
+                expect(reporter.sendLog).toHaveBeenCalledWith('3452', logs[0]);
+                expect(reporter.sendLog).toHaveBeenCalledWith('3452', logs[1]);
+            });
         });
 
         it('should create an element in parentIds', function() {
-            spyOn(reporter.client, 'startTestItem').and.returnValue({
-                tempId: '3452',
-                promise: Promise.resolve()
-            });
+            const promise = Promise.resolve(null);
 
             reporter.suiteStarted({
                 description: 'test description',
                 fullName: 'test name'
             });
 
-            expect(reporter.parentIds.length).toBe(1);
+            promise.then(function() {
+                expect(reporter.parentIds.length).toBe(1);
+            });
         });
     });
 
     describe('specStarted', function() {
-        it('should send a request to the agent', function() {
+        beforeEach(function () {
+            spyOn(SpecificUtils, 'getCodeRef').and.returnValue(Promise.resolve('codeRef'));
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId: '3452',
                 promise: Promise.resolve()
             });
+        });
 
+        it('should send a request to the agent', function() {
+            const promise = Promise.resolve(null);
             reporter.specStarted({
                 description: 'test description',
                 fullName: 'test name'
             });
 
-            expect(reporter.client.startTestItem).toHaveBeenCalledWith({
-                type: 'step',
-                description: 'test description',
-                name: 'test name'
-            }, tempLaunchId, null);
+            promise.then(function() {
+                expect(reporter.client.startTestItem).toHaveBeenCalledWith({
+                    type: 'step',
+                    description: 'test description',
+                    name: 'test description',
+                    codeRef: 'codeRef'
+                }, tempLaunchId, null);
+            });
         });
 
         it('should call setParentId with the appropriate parameter', function() {
-            spyOn(reporter.client, 'startTestItem').and.returnValue({
-                tempId: '3452',
-                promise: Promise.resolve()
-            });
+            const promise = Promise.resolve(null);
             spyOn(reporter, 'setParentId');
 
             reporter.suiteStarted({
@@ -482,7 +519,9 @@ describe('jasmine Report Portal reporter', function() {
                 fullName: 'test name'
             });
 
-            expect(reporter.setParentId).toHaveBeenCalledWith('3452');
+            promise.then(function() {
+                expect(reporter.setParentId).toHaveBeenCalledWith('3452');
+            });
         });
     });
 
@@ -720,6 +759,8 @@ stackTrace: stack`,
     describe('suiteDone', function() {
         it('should send a request to the agent', function() {
             const tempId = 'ferw3452';
+            const promise = Promise.resolve(null);
+            spyOn(SpecificUtils, 'getCodeRef').and.returnValue(Promise.resolve(null));
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId,
 				promise: Promise.resolve()
@@ -732,19 +773,22 @@ stackTrace: stack`,
                 description: 'test description',
                 fullName: 'test name'
             });
-            reporter.suiteDone();
 
-            expect(reporter.client.finishTestItem).toHaveBeenCalledWith(tempId, {});
-        });
+            promise.then(function () {
+                reporter.suiteDone();
 
-        describe('installHooks', function () {
-            it('should call SpecificUtils.makeHooksWrapper', function() {
-                spyOn(SpecificUtils, 'makeHooksWrapper');
-
-                reporter.installHooks();
-
-                expect(SpecificUtils.makeHooksWrapper).toHaveBeenCalledTimes(4);
+                expect(reporter.client.finishTestItem).toHaveBeenCalledWith(tempId, {});
             });
+        });
+    });
+
+    describe('installHooks', function () {
+        it('should call SpecificUtils.makeHooksWrapper', function() {
+            spyOn(SpecificUtils, 'makeHooksWrapper');
+
+            reporter.installHooks();
+
+            expect(SpecificUtils.makeHooksWrapper).toHaveBeenCalledTimes(4);
         });
     });
 });

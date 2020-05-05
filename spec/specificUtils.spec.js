@@ -1,3 +1,4 @@
+const path = require('path');
 const SpecificUtils = require('../lib/specificUtils');
 const pjson = require('./../package.json');
 
@@ -195,6 +196,75 @@ describe('Specific Utils', function() {
 
                 expect(Object.keys(agentParams)).toContain('version');
                 expect(Object.keys(agentParams)).toContain('name');
+            });
+        });
+
+        describe('getCodeRef', function () {
+            it('should return promise if browser is false, promise resolve should be null', function() {
+                browser = false;
+
+                const promise = SpecificUtils.getCodeRef();
+
+                expect(promise.then).toBeDefined();
+                promise.then(function (value) {
+                    expect(value).toEqual(null);
+                });
+            });
+
+            it('should call browser.getProcessedConfig if browser is true', function() {
+                browser = jasmine.createSpyObj('browser', {
+                    'getProcessedConfig': new Promise(function() {})
+                });
+
+                SpecificUtils.getCodeRef();
+
+                expect(browser.getProcessedConfig).toHaveBeenCalled();
+            });
+
+            it('should return promise, promise resolve should be codeRef value if browser is true and browser.getProcessedConfig is successful', function() {
+                browser = jasmine.createSpyObj('browser', {
+                    'getProcessedConfig': new Promise(function(resolve) {
+                        resolve({ specs: [`C:\\Path\\test.spec.js`] });
+                    })
+                });
+                spyOn(path, 'parse').and.returnValue({ dir: '', base: 'test.spec.js' });
+
+                const promise = SpecificUtils.getCodeRef(0, 'testName');
+
+                expect(browser.getProcessedConfig).toHaveBeenCalled();
+                promise.then(function (codeRef) {
+                    expect(codeRef).toEqual('test.spec.js/testName');
+                });
+            });
+
+            it('should return promise, separator should be \'\\\', promise resolve should be codeRef value if browser is true and browser.getProcessedConfig is successful', function() {
+                browser = jasmine.createSpyObj('browser', {
+                    'getProcessedConfig': new Promise(function(resolve) {
+                        resolve({ specs: [`C:\\Path\\example\\test.spec.js`] });
+                    })
+                });
+                spyOn(path, 'parse').and.returnValue({ dir: 'example', base: 'test.spec.js' });
+
+                const promise = SpecificUtils.getCodeRef(0, 'testName');
+
+                expect(browser.getProcessedConfig).toHaveBeenCalled();
+                promise.then(function (codeRef) {
+                    expect(codeRef).toEqual('example/test.spec.js/testName');
+                });
+            });
+        });
+
+        describe('getFullTestName', function () {
+            it('should return test.description if test.description is equal to test.fullName', function() {
+                const fullTestName = SpecificUtils.getFullTestName({ description: 'test', fullName: 'test' });
+
+                expect(fullTestName).toEqual('test');
+            });
+
+            it('should return correct fullTestName if test.description is not equal to test.fullName', function() {
+                const fullTestName = SpecificUtils.getFullTestName({ description: 'spec', fullName: 'suite spec' });
+
+                expect(fullTestName).toEqual('suite/spec');
             });
         });
 

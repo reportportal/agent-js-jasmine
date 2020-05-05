@@ -1,16 +1,16 @@
 const PublicReportingAPI = require('../../lib/publicReportingAPI');
 
-describe('angularjs homepage', function() {
+describe('testAngularPage', function() {
     PublicReportingAPI.addAttributes([{
         key: 'homepageKey1',
         value: 'homepageValue1',
-    }], 'angularjs homepage');
+    }], 'testAngularPage');
     PublicReportingAPI.addAttributes([{
         key: 'homepageKey2',
         value: 'homepageValue2',
-    }], 'angularjs homepage');
-    PublicReportingAPI.setDescription('Homepage description', 'angularjs homepage');
-    PublicReportingAPI.setTestCaseId('TestCaseIdForAngularHomepageSuite', 'angularjs homepage');
+    }], 'testAngularPage');
+    PublicReportingAPI.setDescription('Homepage description', 'testAngularPage');
+    PublicReportingAPI.setTestCaseId('TestCaseIdForAngularHomepageSuite', 'testAngularPage');
 
     describe('describe', function () {
         PublicReportingAPI.addAttributes([{
