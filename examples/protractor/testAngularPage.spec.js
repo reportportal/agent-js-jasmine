@@ -1,4 +1,4 @@
-const PublicReportingAPI = require('../../lib/publicReportingAPI');
+const PublicReportingAPI = require('../../../lib/publicReportingAPI');
 
 describe('testAngularPage', function() {
     PublicReportingAPI.addAttributes([{
