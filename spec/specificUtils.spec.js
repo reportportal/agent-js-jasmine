@@ -227,7 +227,7 @@ describe('Specific Utils', function() {
                         resolve({ specs: [`C:\\Path\\test.spec.js`] });
                     })
                 });
-                spyOn(path, 'parse').and.returnValue({ dir: '', base: 'test.spec.js' });
+                spyOn(process, 'cwd').and.returnValue('C:\\Path');
 
                 const promise = SpecificUtils.getCodeRef(0, 'testName');
 
@@ -243,7 +243,7 @@ describe('Specific Utils', function() {
                         resolve({ specs: [`C:\\Path\\example\\test.spec.js`] });
                     })
                 });
-                spyOn(path, 'parse').and.returnValue({ dir: 'example', base: 'test.spec.js' });
+                spyOn(process, 'cwd').and.returnValue('C:\\Path');
 
                 const promise = SpecificUtils.getCodeRef(0, 'testName');
 
