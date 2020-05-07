@@ -640,6 +640,7 @@ describe('jasmine Report Portal reporter', function() {
         it('should call method finishTestItem with the appropriate parameter, status is disabled', function() {
             promise = Promise.resolve(null);
             reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }] };
+            reporter.conf.skippedIssue = false;
             spyOn(reporter.client, 'sendLog').and.returnValue({
                 tempId: 'sendLog',
                 promise: Promise.resolve('ok')
@@ -654,7 +655,15 @@ describe('jasmine Report Portal reporter', function() {
             });
 
             promise.then(function () {
-                expect(reporter.client.finishTestItem).toHaveBeenCalledWith( null, { status: 'skipped', attributes: [{ key: 'key', value: 'value' }] });
+                expect(reporter.client.finishTestItem).toHaveBeenCalledWith( null, {
+                    status: 'skipped',
+                    attributes: [{ key: 'key', value: 'value' }],
+                    issue: {
+                        issueType: 'NOT_ISSUE'
+                    },
+                });
+
+                reporter.conf.skippedIssue = true;
             });
             expect(reporter.additionalCustomParams).toEqual({});
         });
