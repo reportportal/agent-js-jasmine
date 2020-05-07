@@ -1,4 +1,5 @@
 const SpecificUtils = require('../lib/specificUtils');
+const pjson = require('./../package.json');
 
 describe('Specific Utils', function() {
     describe('takeScreenshot', function () {
@@ -144,6 +145,48 @@ describe('Specific Utils', function() {
             });
 
             expect(launchObj).toEqual(expectedLaunchObj);
+        });
+
+        describe('getSystemAttributes', function () {
+            it('should return only agent system attribute if parameter is true', function() {
+                const expectedSystemAttribute = [{
+                    key: 'agent',
+                    value: `${pjson.name}|${pjson.version}`,
+                    system: true,
+                }];
+
+                const systemAttributes = SpecificUtils.getSystemAttributes(true);
+
+                expect(systemAttributes).toEqual(expectedSystemAttribute)
+            });
+
+            it('should return only agent system attribute if there is no parameter', function() {
+                const expectedSystemAttribute = [{
+                    key: 'agent',
+                    value: `${pjson.name}|${pjson.version}`,
+                    system: true,
+                }];
+
+                const systemAttributes = SpecificUtils.getSystemAttributes();
+
+                expect(systemAttributes).toEqual(expectedSystemAttribute)
+            });
+
+            it('should return agent and skippedIssue system attributes if parameter is false', function() {
+                const expectedSystemAttribute = [{
+                    key: 'agent',
+                    value: `${pjson.name}|${pjson.version}`,
+                    system: true,
+                }, {
+                    key: 'skippedIssue',
+                    value: 'false',
+                    system: true,
+                }];
+
+                const systemAttributes = SpecificUtils.getSystemAttributes(false);
+
+                expect(systemAttributes).toEqual(expectedSystemAttribute)
+            });
         });
 
         describe('getAgentInfo', function () {
