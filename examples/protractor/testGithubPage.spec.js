@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const PublicReportingAPI = require('../../../lib/publicReportingAPI');
+const PublicReportingAPI = require('../../lib/publicReportingAPI');
 
 const attachments = [
     {
