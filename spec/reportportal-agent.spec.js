@@ -26,7 +26,7 @@ const options = Object.assign(reporterOptions, {
 describe('Report Portal agent', function() {
     let agent;
 
-    beforeAll(function () {
+    beforeAll(function() {
         agent = new ReportportalAgent(options);
     });
 

@@ -3,61 +3,67 @@ const SpecificUtils = require('../lib/specificUtils');
 const pjson = require('./../package.json');
 
 describe('Specific Utils', function() {
-    describe('takeScreenshot', function () {
-        it('should return promise if browser is false, promise resolve should be null', function() {
-            browser = false;
+    describe('takeScreenshot', function() {
+        it('should return promise if browser is false, promise resolve should be null', function(done) {
+            global.browser = undefined;
 
             const promise = SpecificUtils.takeScreenshot('fileName');
 
             expect(promise.then).toBeDefined();
-            promise.then(function (value) {
+            promise.then(function(value) {
                 expect(value).toEqual(null);
+
+                done();
             });
         });
 
         it('should call browser.takeScreenshot if browser is true', function() {
-            browser = jasmine.createSpyObj('browser', {
+            global.browser = jasmine.createSpyObj('global.browser', {
                 'takeScreenshot': new Promise(function() {})
             });
 
             SpecificUtils.takeScreenshot('fileName');
 
-            expect(browser.takeScreenshot).toHaveBeenCalled();
+            expect(global.browser.takeScreenshot).toHaveBeenCalled();
         });
 
-        it('if browser is true and browser.takeScreenshot is successful, promise resolve should be object', function() {
+        it('if browser is true and browser.takeScreenshot is successful, promise resolve should be object', function(done) {
             const expectedPromiseResolvedObj = {
                 name: 'fileName',
                 type: 'image/png',
                 content: 'png'
             };
-            browser = jasmine.createSpyObj('browser', {
+            global.browser = jasmine.createSpyObj('global.browser', {
                 'takeScreenshot': Promise.resolve('png')
             });
 
             const promise = SpecificUtils.takeScreenshot('fileName');
 
-            expect(browser.takeScreenshot).toHaveBeenCalled();
-            promise.then(function (value) {
+            expect(global.browser.takeScreenshot).toHaveBeenCalled();
+            promise.then(function(value) {
                 expect(value).toEqual(expectedPromiseResolvedObj);
+
+                done();
             });
         });
 
-        it('if browser is true and browser.takeScreenshot is unsuccessful, promise resolve should be null', function() {
-            browser = jasmine.createSpyObj('browser', {
+        it('if browser is true and browser.takeScreenshot is unsuccessful, promise resolve should be null', function(done) {
+            global.browser = jasmine.createSpyObj('global.browser', {
                 'takeScreenshot': Promise.reject()
             });
 
             const promise = SpecificUtils.takeScreenshot('fileName');
 
-            expect(browser.takeScreenshot).toHaveBeenCalled();
-            promise.then(function (value) {
+            expect(global.browser.takeScreenshot).toHaveBeenCalled();
+            promise.then(function(value) {
                 expect(value).toEqual(null);
+
+                done();
             });
         });
     });
 
-    describe('getLaunchObj', function () {
+    describe('getLaunchObj', function() {
         it('should return launchObj only with system attribute and description if parameter doesn\'t set', function() {
             const expectedLaunchObj = {
                 attributes: [{
@@ -190,7 +196,7 @@ describe('Specific Utils', function() {
             });
         });
 
-        describe('getAgentInfo', function () {
+        describe('getAgentInfo', function() {
             it('should contain version and name properties', function() {
                 const agentParams = SpecificUtils.getAgentInfo();
 
@@ -199,30 +205,21 @@ describe('Specific Utils', function() {
             });
         });
 
-        describe('getCodeRef', function () {
-            it('should return promise if browser is false, promise resolve should be null', function() {
-                browser = false;
+        describe('getCodeRef', function() {
+            it('should return promise if browser is false, promise resolve should be null', function(done) {
+                global.browser = undefined;
 
                 const promise = SpecificUtils.getCodeRef();
 
-                expect(promise.then).toBeDefined();
-                promise.then(function (value) {
+                promise.then(function(value) {
                     expect(value).toEqual(null);
+
+                    done();
                 });
             });
 
-            it('should call browser.getProcessedConfig if browser is true', function() {
-                browser = jasmine.createSpyObj('browser', {
-                    'getProcessedConfig': new Promise(function() {})
-                });
-
-                SpecificUtils.getCodeRef();
-
-                expect(browser.getProcessedConfig).toHaveBeenCalled();
-            });
-
-            it('should return promise, promise resolve should be codeRef value if browser is true and browser.getProcessedConfig is successful', function() {
-                browser = jasmine.createSpyObj('browser', {
+            it('should return promise, promise resolve should be codeRef value if browser is true', function(done) {
+                global.browser = jasmine.createSpyObj('global.browser', {
                     'getProcessedConfig': new Promise(function(resolve) {
                         resolve({ specs: [`C:\\Path\\test.spec.js`] });
                     })
@@ -231,14 +228,16 @@ describe('Specific Utils', function() {
 
                 const promise = SpecificUtils.getCodeRef(0, 'testName');
 
-                expect(browser.getProcessedConfig).toHaveBeenCalled();
-                promise.then(function (codeRef) {
+                expect(global.browser.getProcessedConfig).toHaveBeenCalled();
+                promise.then(function(codeRef) {
                     expect(codeRef).toEqual('test.spec.js/testName');
+
+                    done();
                 });
             });
 
-            it('should return promise, separator should be \'\\\', promise resolve should be codeRef value if browser is true and browser.getProcessedConfig is successful', function() {
-                browser = jasmine.createSpyObj('browser', {
+            it('should return promise, replace separator with \'/\', promise resolve should be codeRef value if browser is true', function(done) {
+                global.browser = jasmine.createSpyObj('global.browser', {
                     'getProcessedConfig': new Promise(function(resolve) {
                         resolve({ specs: [`C:\\Path\\example\\test.spec.js`] });
                     })
@@ -247,14 +246,16 @@ describe('Specific Utils', function() {
 
                 const promise = SpecificUtils.getCodeRef(0, 'testName');
 
-                expect(browser.getProcessedConfig).toHaveBeenCalled();
-                promise.then(function (codeRef) {
+                expect(global.browser.getProcessedConfig).toHaveBeenCalled();
+                promise.then(function(codeRef) {
                     expect(codeRef).toEqual('example/test.spec.js/testName');
+
+                    done();
                 });
             });
         });
 
-        describe('getFullTestName', function () {
+        describe('getFullTestName', function() {
             it('should return test.description if test.description is equal to test.fullName', function() {
                 const fullTestName = SpecificUtils.getFullTestName({ description: 'test', fullName: 'test' });
 
@@ -268,7 +269,7 @@ describe('Specific Utils', function() {
             });
         });
 
-        describe('isPromise', function () {
+        describe('isPromise', function() {
             it('should return true if obj is promise', function() {
                 const isPromise = SpecificUtils.isPromise(new Promise(() => {}));
 
@@ -282,7 +283,7 @@ describe('Specific Utils', function() {
             });
         });
 
-        describe('isHookShouldBeCalled', function () {
+        describe('isHookShouldBeCalled', function() {
             it('should return true if action is promise', function() {
                 const isHookShouldBeCalled = SpecificUtils.isHookShouldBeCalled(new Promise(() => {}));
 
