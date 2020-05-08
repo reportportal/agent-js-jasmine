@@ -433,7 +433,7 @@ describe('jasmine Report Portal reporter', function() {
             });
         });
 
-        it('should send a request to the agent', function() {
+        it('should send a request to the agent', function(done) {
             const attributes = [{
                 key: 'key',
                 value: 'value',
@@ -466,10 +466,12 @@ describe('jasmine Report Portal reporter', function() {
                 expect(reporter.sendLog).toHaveBeenCalledTimes(2);
                 expect(reporter.sendLog).toHaveBeenCalledWith('3452', logs[0]);
                 expect(reporter.sendLog).toHaveBeenCalledWith('3452', logs[1]);
+
+                done();
             });
         });
 
-        it('should create an element in parentIds', function() {
+        it('should create an element in parentIds', function(done) {
             const promise = reporter.suiteStarted({
                 description: 'test description',
                 fullName: 'test name'
@@ -477,6 +479,8 @@ describe('jasmine Report Portal reporter', function() {
 
             promise.then(function() {
                 expect(reporter.parentIds.length).toBe(1);
+
+                done();
             });
         });
     });
