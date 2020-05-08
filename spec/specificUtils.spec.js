@@ -3,8 +3,12 @@ const SpecificUtils = require('../lib/specificUtils');
 const pjson = require('./../package.json');
 
 describe('Specific Utils', function() {
+    afterEach(function() {
+        delete global.browser;
+    });
+
     describe('takeScreenshot', function() {
-        it('should return promise if browser is false, promise resolve should be null', function(done) {
+        it('should return promise if browser is false, promise resolve should be null', function() {
             global.browser = undefined;
 
             const promise = SpecificUtils.takeScreenshot('fileName');
@@ -12,8 +16,6 @@ describe('Specific Utils', function() {
             expect(promise.then).toBeDefined();
             promise.then(function(value) {
                 expect(value).toEqual(null);
-
-                done();
             });
         });
 
@@ -27,7 +29,7 @@ describe('Specific Utils', function() {
             expect(global.browser.takeScreenshot).toHaveBeenCalled();
         });
 
-        it('if browser is true and browser.takeScreenshot is successful, promise resolve should be object', function(done) {
+        it('if browser is true and browser.takeScreenshot is successful, promise resolve should be object', function() {
             const expectedPromiseResolvedObj = {
                 name: 'fileName',
                 type: 'image/png',
@@ -42,12 +44,10 @@ describe('Specific Utils', function() {
             expect(global.browser.takeScreenshot).toHaveBeenCalled();
             promise.then(function(value) {
                 expect(value).toEqual(expectedPromiseResolvedObj);
-
-                done();
             });
         });
 
-        it('if browser is true and browser.takeScreenshot is unsuccessful, promise resolve should be null', function(done) {
+        it('if browser is true and browser.takeScreenshot is unsuccessful, promise resolve should be null', function() {
             global.browser = jasmine.createSpyObj('global.browser', {
                 'takeScreenshot': Promise.reject()
             });
@@ -57,8 +57,6 @@ describe('Specific Utils', function() {
             expect(global.browser.takeScreenshot).toHaveBeenCalled();
             promise.then(function(value) {
                 expect(value).toEqual(null);
-
-                done();
             });
         });
     });
@@ -206,19 +204,17 @@ describe('Specific Utils', function() {
         });
 
         describe('getCodeRef', function() {
-            it('should return promise if browser is false, promise resolve should be null', function(done) {
+            it('should return promise if browser is false, promise resolve should be null', function() {
                 global.browser = undefined;
 
                 const promise = SpecificUtils.getCodeRef();
 
                 promise.then(function(value) {
                     expect(value).toEqual(null);
-
-                    done();
                 });
             });
 
-            it('should return promise, promise resolve should be codeRef value if browser is true', function(done) {
+            it('should return promise, promise resolve should be codeRef value if browser is true', function() {
                 global.browser = jasmine.createSpyObj('global.browser', {
                     'getProcessedConfig': new Promise(function(resolve) {
                         resolve({ specs: [`C:\\Path\\test.spec.js`] });
@@ -231,12 +227,10 @@ describe('Specific Utils', function() {
                 expect(global.browser.getProcessedConfig).toHaveBeenCalled();
                 promise.then(function(codeRef) {
                     expect(codeRef).toEqual('test.spec.js/testName');
-
-                    done();
                 });
             });
 
-            it('should return promise, replace separator with \'/\', promise resolve should be codeRef value if browser is true', function(done) {
+            it('should return promise, replace separator with \'/\', promise resolve should be codeRef value if browser is true', function() {
                 global.browser = jasmine.createSpyObj('global.browser', {
                     'getProcessedConfig': new Promise(function(resolve) {
                         resolve({ specs: [`C:\\Path\\example\\test.spec.js`] });
@@ -249,8 +243,6 @@ describe('Specific Utils', function() {
                 expect(global.browser.getProcessedConfig).toHaveBeenCalled();
                 promise.then(function(codeRef) {
                     expect(codeRef).toEqual('example/test.spec.js/testName');
-
-                    done();
                 });
             });
         });
