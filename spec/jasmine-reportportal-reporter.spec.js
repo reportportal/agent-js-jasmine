@@ -268,6 +268,46 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
+    describe('setStatus', function() {
+        it('additionalCustomParams should not be empty if setStatus\' parameter is not empty', function() {
+            const expectedAdditionalCustomParams = {
+                customParams: 'value',
+                customStatus: 'passed'
+            };
+            reporter.additionalCustomParams = { customParams: 'value' };
+
+            reporter.setStatus({ status: 'passed' });
+
+            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+        });
+
+        it('suiteStatus should not be empty if setStatus\' parameter has suite property', function() {
+            const expectedSuiteStatus = new Map([['suite', 'passed']]);
+
+            reporter.setStatus({ status: 'passed', suite: 'suite' });
+
+            expect(reporter.suiteStatus).toEqual(expectedSuiteStatus);
+            expect(reporter.additionalCustomParams).toEqual({});
+        });
+
+        it('additionalCustomParams should be empty if setStatus\' parameter and additionalCustomParams are empty', function() {
+            const expectedAdditionalCustomParams = {};
+            reporter.additionalCustomParams = {};
+
+            reporter.setStatus();
+
+            expect(reporter.additionalCustomParams).toEqual(expectedAdditionalCustomParams);
+        });
+    });
+
+    describe('setLaunchStatus', function() {
+        it('should set the status for conf.launchStatus variable', function() {
+            reporter.setLaunchStatus('passed');
+
+            expect(reporter.conf.launchStatus).toEqual('passed');
+        })
+    });
+
     describe('addTestItemLog', function() {
         it('additionalCustomParams should not be empty if addTestItemLog\' parameter is not empty', function() {
             const expectedAdditionalCustomParams = {
@@ -385,6 +425,24 @@ describe('jasmine Report Portal reporter', function() {
             const suiteAttributes = reporter.getSuiteAttributesBySuite('suite1');
 
             expect(suiteAttributes).toEqual(undefined);
+        });
+    });
+
+    describe('getSuiteStatusBySuite', function() {
+        it('should return correct status of suiteStatus', function() {
+            reporter.suiteStatus = new Map([['suite', 'passed']]);
+
+            const suiteStatus = reporter.getSuiteStatusBySuite('suite');
+
+            expect(suiteStatus).toEqual('passed');
+        });
+
+        it('should return undefined if there is no suitable suite', function() {
+            reporter.suiteStatus = new Map([['suite', 'passed']]);
+
+            const suiteStatus = reporter.getSuiteStatusBySuite('suite1');
+
+            expect(suiteStatus).toEqual(undefined);
         });
     });
 
@@ -771,26 +829,44 @@ stackTrace: stack`,
     });
 
     describe('suiteDone', function() {
-        it('should send a request to the agent', function(done) {
+        beforeEach(function() {
             const tempId = 'ferw3452';
             spyOn(SpecificUtils, 'getCodeRef').and.returnValue(Promise.resolve(null));
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId,
-				promise: Promise.resolve()
+                promise: Promise.resolve()
             });
             spyOn(reporter.client, 'finishTestItem').and.returnValue({
-				promise: Promise.resolve()
+                promise: Promise.resolve()
             });
+        });
 
+        it('should send a request to the agent', function(done) {
             const promise = reporter.suiteStarted({
                 description: 'test description',
                 fullName: 'test name'
             });
 
             promise.then(function() {
-                reporter.suiteDone();
+                reporter.suiteDone({ description: 'test description' });
 
-                expect(reporter.client.finishTestItem).toHaveBeenCalledWith(tempId, {});
+                expect(reporter.client.finishTestItem).toHaveBeenCalledWith('ferw3452', {});
+
+                done();
+            });
+        });
+
+        it('should call client.finishTestItem with status passed', function(done) {
+            reporter.suiteStatus = new Map([['test description', 'passed']]);
+            const promise = reporter.suiteStarted({
+                description: 'test description',
+                fullName: 'test name'
+            });
+
+            promise.then(function() {
+                reporter.suiteDone({ description: 'test description' });
+
+                expect(reporter.client.finishTestItem).toHaveBeenCalledWith('ferw3452', { status: 'passed' });
 
                 done();
             });
