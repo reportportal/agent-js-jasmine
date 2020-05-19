@@ -61,6 +61,10 @@ describe('testGithubPage', function() {
     PublicReportingAPI.error('error log, testGithubPage', null, 'testGithubPage');
     PublicReportingAPI.fatal('fatal log, testGithubPage',null,  'testGithubPage');
 
+
+    PublicReportingAPI.setLaunchStatusPassed();
+    PublicReportingAPI.setStatusFailed('testGithubPage');
+
     it('test with logs and attachments', async function() {
         PublicReportingAPI.debug('debug log');
         PublicReportingAPI.trace('trace log');
@@ -91,6 +95,7 @@ describe('testGithubPage', function() {
     it('should have a title', function() {
         browser.get('http://github.com/');
         PublicReportingAPI.info('info log, should have a title');
+        PublicReportingAPI.setStatusPassed();
         expect(browser.getTitle()).toContain('GitHub');
     });
 });

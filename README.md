@@ -112,7 +112,7 @@ attributes | true | attributes, pairs of key and value | [{ "key": "YourKey", "v
 PublicReportingAPI provides the following methods for reporting logs into the current suite/spec.
 
 * log(*level*, *message* , *file*, *suite*). Reports *message* and optional *file* with specified log *level* as a log of the current suite/spec.<br/>
-*level* should be equal to one the following values: *TRACE*, *DEBUG*, *INFO*, *WARN*, *ERROR*, *FATAL*.<br/>
+*level* should be equal to one of the following values: *TRACE*, *DEBUG*, *INFO*, *WARN*, *ERROR*, *FATAL*.<br/>
 *suite* it's description of your suite (all suite descriptions must be unique) ***REQUIRED INSIDE OF YOUR SUITE, OPTIONAL FOR SPEC*** <br/>
 *file* should be an object (***REQUIRED INSIDE OF YOUR SUITE,*** if there is no file object, set ***NULL***) : <br/>
 ```javascript
@@ -138,6 +138,35 @@ PublicReportingAPI provides the corresponding methods for reporting logs into th
 * launchError (*message* , *file*). Reports *message* and optional *file* as a log of the launch with error log level.
 * launchFatal (*message* , *file*). Reports *message* and optional *file* as a log of the launch with fatal log level.
 
+#### Finish launch/suite/spec with status
+PublicReportingAPI provides the following methods for setting status into the current suite/spec.
+
+* setStatus(*status*, *suite*). Assign *status* to the current suite/spec.<br/>
+*status* should be equal to one of the following values: *passed*, *failed*, *stopped*, *skipped*, *interrupted*, *cancelled*, *info*, *warn*.<br/>
+*suite* it's description of your suite (all suite descriptions must be unique) ***REQUIRED INSIDE OF YOUR SUITE, OPTIONAL FOR SPEC*** <br/>
+
+* setStatusPassed(). Assign *passed* status to the current suite/spec.
+* setStatusFailed(). Assign *failed* status to the current suite/spec.
+* setStatusSkipped(). Assign *skipped* status to the current suite/spec.
+* setStatusStopped(). Assign *stopped* status to the current suite/spec.
+* setStatusInterrupted(). Assign *interrupted* status to the current suite/spec.
+* setStatusCancelled(). Assign *cancelled* status to the current suite/spec.
+* setStatusInfo(). Assign *info* status to the current suite/spec.
+* setStatusWarn(). Assign *warn* status to the current suite/spec.
+
+PublicReportingAPI provides the corresponding methods for setting status into the launch.
+* setLaunchStatus(*status*). Assign *status* to the launch.<br/>
+*status* should be equal to one of the following values: *passed*, *failed*, *stopped*, *skipped*, *interrupted*, *cancelled*, *info*, *warn*.<br/>
+
+* setLaunchStatusPassed(). Assign *passed* status to the launch.
+* setLaunchStatusFailed(). Assign *failed* status to the launch.
+* setLaunchStatusSkipped(). Assign *skipped* status to the launch.
+* setLaunchStatusStopped(). Assign *stopped* status to the launch.
+* setLaunchStatusInterrupted(). Assign *interrupted* status to the launch.
+* setLaunchStatusCancelled(). Assign *cancelled* status to the launch.
+* setLaunchStatusInfo(). Assign *info* status to the launch.
+* setLaunchStatusWarn(). Assign *warn* status to the launch.
+
 **Example:**
 ```javascript
 const PublicReportingAPI = require('agent-js-jasmine/lib/publicReportingAPI');
@@ -158,6 +187,8 @@ describe('A suite', function() {
     PublicReportingAPI.warn('Warning for suite "suite"', null, 'A suite');
     PublicReportingAPI.error('Error log message for suite "suite"', null, 'A suite');
     PublicReportingAPI.fatal('Fatal log message for suite "suite"', suiteAttachment, 'A suite');
+    PublicReportingAPI.setLaunchStatusPassed();
+    PublicReportingAPI.setStatusPassed('A suite');
 
     it('spec', function() {
         const specAttachment = {
@@ -178,6 +209,7 @@ describe('A suite', function() {
         PublicReportingAPI.warn('Warning for spec "spec"');
         PublicReportingAPI.error('Error log message for spec "spec"');
         PublicReportingAPI.fatal('Fatal log message for spec "spec"');
+        PublicReportingAPI.setStatusPassed();
         
         expect(true).toBe(true);
     });

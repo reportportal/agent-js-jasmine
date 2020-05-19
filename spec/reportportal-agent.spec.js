@@ -30,6 +30,11 @@ describe('Report Portal agent', function() {
         agent = new ReportportalAgent(options);
     });
 
+    afterEach(function() {
+        agent.tempLaunchId = null;
+        agent.reporterConf.launchStatus = undefined;
+    });
+
     it('should be properly initialized', function() {
         expect(agent.tempLaunchId).toBeDefined();
         expect(agent.client).toBeDefined();
@@ -69,6 +74,29 @@ describe('Report Portal agent', function() {
 
     it('getExitPromise should return promise', function() {
         expect((agent.getExitPromise()).then).toBeDefined();
+    });
+
+    it('getExitPromise should call client.finishLaunch without status', function() {
+        agent.tempLaunchId = 'tempLaunchId';
+        spyOn(agent.client, 'finishLaunch').and.returnValue({
+            promise: Promise.resolve()
+        });
+
+        agent.getExitPromise();
+
+        expect(agent.client.finishLaunch).toHaveBeenCalledWith('tempLaunchId', {});
+    });
+
+    it('getExitPromise should call client.finishLaunch with status passed', function() {
+        agent.tempLaunchId = 'tempLaunchId';
+        agent.reporterConf.launchStatus = 'passed';
+        spyOn(agent.client, 'finishLaunch').and.returnValue({
+            promise: Promise.resolve()
+        });
+
+        agent.getExitPromise();
+
+        expect(agent.client.finishLaunch).toHaveBeenCalledWith('tempLaunchId', { status: 'passed' });
     });
 
     it('getPromiseFinishAllItems should return client.getPromiseFinishAllItems', function() {
