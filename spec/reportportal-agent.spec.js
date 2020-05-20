@@ -31,8 +31,8 @@ describe('Report Portal agent', function() {
     });
 
     afterEach(function() {
+        agent.launchStatus = undefined;
         agent.tempLaunchId = null;
-        agent.reporterConf.launchStatus = undefined;
     });
 
     it('should be properly initialized', function() {
@@ -53,6 +53,12 @@ describe('Report Portal agent', function() {
 
         expect(SpecificUtils.getLaunchObj).toHaveBeenCalled();
         expect(SpecificUtils.getAgentInfo).toHaveBeenCalled();
+    });
+
+    it('setLaunchStatus should set the status for launchStatus variable', function() {
+        agent.setLaunchStatus('passed');
+
+        expect(agent.launchStatus).toEqual('passed');
     });
 
     it('getJasmineReporter should return instance of JasmineReportportalReporter', function() {
@@ -89,7 +95,7 @@ describe('Report Portal agent', function() {
 
     it('getExitPromise should call client.finishLaunch with status passed', function() {
         agent.tempLaunchId = 'tempLaunchId';
-        agent.reporterConf.launchStatus = 'passed';
+        agent.launchStatus = 'passed';
         spyOn(agent.client, 'finishLaunch').and.returnValue({
             promise: Promise.resolve()
         });
