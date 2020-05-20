@@ -281,12 +281,12 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
         });
 
-        it('suiteStatus should not be empty if setStatus\' parameter has suite property', function() {
+        it('suiteStatuses should not be empty if setStatus\' parameter has suite property', function() {
             const expectedSuiteStatus = new Map([['suite', 'passed']]);
 
             reporter.setStatus({ status: 'passed', suite: 'suite' });
 
-            expect(reporter.suiteStatus).toEqual(expectedSuiteStatus);
+            expect(reporter.suiteStatuses).toEqual(expectedSuiteStatus);
             expect(reporter.additionalCustomParams).toEqual({});
         });
 
@@ -429,20 +429,20 @@ describe('jasmine Report Portal reporter', function() {
     });
 
     describe('getSuiteStatusBySuite', function() {
-        it('should return correct status of suiteStatus', function() {
-            reporter.suiteStatus = new Map([['suite', 'passed']]);
+        it('should return correct status of suiteStatuses', function() {
+            reporter.suiteStatuses = new Map([['suite', 'passed']]);
 
-            const suiteStatus = reporter.getSuiteStatusBySuite('suite');
+            const suiteStatuses = reporter.getSuiteStatusBySuite('suite');
 
-            expect(suiteStatus).toEqual('passed');
+            expect(suiteStatuses).toEqual('passed');
         });
 
         it('should return undefined if there is no suitable suite', function() {
-            reporter.suiteStatus = new Map([['suite', 'passed']]);
+            reporter.suiteStatuses = new Map([['suite', 'passed']]);
 
-            const suiteStatus = reporter.getSuiteStatusBySuite('suite1');
+            const suiteStatuses = reporter.getSuiteStatusBySuite('suite1');
 
-            expect(suiteStatus).toEqual(undefined);
+            expect(suiteStatuses).toEqual(undefined);
         });
     });
 
@@ -857,7 +857,7 @@ stackTrace: stack`,
         });
 
         it('should call client.finishTestItem with status passed', function(done) {
-            reporter.suiteStatus = new Map([['test description', 'passed']]);
+            reporter.suiteStatuses = new Map([['test description', 'passed']]);
             const promise = reporter.suiteStarted({
                 description: 'test description',
                 fullName: 'test name'
