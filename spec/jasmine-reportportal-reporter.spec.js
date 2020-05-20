@@ -8,18 +8,19 @@ describe('jasmine Report Portal reporter', function() {
     let baseTime;
 
     beforeEach(function() {
-        let client = {
+        const client = {
             startTestItem() {},
             finishTestItem() {},
             sendLog() {},
         };
+        const onSetLaunchStatus = function() {};
         baseTime = new Date(2020, 4, 8);
 
         jasmine.clock().mockDate(baseTime);
         reporter = new Reporter({
             client: client,
             tempLaunchId: tempLaunchId,
-        });
+        }, onSetLaunchStatus);
     });
 
     afterEach(function() {
@@ -298,14 +299,6 @@ describe('jasmine Report Portal reporter', function() {
 
             expect(reporter.additionalCustomParams).toEqual(expectedAdditionalCustomParams);
         });
-    });
-
-    describe('setLaunchStatus', function() {
-        it('should set the status for conf.launchStatus variable', function() {
-            reporter.setLaunchStatus('passed');
-
-            expect(reporter.conf.launchStatus).toEqual('passed');
-        })
     });
 
     describe('addTestItemLog', function() {
