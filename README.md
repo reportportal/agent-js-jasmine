@@ -8,7 +8,7 @@ Agent for integration Jasmine with ReportPortal.
 ### How to use
 1. Install the agent in your project:
 ```cmd
-npm i agent-js-jasmine --save-dev
+npm i @reportportal/agent-js-jasmine --save-dev
 ```
 2. Create an agent instance:
 ```javascript
@@ -107,6 +107,17 @@ description | true | "string" - text description for your suite | "Your descript
 Parameter | Required | Description | Examples
 --------- | ----------- | ----------- | -----------
 attributes | true | attributes, pairs of key and value | [{ "key": "YourKey", "value": "YourValue" }]
+To integrate with Sauce Labs just add attributes: 
+
+```javascript
+[{
+ "key": "SLID",
+ "value": "# of the job in Sauce Labs"
+}, {
+ "key": "SLDC",
+ "value": "EU (EU or US)"
+}]
+```
 
 #### Report logs and attachments
 PublicReportingAPI provides the following methods for reporting logs into the current suite/spec.
@@ -167,6 +178,13 @@ PublicReportingAPI provides the corresponding methods for setting status into th
 * setLaunchStatusInfo(). Assign *info* status to the launch.
 * setLaunchStatusWarn(). Assign *warn* status to the launch.
 
+#### Report test case id for steps and suites
+
+**setTestCaseId(*testCaseId*, *suite*)**. Set test case id to the current suite/spec. Should be called inside of corresponding suite or spec.</br> 
+
+*suite* it's description of your suite (all suite descriptions must be unique) ***REQUIRED INSIDE OF YOUR SUITE, OPTIONAL FOR SPEC*** <br/>
+
+
 **Example:**
 ```javascript
 const PublicReportingAPI = require('agent-js-jasmine/lib/publicReportingAPI');
@@ -189,6 +207,7 @@ describe('A suite', function() {
     PublicReportingAPI.fatal('Fatal log message for suite "suite"', suiteAttachment, 'A suite');
     PublicReportingAPI.setLaunchStatusPassed();
     PublicReportingAPI.setStatusPassed('A suite');
+    PublicReportingAPI.setTestCaseId('TestCaseIdForSuite', 'A suite');
 
     it('spec', function() {
         const specAttachment = {
@@ -210,6 +229,7 @@ describe('A suite', function() {
         PublicReportingAPI.error('Error log message for spec "spec"');
         PublicReportingAPI.fatal('Fatal log message for spec "spec"');
         PublicReportingAPI.setStatusPassed();
+        PublicReportingAPI.setTestCaseId('TestCaseIdForSpec');
         
         expect(true).toBe(true);
     });
@@ -371,8 +391,7 @@ multiThreadConf.js file
 npm run protractor-multi
 ```
 
-
-Link to the jasmine issue , that it doesn't work well with async functions
+Link to the jasmine issue, that it doesn't work well with async functions
 [jasmine issue](https://github.com/jasmine/jasmine/issues/842), 
 [protractor's community](https://github.com/angular/protractor/issues/1938)
 

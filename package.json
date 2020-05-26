@@ -1,5 +1,5 @@
 {
-  "name": "reportportal-agent-jasmine",
+  "name": "@reportportal/agent-js-jasmine",
   "version": "1.0.0",
   "description": "Agent for integration Jasmine with ReportPortal.",
   "contributors": [
@@ -36,16 +36,22 @@
   "nyc": {
     "include": [
       "lib/*.js"
-    ],
-    "exclude": [
-      "examples/protractor/*.js",
-      "**/*spec.js"
     ]
   },
-  "author": "",
-  "license": "ISC",
+  "author": "ReportPortal.io",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/reportportal/agent-js-jasmine.git"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/reportportal/agent-js-jasmine/issues"
+  },
+  "homepage": "https://github.com/reportportal/agent-js-jasmine#readme",
+  "keywords": [
+    "epam",
+    "reportportal",
+    "rp",
+    "jasmine"
+  ]
 }
