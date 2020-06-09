@@ -1,7 +1,6 @@
-# agent-js-jasmine
-[![Build Status](https://travis-ci.org/reportportal/agent-js-jasmine.svg?branch=master)](https://travis-ci.org/reportportal/agent-js-jasmine)[![Code Coverage](https://codecov.io/gh/reportportal/agent-js-jasmine/branch/master/graph/badge.svg)](https://codecov.io/gh/reportportal/agent-js-jasmine)[![npm version](https://badge.fury.io/js/agent-js-jasmine.svg)](https://badge.fury.io/js/agent-js-jasmine)
+# @reportportal/agent-js-jasmine
 
-Agent for integration Jasmine with ReportPortal.     
+Agent for integration Jasmine with ReportPortal.
 [ReportPortal](http://reportportal.io/)<br>
 [ReportPortal on GitHub](https://github.com/reportportal)
 
@@ -12,7 +11,7 @@ npm i @reportportal/agent-js-jasmine --save-dev
 ```
 2. Create an agent instance:
 ```javascript
-var ReportportalAgent = require('agent-js-jasmine');
+var ReportportalAgent = require('@reportportal/agent-js-jasmine');
 
 var agent = new ReportportalAgent({
     // client settings
@@ -52,7 +51,7 @@ Agent settings consist of two parts:
 Parameter | Description
 --------- | -----------
 attachPicturesToLogs | It is 'true' or 'false', if set 'true' then attempts will be made to attach screenshots to the logs. Default: 'true'.
-reportHooks           | *Default: false.* Determines report before and after hooks or not. 
+reportHooks           | *Default: false.* Determines report before and after hooks or not.
 skippedIssue | *Default: true.* ReportPortal provides feature to mark skipped tests as not 'To Investigate' items on WS side.<br> Parameter could be equal boolean values:<br> *TRUE* - skipped tests considered as issues and will be marked as 'To Investigate' on Report Portal.<br> *FALSE* - skipped tests will not be marked as 'To Investigate' on application.
 
 To report [rerun](https://github.com/reportportal/documentation/blob/master/src/md/src/DevGuides/rerun.md) to the report portal you need to specify the following options:
@@ -76,7 +75,7 @@ The agent provides an API to extend the functionality of Jasmine.
 Add PublicReportingAPI into your test file to use additional reporting features.
 
 ```javascript
-const PublicReportingAPI = require('agent-js-jasmine/lib/publicReportingAPI');
+const PublicReportingAPI = require('@reportportal/agent-js-jasmine/lib/publicReportingAPI');
 ```
 
 #### Report static attributes, description
@@ -107,7 +106,7 @@ description | true | "string" - text description for your suite | "Your descript
 Parameter | Required | Description | Examples
 --------- | ----------- | ----------- | -----------
 attributes | true | attributes, pairs of key and value | [{ "key": "YourKey", "value": "YourValue" }]
-To integrate with Sauce Labs just add attributes: 
+To integrate with Sauce Labs just add attributes:
 
 ```javascript
 [{
@@ -180,14 +179,14 @@ PublicReportingAPI provides the corresponding methods for setting status into th
 
 #### Report test case id for steps and suites
 
-**setTestCaseId(*testCaseId*, *suite*)**. Set test case id to the current suite/spec. Should be called inside of corresponding suite or spec.</br> 
+**setTestCaseId(*testCaseId*, *suite*)**. Set test case id to the current suite/spec. Should be called inside of corresponding suite or spec.</br>
 
 *suite* it's description of your suite (all suite descriptions must be unique) ***REQUIRED INSIDE OF YOUR SUITE, OPTIONAL FOR SPEC*** <br/>
 
 
 **Example:**
 ```javascript
-const PublicReportingAPI = require('agent-js-jasmine/lib/publicReportingAPI');
+const PublicReportingAPI = require('@reportportal/agent-js-jasmine/lib/publicReportingAPI');
 
 describe('A suite', function() {
     const suiteAttachment = {
@@ -230,7 +229,7 @@ describe('A suite', function() {
         PublicReportingAPI.fatal('Fatal log message for spec "spec"');
         PublicReportingAPI.setStatusPassed();
         PublicReportingAPI.setTestCaseId('TestCaseIdForSpec');
-        
+
         expect(true).toBe(true);
     });
 });
@@ -244,7 +243,7 @@ If you launch protractor in single tread mode , just add agent initialization to
 Add agent.getJasmineReporter to the  jasmine.getEnv().addReporter() as an argument. You can see this in the example bellow.
 Update your configuration file as follows:
 ```javascript
-const ReportportalAgent = require('agent-js-jasmine');
+const ReportportalAgent = require('@reportportal/agent-js-jasmine');
 
 ...
 const agent = new ReportportalAgent({
@@ -280,7 +279,7 @@ exports.config = {
  For launching agents in multi thread mode firstly parent launch must be created and it ID
  must be sent to the child launches , so they would send data to the right place, and wouldn't create new
  launch instances at the Report Portal.
- 
+
  The main problem is that node.js is a single threaded platform. And for providing multi treading launch with browsers protractor generate
  new processes  of node, which can't interact with each other, so Singelton objects or functions can't be created for synchronizing
  it work. Only primitive types could be sent as args to the new processes before launch. The way of resolving this problem is
@@ -288,12 +287,12 @@ exports.config = {
  launch jasmine-agents with parent ID.
  Look through example of the Launch File with protractor-flake module at the 'Settings fot the multi threaded launch' section or at the examples folder.
  Any node runner could be used!
- 
+
 1. Install 'protractor-flake':
 ```bash
 npm install protractor-flake --save-dev
 ```
- 
+
 2. Create a config file as in example below:
 
 reportportalConf.js
@@ -321,7 +320,7 @@ module.exports = {
 protractorLaunchFile.js
 ```javascript
 const protractorFlake = require('protractor-flake');
-const AgentJasmine = require('agent-js-jasmine');
+const AgentJasmine = require('@reportportal/agent-js-jasmine');
 const reportportalConfig = require('./reportportalConf');
 const agent = new AgentJasmine(reportportalConfig);
 
@@ -346,9 +345,9 @@ agent.getLaunchStartPromise().then((launchData) =>{
 multiThreadConf.js file
 
 ```javascript
- const ReportportalAgent = require('agent-js-jasmine');
+ const ReportportalAgent = require('@reportportal/agent-js-jasmine');
  const reportportalConfig = require('./reportportalConf');
- 
+
  exports.config = {
      multiCapabilities: [
          {
@@ -375,7 +374,7 @@ multiThreadConf.js file
          afterAll((done) => agent.getPromiseFinishAllItems(agent.tempLaunchId).then(()=> done()));
          jasmine.getEnv().addReporter(agent.getJasmineReporter());
      }
- 
+
  };
 ```
 
@@ -392,11 +391,11 @@ npm run protractor-multi
 ```
 
 Link to the jasmine issue, that it doesn't work well with async functions
-[jasmine issue](https://github.com/jasmine/jasmine/issues/842), 
+[jasmine issue](https://github.com/jasmine/jasmine/issues/842),
 [protractor's community](https://github.com/angular/protractor/issues/1938)
 
 # Copyright Notice
 Licensed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
 license (see the LICENSE.txt file).
 
-		
+

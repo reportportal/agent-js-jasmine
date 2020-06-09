@@ -18,28 +18,28 @@ const path = require('path');
 const SpecificUtils = require('../lib/specificUtils');
 const pjson = require('./../package.json');
 
-describe('Specific Utils', function() {
-    afterEach(function() {
+describe('Specific Utils', () => {
+    afterEach(() => {
         delete global.browser;
     });
 
-    describe('takeScreenshot', function() {
-        it('should return promise if browser is false, promise resolve should be null', function(done) {
+    describe('takeScreenshot', () => {
+        it('should return promise if browser is false, promise resolve should be null', (done) => {
             global.browser = undefined;
 
             const promise = SpecificUtils.takeScreenshot('fileName');
 
             expect(promise.then).toBeDefined();
-            promise.then(function(value) {
+            promise.then((value) => {
                 expect(value).toEqual(null);
 
                 done();
             });
         });
 
-        it('should call browser.takeScreenshot if browser is true', function() {
+        it('should call browser.takeScreenshot if browser is true', () => {
             global.browser = jasmine.createSpyObj('global.browser', {
-                'takeScreenshot': new Promise(function() {})
+                takeScreenshot: new Promise((() => {})),
             });
 
             SpecificUtils.takeScreenshot('fileName');
@@ -47,35 +47,35 @@ describe('Specific Utils', function() {
             expect(global.browser.takeScreenshot).toHaveBeenCalled();
         });
 
-        it('if browser is true and browser.takeScreenshot is successful, promise resolve should be object', function(done) {
+        it('if browser is true and browser.takeScreenshot is successful, promise resolve should be object', (done) => {
             const expectedPromiseResolvedObj = {
                 name: 'fileName',
                 type: 'image/png',
-                content: 'png'
+                content: 'png',
             };
             global.browser = jasmine.createSpyObj('global.browser', {
-                'takeScreenshot': Promise.resolve('png')
+                takeScreenshot: Promise.resolve('png'),
             });
 
             const promise = SpecificUtils.takeScreenshot('fileName');
 
             expect(global.browser.takeScreenshot).toHaveBeenCalled();
-            promise.then(function(value) {
+            promise.then((value) => {
                 expect(value).toEqual(expectedPromiseResolvedObj);
 
                 done();
             });
         });
 
-        it('if browser is true and browser.takeScreenshot is unsuccessful, promise resolve should be null', function(done) {
+        it('if browser is true and browser.takeScreenshot is unsuccessful, promise resolve should be null', (done) => {
             global.browser = jasmine.createSpyObj('global.browser', {
-                'takeScreenshot': Promise.reject()
+                takeScreenshot: Promise.reject(),
             });
 
             const promise = SpecificUtils.takeScreenshot('fileName');
 
             expect(global.browser.takeScreenshot).toHaveBeenCalled();
-            promise.then(function(value) {
+            promise.then((value) => {
                 expect(value).toEqual(null);
 
                 done();
@@ -83,22 +83,22 @@ describe('Specific Utils', function() {
         });
     });
 
-    describe('getLaunchObj', function() {
-        it('should return launchObj only with system attribute and description if parameter doesn\'t set', function() {
+    describe('getLaunchObj', () => {
+        it('should return launchObj only with system attribute and description if parameter doesn\'t set', () => {
             const expectedLaunchObj = {
                 attributes: [{
                     key: 'agent',
                     value: 'agentName|agentVersion',
                     system: true,
                 }],
-                description: undefined
+                description: undefined,
             };
             spyOn(SpecificUtils, 'getSystemAttributes').and.returnValue([
                 {
                     key: 'agent',
                     value: 'agentName|agentVersion',
                     system: true,
-                }
+                },
             ]);
 
             const launchObj = SpecificUtils.getLaunchObj({});
@@ -106,7 +106,8 @@ describe('Specific Utils', function() {
             expect(launchObj).toEqual(expectedLaunchObj);
         });
 
-        it('should return correct launchObj with attribute, description if parameter has description and custom attributes', function() {
+        it('should return correct launchObj with attribute, description if parameter has description'
+            + ' and custom attributes', () => {
             const expectedLaunchObj = {
                 attributes: [{
                     key: 'key',
@@ -116,14 +117,14 @@ describe('Specific Utils', function() {
                     value: 'agentName|agentVersion',
                     system: true,
                 }],
-                description: 'description'
+                description: 'description',
             };
             spyOn(SpecificUtils, 'getSystemAttributes').and.returnValue([
                 {
                     key: 'agent',
                     value: 'agentName|agentVersion',
                     system: true,
-                }
+                },
             ]);
 
             const launchObj = SpecificUtils.getLaunchObj({
@@ -131,13 +132,14 @@ describe('Specific Utils', function() {
                     key: 'key',
                     value: 'value',
                 }],
-                description: 'description'
+                description: 'description',
             });
 
             expect(launchObj).toEqual(expectedLaunchObj);
         });
 
-        it('should return correct launchObj with attribute, description, id, rerun, rerunOf if parameter has description, attributes, id, rerun, rerunOf', function() {
+        it('should return correct launchObj with attribute, description, id, rerun, rerunOf if parameter'
+            + ' has description, attributes, id, rerun, rerunOf', () => {
             const expectedLaunchObj = {
                 attributes: [{
                     key: 'key',
@@ -157,7 +159,7 @@ describe('Specific Utils', function() {
                     key: 'agent',
                     value: 'agentName|agentVersion',
                     system: true,
-                }
+                },
             ]);
 
             const launchObj = SpecificUtils.getLaunchObj({
@@ -174,8 +176,8 @@ describe('Specific Utils', function() {
             expect(launchObj).toEqual(expectedLaunchObj);
         });
 
-        describe('getSystemAttributes', function () {
-            it('should return only agent system attribute if parameter is true', function() {
+        describe('getSystemAttributes', () => {
+            it('should return only agent system attribute if parameter is true', () => {
                 const expectedSystemAttribute = [{
                     key: 'agent',
                     value: `${pjson.name}|${pjson.version}`,
@@ -184,10 +186,10 @@ describe('Specific Utils', function() {
 
                 const systemAttributes = SpecificUtils.getSystemAttributes(true);
 
-                expect(systemAttributes).toEqual(expectedSystemAttribute)
+                expect(systemAttributes).toEqual(expectedSystemAttribute);
             });
 
-            it('should return only agent system attribute if there is no parameter', function() {
+            it('should return only agent system attribute if there is no parameter', () => {
                 const expectedSystemAttribute = [{
                     key: 'agent',
                     value: `${pjson.name}|${pjson.version}`,
@@ -196,10 +198,10 @@ describe('Specific Utils', function() {
 
                 const systemAttributes = SpecificUtils.getSystemAttributes();
 
-                expect(systemAttributes).toEqual(expectedSystemAttribute)
+                expect(systemAttributes).toEqual(expectedSystemAttribute);
             });
 
-            it('should return agent and skippedIssue system attributes if parameter is false', function() {
+            it('should return agent and skippedIssue system attributes if parameter is false', () => {
                 const expectedSystemAttribute = [{
                     key: 'agent',
                     value: `${pjson.name}|${pjson.version}`,
@@ -212,12 +214,12 @@ describe('Specific Utils', function() {
 
                 const systemAttributes = SpecificUtils.getSystemAttributes(false);
 
-                expect(systemAttributes).toEqual(expectedSystemAttribute)
+                expect(systemAttributes).toEqual(expectedSystemAttribute);
             });
         });
 
-        describe('getAgentInfo', function() {
-            it('should contain version and name properties', function() {
+        describe('getAgentInfo', () => {
+            it('should contain version and name properties', () => {
                 const agentParams = SpecificUtils.getAgentInfo();
 
                 expect(Object.keys(agentParams)).toContain('version');
@@ -225,49 +227,50 @@ describe('Specific Utils', function() {
             });
         });
 
-        describe('getCodeRef', function() {
-            it('should return promise if browser is false, promise resolve should be null', function(done) {
+        describe('getCodeRef', () => {
+            it('should return promise if browser is false, promise resolve should be null', (done) => {
                 global.browser = undefined;
 
                 const promise = SpecificUtils.getCodeRef();
 
-                promise.then(function(value) {
+                promise.then((value) => {
                     expect(value).toEqual(null);
 
                     done();
                 });
             });
 
-            it('should return promise, promise resolve should be codeRef value if browser is true', function(done) {
+            it('should return promise, promise resolve should be codeRef value if browser is true', (done) => {
                 global.browser = jasmine.createSpyObj('global.browser', {
-                    'getProcessedConfig': new Promise(function(resolve) {
-                        resolve({ specs: [`C:\\Path\\test.spec.js`] });
-                    })
+                    getProcessedConfig: new Promise(((resolve) => {
+                        resolve({ specs: ['C:\\Path\\test.spec.js'] });
+                    })),
                 });
                 spyOn(process, 'cwd').and.returnValue('C:\\Path');
 
                 const promise = SpecificUtils.getCodeRef(0, 'testName');
 
                 expect(global.browser.getProcessedConfig).toHaveBeenCalled();
-                promise.then(function(codeRef) {
+                promise.then((codeRef) => {
                     expect(codeRef).toEqual('test.spec.js/testName');
 
                     done();
                 });
             });
 
-            it('should return promise, replace separator with \'/\', promise resolve should be codeRef value if browser is true', function(done) {
+            it('should return promise, replace separator with \'/\', promise resolve should be codeRef value if'
+                + ' browser is true', (done) => {
                 global.browser = jasmine.createSpyObj('global.browser', {
-                    'getProcessedConfig': new Promise(function(resolve) {
-                        resolve({ specs: [`C:\\Path\\example\\test.spec.js`] });
-                    })
+                    getProcessedConfig: new Promise(((resolve) => {
+                        resolve({ specs: ['C:\\Path\\example\\test.spec.js'] });
+                    })),
                 });
                 spyOn(process, 'cwd').and.returnValue('C:\\Path');
 
                 const promise = SpecificUtils.getCodeRef(0, 'testName');
 
                 expect(global.browser.getProcessedConfig).toHaveBeenCalled();
-                promise.then(function(codeRef) {
+                promise.then((codeRef) => {
                     expect(codeRef).toEqual('example/test.spec.js/testName');
 
                     done();
@@ -275,42 +278,42 @@ describe('Specific Utils', function() {
             });
         });
 
-        describe('getFullTestName', function() {
-            it('should return test.description if test.description is equal to test.fullName', function() {
+        describe('getFullTestName', () => {
+            it('should return test.description if test.description is equal to test.fullName', () => {
                 const fullTestName = SpecificUtils.getFullTestName({ description: 'test', fullName: 'test' });
 
                 expect(fullTestName).toEqual('test');
             });
 
-            it('should return correct fullTestName if test.description is not equal to test.fullName', function() {
+            it('should return correct fullTestName if test.description is not equal to test.fullName', () => {
                 const fullTestName = SpecificUtils.getFullTestName({ description: 'spec', fullName: 'suite spec' });
 
                 expect(fullTestName).toEqual('suite/spec');
             });
         });
 
-        describe('isPromise', function() {
-            it('should return true if obj is promise', function() {
+        describe('isPromise', () => {
+            it('should return true if obj is promise', () => {
                 const isPromise = SpecificUtils.isPromise(new Promise(() => {}));
 
                 expect(isPromise).toEqual(true);
             });
 
-            it('should return false if obj is not promise', function() {
+            it('should return false if obj is not promise', () => {
                 const isPromise = SpecificUtils.isPromise('string');
 
                 expect(isPromise).toEqual(false);
             });
         });
 
-        describe('isHookShouldBeCalled', function() {
-            it('should return true if action is promise', function() {
+        describe('isHookShouldBeCalled', () => {
+            it('should return true if action is promise', () => {
                 const isHookShouldBeCalled = SpecificUtils.isHookShouldBeCalled(new Promise(() => {}));
 
                 expect(isHookShouldBeCalled).toEqual(true);
             });
 
-            it('should return true if action is function', function() {
+            it('should return true if action is function', () => {
                 const isHookShouldBeCalled = SpecificUtils.isHookShouldBeCalled(() => {});
 
                 expect(isHookShouldBeCalled).toEqual(true);
