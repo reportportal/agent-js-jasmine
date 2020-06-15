@@ -41,7 +41,7 @@ describe('jasmine Report Portal reporter', function() {
 
     afterEach(function() {
         promise = null;
-        reporter.parentIds = [];
+        reporter.parentInfo = [];
         reporter.hookIds = null;
         reporter.additionalCustomParams = {};
         reporter.conf.attachPicturesToLogs = false;
@@ -49,7 +49,7 @@ describe('jasmine Report Portal reporter', function() {
     });
 
     it('should be properly initialized', function() {
-        expect(reporter.parentIds.length).toBe(0);
+        expect(reporter.parentInfo.length).toBe(0);
     });
 
     it('should escape markdown', function() {
@@ -78,45 +78,45 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('getParentId', function() {
-        it('should return null if getParentId is empty', function() {
-            reporter.parentIds = [];
+    describe('getParentInfo', function() {
+        it('should return null if getParentInfo is empty', function() {
+            reporter.parentInfo = [];
 
-            const parent = reporter.getParentId();
+            const parent = reporter.getParentInfo();
 
             expect(parent).toEqual(null);
         });
 
         it('should return last parent if there is no number as parameter', function() {
-            reporter.parentIds = [1, 2, 3];
+            reporter.parentInfo = [1, 2, 3];
 
-            const parent = reporter.getParentId();
+            const parent = reporter.getParentInfo();
 
             expect(parent).toEqual(3);
         });
     });
 
-    describe('getParentOfParentId', function() {
-        it('should return null if this.parentIds is empty', function() {
-            reporter.parentIds = [];
+    describe('getParentOfParentInfo', function() {
+        it('should return null if this.parentInfo is empty', function() {
+            reporter.parentInfo = [];
 
-            const parent = reporter.getParentOfParentId();
-
-            expect(parent).toEqual(null);
-        });
-
-        it('should return null if this.parentIds.length less then 2', function() {
-            reporter.parentIds = [1];
-
-            const parent = reporter.getParentOfParentId();
+            const parent = reporter.getParentOfParentInfo();
 
             expect(parent).toEqual(null);
         });
 
-        it('should return correct parent if this.parentIds.length more then 1', function() {
-            reporter.parentIds = [1, 2];
+        it('should return null if this.parentInfo.length less then 2', function() {
+            reporter.parentInfo = [1];
 
-            const parent = reporter.getParentOfParentId();
+            const parent = reporter.getParentOfParentInfo();
+
+            expect(parent).toEqual(null);
+        });
+
+        it('should return correct parent if this.parentInfo.length more then 1', function() {
+            reporter.parentInfo = [1, 2];
+
+            const parent = reporter.getParentOfParentInfo();
 
             expect(parent).toEqual(1);
         });
@@ -474,16 +474,16 @@ describe('jasmine Report Portal reporter', function() {
     });
 
     describe('getTopLevelType', function() {
-        it('should return level type \'test\' if parentIds is not empty', function() {
-            reporter.parentIds = [0, 1];
+        it('should return level type \'test\' if parentInfo is not empty', function() {
+            reporter.parentInfo = [0, 1];
 
             const levelType = reporter.getTopLevelType();
 
             expect(levelType).toBe('test');
         });
 
-        it('should return level type \'suite\' if parentIds is empty', function() {
-            reporter.parentIds = [];
+        it('should return level type \'suite\' if parentInfo is empty', function() {
+            reporter.parentInfo = [];
 
             const levelType = reporter.getTopLevelType();
 
@@ -528,7 +528,8 @@ describe('jasmine Report Portal reporter', function() {
                     attributes: [{ key: 'key', value: 'value' }],
                     description: 'text description',
                     testCaseId: 'testCaseId',
-                    codeRef: 'codeRef'
+                    codeRef: 'codeRef',
+                    startTime: baseTime.valueOf()
                 }, tempLaunchId, null);
                 expect(reporter.sendLog).toHaveBeenCalledTimes(2);
                 expect(reporter.sendLog).toHaveBeenCalledWith('3452', logs[0]);
@@ -538,14 +539,14 @@ describe('jasmine Report Portal reporter', function() {
             });
         });
 
-        it('should create an element in parentIds', function(done) {
+        it('should create an element in parentInfo', function(done) {
             const promise = reporter.suiteStarted({
                 description: 'test description',
                 fullName: 'test name'
             });
 
             promise.then(function() {
-                expect(reporter.parentIds.length).toBe(1);
+                expect(reporter.parentInfo.length).toBe(1);
 
                 done();
             });
@@ -572,26 +573,62 @@ describe('jasmine Report Portal reporter', function() {
                     type: 'step',
                     description: 'test description',
                     name: 'test description',
-                    codeRef: 'codeRef'
+                    codeRef: 'codeRef',
+                    startTime: baseTime.valueOf(),
                 }, tempLaunchId, null);
 
                 done();
             });
         });
 
-        it('should call setParentId with the appropriate parameter', function(done) {
-            spyOn(reporter, 'setParentId');
+        it('should call setParentInfo with the appropriate parameter', function(done) {
+            spyOn(reporter, 'setParentInfo');
 
             const promise = reporter.suiteStarted({
                 description: 'test description',
-                fullName: 'test name'
+                fullName: 'test name',
             });
 
             promise.then(function() {
-                expect(reporter.setParentId).toHaveBeenCalledWith('3452');
+                expect(reporter.setParentInfo).toHaveBeenCalledWith({ tempId: '3452', startTime: baseTime.valueOf() });
 
                 done();
             });
+        });
+    });
+
+    describe('getHookStartTime', function () {
+        it('should return reporter.startTime minus one if hookType is BEFORE_SUITE', function() {
+            reporter.startTime = 1234567891234;
+
+            const startTime = reporter.getHookStartTime('BEFORE_SUITE', null);
+
+            expect(startTime).toEqual(1234567891233);
+        });
+
+        it('should return reporter.startTime minus one if hookType is BEFORE_METHOD', function() {
+            reporter.startTime = 1234567891234;
+
+            const startTime = reporter.getHookStartTime('BEFORE_METHOD', { startTime: 1234567891233 });
+
+            expect(startTime).toEqual(1234567891233);
+        });
+
+        it('should return reporter.startTime', function() {
+            reporter.startTime = 1234567891234;
+
+            const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
+
+            expect(startTime).toEqual(1234567891234);
+        });
+
+        it('should call getTime if reporter.startTime is null', function() {
+            spyOn(reporter, 'getTime').and.returnValue(1234567891234);
+
+            const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
+
+            expect(reporter.getTime).toHaveBeenCalled();
+            expect(startTime).toEqual(1234567891234);
         });
     });
 
@@ -602,6 +639,7 @@ describe('jasmine Report Portal reporter', function() {
                 tempId: '3452',
                 promise: Promise.resolve()
             });
+            spyOn(reporter, 'getHookStartTime').and.returnValue(baseTime.valueOf());
 
             reporter.hookStarted('beforeAll');
 
