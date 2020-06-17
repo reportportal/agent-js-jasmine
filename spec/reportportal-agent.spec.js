@@ -83,7 +83,7 @@ describe('Report Portal agent', function() {
         expect(instanceJasmineReportportalReporter).toEqual(jasmine.any(JasmineReportportalReporter));
         expect(instanceJasmineReportportalReporter).toBeDefined();
         expect(instanceJasmineReportportalReporter.client).toBeDefined();
-        expect(instanceJasmineReportportalReporter.parentInfo).toEqual([]);
+        expect(instanceJasmineReportportalReporter.parentsInfo).toEqual([]);
     });
 
     it('getLaunchStartPromise should return promise', function() {

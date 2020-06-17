@@ -41,7 +41,7 @@ describe('jasmine Report Portal reporter', function() {
 
     afterEach(function() {
         promise = null;
-        reporter.parentInfo = [];
+        reporter.parentsInfo = [];
         reporter.hookIds = null;
         reporter.additionalCustomParams = {};
         reporter.conf.attachPicturesToLogs = false;
@@ -49,7 +49,7 @@ describe('jasmine Report Portal reporter', function() {
     });
 
     it('should be properly initialized', function() {
-        expect(reporter.parentInfo.length).toBe(0);
+        expect(reporter.parentsInfo.length).toBe(0);
     });
 
     it('should escape markdown', function() {
@@ -80,7 +80,7 @@ describe('jasmine Report Portal reporter', function() {
 
     describe('getParentInfo', function() {
         it('should return null if getParentInfo is empty', function() {
-            reporter.parentInfo = [];
+            reporter.parentsInfo = [];
 
             const parent = reporter.getParentInfo();
 
@@ -88,7 +88,7 @@ describe('jasmine Report Portal reporter', function() {
         });
 
         it('should return last parent if there is no number as parameter', function() {
-            reporter.parentInfo = [1, 2, 3];
+            reporter.parentsInfo = [1, 2, 3];
 
             const parent = reporter.getParentInfo();
 
@@ -97,24 +97,24 @@ describe('jasmine Report Portal reporter', function() {
     });
 
     describe('getParentOfParentInfo', function() {
-        it('should return null if this.parentInfo is empty', function() {
-            reporter.parentInfo = [];
+        it('should return null if this.parentsInfo is empty', function() {
+            reporter.parentsInfo = [];
 
             const parent = reporter.getParentOfParentInfo();
 
             expect(parent).toEqual(null);
         });
 
-        it('should return null if this.parentInfo.length less then 2', function() {
-            reporter.parentInfo = [1];
+        it('should return null if this.parentsInfo.length less then 2', function() {
+            reporter.parentsInfo = [1];
 
             const parent = reporter.getParentOfParentInfo();
 
             expect(parent).toEqual(null);
         });
 
-        it('should return correct parent if this.parentInfo.length more then 1', function() {
-            reporter.parentInfo = [1, 2];
+        it('should return correct parent if this.parentsInfo.length more then 1', function() {
+            reporter.parentsInfo = [1, 2];
 
             const parent = reporter.getParentOfParentInfo();
 
@@ -474,16 +474,16 @@ describe('jasmine Report Portal reporter', function() {
     });
 
     describe('getTopLevelType', function() {
-        it('should return level type \'test\' if parentInfo is not empty', function() {
-            reporter.parentInfo = [0, 1];
+        it('should return level type \'test\' if parentsInfo is not empty', function() {
+            reporter.parentsInfo = [0, 1];
 
             const levelType = reporter.getTopLevelType();
 
             expect(levelType).toBe('test');
         });
 
-        it('should return level type \'suite\' if parentInfo is empty', function() {
-            reporter.parentInfo = [];
+        it('should return level type \'suite\' if parentsInfo is empty', function() {
+            reporter.parentsInfo = [];
 
             const levelType = reporter.getTopLevelType();
 
@@ -539,14 +539,14 @@ describe('jasmine Report Portal reporter', function() {
             });
         });
 
-        it('should create an element in parentInfo', function(done) {
+        it('should create an element in parentsInfo', function(done) {
             const promise = reporter.suiteStarted({
                 description: 'test description',
                 fullName: 'test name'
             });
 
             promise.then(function() {
-                expect(reporter.parentInfo.length).toBe(1);
+                expect(reporter.parentsInfo.length).toBe(1);
 
                 done();
             });
@@ -598,31 +598,31 @@ describe('jasmine Report Portal reporter', function() {
     });
 
     describe('getHookStartTime', function () {
-        it('should return reporter.startTime minus one if hookType is BEFORE_SUITE', function() {
-            reporter.startTime = 1234567891234;
+        it('should return reporter.itemStartTime minus one if hookType is BEFORE_SUITE', function() {
+            reporter.itemStartTime = 1234567891234;
 
             const startTime = reporter.getHookStartTime('BEFORE_SUITE', null);
 
             expect(startTime).toEqual(1234567891233);
         });
 
-        it('should return reporter.startTime minus one if hookType is BEFORE_METHOD', function() {
-            reporter.startTime = 1234567891234;
+        it('should return reporter.itemStartTime minus one if hookType is BEFORE_METHOD', function() {
+            reporter.itemStartTime = 1234567891234;
 
             const startTime = reporter.getHookStartTime('BEFORE_METHOD', { startTime: 1234567891233 });
 
             expect(startTime).toEqual(1234567891233);
         });
 
-        it('should return reporter.startTime', function() {
-            reporter.startTime = 1234567891234;
+        it('should return reporter.itemStartTime', function() {
+            reporter.itemStartTime = 1234567891234;
 
             const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
 
             expect(startTime).toEqual(1234567891234);
         });
 
-        it('should call getTime if reporter.startTime is null', function() {
+        it('should call getTime if reporter.itemStartTime is null', function() {
             spyOn(reporter, 'getTime').and.returnValue(1234567891234);
 
             const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
@@ -665,7 +665,7 @@ describe('jasmine Report Portal reporter', function() {
                 status: 'passed',
                 endTime: baseTime.valueOf(),
             });
-            expect(reporter.startTime).toEqual(null);
+            expect(reporter.itemStartTime).toEqual(null);
         });
 
         it('should call finishTestItem with status FAILED if it gets from parameter', function() {
