@@ -14,8 +14,9 @@
  *  limitations under the License.
  */
 
-const ClientPublicReportingAPI = require('reportportal-client/lib/publicReportingAPI');
+const ClientPublicReportingAPI = require('@reportportal/client-javascript/lib/publicReportingAPI');
 const PublicReportingAPI = require('../lib/publicReportingAPI');
+
 const publicReportingAPILaunchLogMethods = [
     { method: 'launchTrace', level: 'TRACE' },
     { method: 'launchDebug', level: 'DEBUG' },
@@ -53,16 +54,18 @@ const publicReportingAPIStatusMethods = [
     { method: 'setStatusWarn', status: 'warn' },
 ];
 
-describe('PublicReportingAPI', function() {
-    it('should call clientPublicReportingApi.addAttributes method with attributes and undefined as parameter, if suite doesn\'t set', function() {
+describe('PublicReportingAPI', () => {
+    it('should call clientPublicReportingApi.addAttributes method with attributes and undefined as parameter,'
+        + ' if suite doesn\'t set', () => {
         spyOn(ClientPublicReportingAPI, 'addAttributes').and.returnValue(() => {});
 
         PublicReportingAPI.addAttributes([{ key: 'key', value: 'value' }]);
 
-        expect(ClientPublicReportingAPI.addAttributes).toHaveBeenCalledWith([{ key: 'key', value: 'value' }], undefined);
+        expect(ClientPublicReportingAPI.addAttributes)
+            .toHaveBeenCalledWith([{ key: 'key', value: 'value' }], undefined);
     });
 
-    it('should call clientPublicReportingApi.addAttributes method with attributes and suite as parameter', function() {
+    it('should call clientPublicReportingApi.addAttributes method with attributes and suite as parameter', () => {
         spyOn(ClientPublicReportingAPI, 'addAttributes').and.returnValue(() => {});
 
         PublicReportingAPI.addAttributes([{ key: 'key', value: 'value' }], 'suite');
@@ -70,7 +73,8 @@ describe('PublicReportingAPI', function() {
         expect(ClientPublicReportingAPI.addAttributes).toHaveBeenCalledWith([{ key: 'key', value: 'value' }], 'suite');
     });
 
-    it('should call clientPublicReportingApi.setDescription method with text and undefined as parameters, if suite doesn\'t set', function() {
+    it('should call clientPublicReportingApi.setDescription method with text and undefined as parameters,'
+        + ' if suite doesn\'t set', () => {
         spyOn(ClientPublicReportingAPI, 'setDescription').and.returnValue(() => {});
 
         PublicReportingAPI.setDescription('text');
@@ -78,7 +82,7 @@ describe('PublicReportingAPI', function() {
         expect(ClientPublicReportingAPI.setDescription).toHaveBeenCalledWith('text', undefined);
     });
 
-    it('should call clientPublicReportingApi.setDescription method with text and suite as parameters', function() {
+    it('should call clientPublicReportingApi.setDescription method with text and suite as parameters', () => {
         spyOn(ClientPublicReportingAPI, 'setDescription').and.returnValue(() => {});
 
         PublicReportingAPI.setDescription('text', 'suite');
@@ -86,7 +90,8 @@ describe('PublicReportingAPI', function() {
         expect(ClientPublicReportingAPI.setDescription).toHaveBeenCalledWith('text', 'suite');
     });
 
-    it('should call clientPublicReportingApi.setTestCaseId method with testCaseId and undefined as parameters, if suite doesn\'t set', function() {
+    it('should call clientPublicReportingApi.setTestCaseId method with testCaseId and undefined as parameters,'
+        + ' if suite doesn\'t set', () => {
         spyOn(ClientPublicReportingAPI, 'setTestCaseId').and.returnValue(() => {});
 
         PublicReportingAPI.setTestCaseId('testCaseId');
@@ -94,7 +99,7 @@ describe('PublicReportingAPI', function() {
         expect(ClientPublicReportingAPI.setTestCaseId).toHaveBeenCalledWith('testCaseId', undefined);
     });
 
-    it('should call clientPublicReportingApi.setTestCaseId method with testCaseId and suite as parameters', function() {
+    it('should call clientPublicReportingApi.setTestCaseId method with testCaseId and suite as parameters', () => {
         spyOn(ClientPublicReportingAPI, 'setTestCaseId').and.returnValue(() => {});
 
         PublicReportingAPI.setTestCaseId('testCaseId', 'suite');
@@ -102,43 +107,58 @@ describe('PublicReportingAPI', function() {
         expect(ClientPublicReportingAPI.setTestCaseId).toHaveBeenCalledWith('testCaseId', 'suite');
     });
 
-    it('should call clientPublicReportingApi.addLog method with log and suite as parameters', function() {
+    it('should call clientPublicReportingApi.addLog method with log and suite as parameters', () => {
         spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
 
         PublicReportingAPI.log('INFO', 'message', null, 'suite');
 
-        expect(ClientPublicReportingAPI.addLog).toHaveBeenCalledWith({ level: 'INFO', file: null, message: 'message' }, 'suite');
+        expect(ClientPublicReportingAPI.addLog)
+            .toHaveBeenCalledWith({ level: 'INFO', file: null, message: 'message' }, 'suite');
     });
 
-    publicReportingAPILogMethods.forEach(item => {
-        it(`should call clientPublicReportingApi.addLog method with ${item.level} level parameter if we run ${item.method} method`, function() {
+    it('should call clientPublicReportingApi.addLog with default parameters if there are no custom ones', () => {
+        spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
+
+        PublicReportingAPI.log();
+
+        expect(ClientPublicReportingAPI.addLog)
+            .toHaveBeenCalledWith({ level: 'INFO', file: undefined, message: '' }, undefined);
+    });
+
+    publicReportingAPILogMethods.forEach((item) => {
+        it(`should call clientPublicReportingApi.addLog method with ${item.level}
+         level parameter if we run ${item.method} method`, () => {
             spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
 
             PublicReportingAPI[item.method]('message', null, 'suite');
 
-            expect(ClientPublicReportingAPI.addLog).toHaveBeenCalledWith({ level: item.level, file: null, message: 'message' }, 'suite');
+            expect(ClientPublicReportingAPI.addLog)
+                .toHaveBeenCalledWith({ level: item.level, file: null, message: 'message' }, 'suite');
         });
     });
 
-    it('should call clientPublicReportingApi.addLaunchLog method with default parameters', function() {
+    it('should call clientPublicReportingApi.addLaunchLog method with default parameters', () => {
         spyOn(ClientPublicReportingAPI, 'addLaunchLog').and.returnValue(() => {});
 
         PublicReportingAPI.launchLog();
 
-        expect(ClientPublicReportingAPI.addLaunchLog).toHaveBeenCalledWith({ level: 'INFO', file: undefined, message: '' });
+        expect(ClientPublicReportingAPI.addLaunchLog)
+            .toHaveBeenCalledWith({ level: 'INFO', file: undefined, message: '' });
     });
 
-    publicReportingAPILaunchLogMethods.forEach(item => {
-        it(`should call clientPublicReportingApi.addLaunchLog method with ${item.level} level parameter if we run ${item.method} method`, function() {
+    publicReportingAPILaunchLogMethods.forEach((item) => {
+        it(`should call clientPublicReportingApi.addLaunchLog method with ${item.level}
+         level parameter if we run ${item.method} method`, () => {
             spyOn(ClientPublicReportingAPI, 'addLaunchLog').and.returnValue(() => {});
 
             PublicReportingAPI[item.method]();
 
-            expect(ClientPublicReportingAPI.addLaunchLog).toHaveBeenCalledWith({ level: item.level, file: undefined, message: '' });
+            expect(ClientPublicReportingAPI.addLaunchLog)
+                .toHaveBeenCalledWith({ level: item.level, file: undefined, message: '' });
         });
     });
 
-    it('should call clientPublicReportingApi.setStatus method', function() {
+    it('should call clientPublicReportingApi.setStatus method', () => {
         spyOn(ClientPublicReportingAPI, 'setStatus').and.returnValue(() => {});
 
         PublicReportingAPI.setStatus();
@@ -146,8 +166,9 @@ describe('PublicReportingAPI', function() {
         expect(ClientPublicReportingAPI.setStatus).toHaveBeenCalled();
     });
 
-    publicReportingAPIStatusMethods.forEach(item => {
-        it(`should call clientPublicReportingApi.setStatus method with ${item.status} status parameter if we run ${item.method} method`, function() {
+    publicReportingAPIStatusMethods.forEach((item) => {
+        it(`should call clientPublicReportingApi.setStatus method with ${item.status}
+         status parameter if we run ${item.method} method`, () => {
             spyOn(ClientPublicReportingAPI, 'setStatus').and.returnValue(() => {});
 
             PublicReportingAPI[item.method]();
@@ -156,7 +177,7 @@ describe('PublicReportingAPI', function() {
         });
     });
 
-    it('should call clientPublicReportingApi.setLaunchStatus method', function() {
+    it('should call clientPublicReportingApi.setLaunchStatus method', () => {
         spyOn(ClientPublicReportingAPI, 'setLaunchStatus').and.returnValue(() => {});
 
         PublicReportingAPI.setLaunchStatus();
@@ -164,8 +185,9 @@ describe('PublicReportingAPI', function() {
         expect(ClientPublicReportingAPI.setLaunchStatus).toHaveBeenCalled();
     });
 
-    publicReportingAPILaunchStatusMethods.forEach(item => {
-        it(`should call clientPublicReportingApi.setStatus method with ${item.status} status parameter if we run ${item.method} method`, function() {
+    publicReportingAPILaunchStatusMethods.forEach((item) => {
+        it(`should call clientPublicReportingApi.setStatus method with ${item.status}
+         status parameter if we run ${item.method} method`, () => {
             spyOn(ClientPublicReportingAPI, 'setLaunchStatus').and.returnValue(() => {});
 
             PublicReportingAPI[item.method]();

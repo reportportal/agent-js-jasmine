@@ -14,32 +14,32 @@
  *  limitations under the License.
  */
 
-describe('jasmine Report Portal reporter', function() {
+describe('jasmine Report Portal reporter', () => {
     const Reporter = require('../lib/jasmine-reportportal-reporter');
     const SpecificUtils = require('../lib/specificUtils');
 
     let reporter;
-    let tempLaunchId = 'ewrf35432r';
+    const tempLaunchId = 'ewrf35432r';
     let promise;
     let baseTime;
 
-    beforeEach(function() {
+    beforeEach(() => {
         const client = {
             startTestItem() {},
             finishTestItem() {},
             sendLog() {},
         };
-        const onSetLaunchStatus = function() {};
+        const onSetLaunchStatus = function () {};
         baseTime = new Date(2020, 4, 8);
 
         jasmine.clock().mockDate(baseTime);
         reporter = new Reporter({
-            client: client,
-            tempLaunchId: tempLaunchId,
+            client,
+            tempLaunchId,
         }, onSetLaunchStatus);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         promise = null;
         reporter.parentsInfo = [];
         reporter.hookIds = null;
@@ -48,18 +48,18 @@ describe('jasmine Report Portal reporter', function() {
         reporter.conf.reportHooks = false;
     });
 
-    it('should be properly initialized', function() {
+    it('should be properly initialized', () => {
         expect(reporter.parentsInfo.length).toBe(0);
     });
 
-    it('should escape markdown', function() {
+    it('should escape markdown', () => {
         const escapeString = reporter.escapeMarkdown('_test*');
 
         expect(escapeString).toBe('\\_test\\*');
     });
 
-    describe('reportHooks', function() {
-        it('should called installHooks method if conf.reportHooks is true', function() {
+    describe('reportHooks', () => {
+        it('should called installHooks method if conf.reportHooks is true', () => {
             spyOn(reporter, 'installHooks');
             reporter.conf.reportHooks = true;
 
@@ -68,7 +68,7 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.installHooks).toHaveBeenCalled();
         });
 
-        it('should not called installHooks method if conf.reportHooks is false', function() {
+        it('should not called installHooks method if conf.reportHooks is false', () => {
             spyOn(reporter, 'installHooks');
             reporter.conf.reportHooks = false;
 
@@ -78,8 +78,8 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('getParentInfo', function() {
-        it('should return null if getParentInfo is empty', function() {
+    describe('getParentInfo', () => {
+        it('should return null if getParentInfo is empty', () => {
             reporter.parentsInfo = [];
 
             const parent = reporter.getParentInfo();
@@ -87,7 +87,7 @@ describe('jasmine Report Portal reporter', function() {
             expect(parent).toEqual(null);
         });
 
-        it('should return last parent if there is no number as parameter', function() {
+        it('should return last parent if there is no number as parameter', () => {
             reporter.parentsInfo = [1, 2, 3];
 
             const parent = reporter.getParentInfo();
@@ -96,8 +96,8 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('getParentOfParentInfo', function() {
-        it('should return null if this.parentsInfo is empty', function() {
+    describe('getParentOfParentInfo', () => {
+        it('should return null if this.parentsInfo is empty', () => {
             reporter.parentsInfo = [];
 
             const parent = reporter.getParentOfParentInfo();
@@ -105,7 +105,7 @@ describe('jasmine Report Portal reporter', function() {
             expect(parent).toEqual(null);
         });
 
-        it('should return null if this.parentsInfo.length less then 2', function() {
+        it('should return null if this.parentsInfo.length less then 2', () => {
             reporter.parentsInfo = [1];
 
             const parent = reporter.getParentOfParentInfo();
@@ -113,7 +113,7 @@ describe('jasmine Report Portal reporter', function() {
             expect(parent).toEqual(null);
         });
 
-        it('should return correct parent if this.parentsInfo.length more then 1', function() {
+        it('should return correct parent if this.parentsInfo.length more then 1', () => {
             reporter.parentsInfo = [1, 2];
 
             const parent = reporter.getParentOfParentInfo();
@@ -122,8 +122,8 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('changeCurrentTestFilePath', function() {
-        it('should assign zero to currentTestFilePathIndex if currentTestFilePathIndex is undefined', function() {
+    describe('changeCurrentTestFilePath', () => {
+        it('should assign zero to currentTestFilePathIndex if currentTestFilePathIndex is undefined', () => {
             reporter.currentTestFilePathIndex = undefined;
 
             reporter.changeCurrentTestFilePath();
@@ -131,7 +131,8 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.currentTestFilePathIndex).toEqual(0);
         });
 
-        it('should increase by one the currentTestFilePathIndex if currentTestFilePathIndex is not undefined and suite.description is equal to suite.fullName', function() {
+        it('should increase by one the currentTestFilePathIndex if currentTestFilePathIndex is not undefined'
+            + ' and suite.description is equal to suite.fullName', () => {
             reporter.currentTestFilePathIndex = 0;
 
             reporter.changeCurrentTestFilePath({ description: 'text', fullName: 'text' });
@@ -139,7 +140,8 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.currentTestFilePathIndex).toEqual(1);
         });
 
-        it('should not change the currentTestFilePathIndex value if currentTestFilePathIndex is not undefined and suite.description is not equal to suite.fullName', function() {
+        it('should not change the currentTestFilePathIndex value if currentTestFilePathIndex is not undefined'
+            + ' and suite.description is not equal to suite.fullName', () => {
             reporter.currentTestFilePathIndex = 0;
 
             reporter.changeCurrentTestFilePath({ description: 'text', fullName: 'text1' });
@@ -148,48 +150,49 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('addAttributes', function() {
-        it('additionalCustomParams should not be empty if addAttributes\' parameter is not empty', function() {
+    describe('addAttributes', () => {
+        it('additionalCustomParams should not be empty if addAttributes\' parameter is not empty', () => {
             const expectedAdditionalCustomParams = {
                 customParams: 'value',
                 attributes: [
                     { key: 'key', value: 'value' },
-                    { key: 'key1', value: 'value2' }
-                ]
+                    { key: 'key1', value: 'value2' },
+                ],
             };
             reporter.additionalCustomParams = { customParams: 'value' };
 
-            reporter.addAttributes({ attributes: [{ key: 'key', value: 'value' }, { key: 'key1', value: 'value2' }]});
+            reporter.addAttributes({ attributes: [{ key: 'key', value: 'value' }, { key: 'key1', value: 'value2' }] });
 
-            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+            expect(reporter.additionalCustomParams).toEqual(expectedAdditionalCustomParams);
         });
 
-        it('additionalCustomParams should be correct if we call addAttributes with attributes few times', function() {
+        it('additionalCustomParams should be correct if we call addAttributes with attributes few times', () => {
             const expectedAdditionalCustomParams = {
                 attributes: [
                     { key: 'key', value: 'value' },
                     { key: 'key1', value: 'value1' },
-                    { key: 'key2', value: 'value2' }
-                ]
+                    { key: 'key2', value: 'value2' },
+                ],
             };
             reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }] };
 
-            reporter.addAttributes({ attributes: [{ key: 'key1', value: 'value1' }]});
-            reporter.addAttributes({ attributes: [{ key: 'key2', value: 'value2' }]});
+            reporter.addAttributes({ attributes: [{ key: 'key1', value: 'value1' }] });
+            reporter.addAttributes({ attributes: [{ key: 'key2', value: 'value2' }] });
 
-            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+            expect(reporter.additionalCustomParams).toEqual(expectedAdditionalCustomParams);
         });
 
-        it('additionalCustomParams should be empty if addAttributes\' parameter and additionalCustomParams are empty', function() {
+        it('additionalCustomParams should be empty if addAttributes\' parameter and additionalCustomParams'
+            + ' are empty', () => {
             const expectedAdditionalCustomParams = {};
             reporter.additionalCustomParams = {};
 
             reporter.addAttributes();
 
-            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+            expect(reporter.additionalCustomParams).toEqual(expectedAdditionalCustomParams);
         });
 
-        it('suiteAttributes should not be empty if addAttributes\' parameter has suite property', function() {
+        it('suiteAttributes should not be empty if addAttributes\' parameter has suite property', () => {
             const attributes = [{
                 key: 'key',
                 value: 'value',
@@ -202,7 +205,8 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.additionalCustomParams).toEqual({});
         });
 
-        it('suiteAttributes should be correct if addAttributes\' parameter has suite property and we call addAttributes few times', function() {
+        it('suiteAttributes should be correct if addAttributes\' parameter has suite property and we'
+            + ' call addAttributes few times', () => {
             const attributesOne = [{
                 key: 'keyOne',
                 value: 'valueOne',
@@ -221,20 +225,20 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('setDescription', function() {
-        it('additionalCustomParams should not be empty if setDescription\' parameter is not empty', function() {
+    describe('setDescription', () => {
+        it('additionalCustomParams should not be empty if setDescription\' parameter is not empty', () => {
             const expectedAdditionalCustomParams = {
                 customParams: 'value',
-                description: 'text description'
+                description: 'text description',
             };
             reporter.additionalCustomParams = { customParams: 'value' };
 
             reporter.setDescription({ text: 'text description' });
 
-            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+            expect(reporter.additionalCustomParams).toEqual(expectedAdditionalCustomParams);
         });
 
-        it('suiteDescription should not be empty if setDescription\' parameter has suite property', function() {
+        it('suiteDescription should not be empty if setDescription\' parameter has suite property', () => {
             const expectedSuiteDescription = new Map([['suite', 'text description']]);
 
             reporter.setDescription({ text: 'text description', suite: 'suite' });
@@ -243,7 +247,8 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.additionalCustomParams).toEqual({});
         });
 
-        it('additionalCustomParams should be empty if setDescription\' parameter and additionalCustomParams are empty', function() {
+        it('additionalCustomParams should be empty if setDescription\' parameter and additionalCustomParams'
+            + ' are empty', () => {
             const expectedAdditionalCustomParams = {};
             reporter.additionalCustomParams = {};
 
@@ -253,20 +258,20 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('setTestCaseId', function() {
-        it('additionalCustomParams should not be empty if setTestCaseId\' parameter is not empty', function() {
+    describe('setTestCaseId', () => {
+        it('additionalCustomParams should not be empty if setTestCaseId\' parameter is not empty', () => {
             const expectedAdditionalCustomParams = {
                 customParams: 'value',
-                testCaseId: 'testCaseId'
+                testCaseId: 'testCaseId',
             };
             reporter.additionalCustomParams = { customParams: 'value' };
 
             reporter.setTestCaseId({ testCaseId: 'testCaseId' });
 
-            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+            expect(reporter.additionalCustomParams).toEqual(expectedAdditionalCustomParams);
         });
 
-        it('suiteTestCaseIds should not be empty if setTestCaseId\' parameter has suite property', function() {
+        it('suiteTestCaseIds should not be empty if setTestCaseId\' parameter has suite property', () => {
             const expectedSuiteTestCaseIds = new Map([['suite', 'testCaseId']]);
 
             reporter.setTestCaseId({ testCaseId: 'testCaseId', suite: 'suite' });
@@ -275,7 +280,8 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.additionalCustomParams).toEqual({});
         });
 
-        it('additionalCustomParams should be empty if setTestCaseId\' parameter and additionalCustomParams are empty', function() {
+        it('additionalCustomParams should be empty if setTestCaseId\' parameter and additionalCustomParams'
+            + ' are empty', () => {
             const expectedAdditionalCustomParams = {};
             reporter.additionalCustomParams = {};
 
@@ -285,20 +291,20 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('setStatus', function() {
-        it('additionalCustomParams should not be empty if setStatus\' parameter is not empty', function() {
+    describe('setStatus', () => {
+        it('additionalCustomParams should not be empty if setStatus\' parameter is not empty', () => {
             const expectedAdditionalCustomParams = {
                 customParams: 'value',
-                customStatus: 'passed'
+                customStatus: 'passed',
             };
             reporter.additionalCustomParams = { customParams: 'value' };
 
             reporter.setStatus({ status: 'passed' });
 
-            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+            expect(reporter.additionalCustomParams).toEqual(expectedAdditionalCustomParams);
         });
 
-        it('suiteStatuses should not be empty if setStatus\' parameter has suite property', function() {
+        it('suiteStatuses should not be empty if setStatus\' parameter has suite property', () => {
             const expectedSuiteStatus = new Map([['suite', 'passed']]);
 
             reporter.setStatus({ status: 'passed', suite: 'suite' });
@@ -307,7 +313,8 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.additionalCustomParams).toEqual({});
         });
 
-        it('additionalCustomParams should be empty if setStatus\' parameter and additionalCustomParams are empty', function() {
+        it('additionalCustomParams should be empty if setStatus\' parameter and additionalCustomParams'
+            + ' are empty', () => {
             const expectedAdditionalCustomParams = {};
             reporter.additionalCustomParams = {};
 
@@ -317,39 +324,43 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('addTestItemLog', function() {
-        it('additionalCustomParams should not be empty if addTestItemLog\' parameter is not empty', function() {
+    describe('addTestItemLog', () => {
+        it('additionalCustomParams should not be empty if addTestItemLog\' parameter is not empty', () => {
             const expectedAdditionalCustomParams = {
                 customParams: 'value',
                 logs: [{
                     level: 'level',
                     file: null,
                     message: 'message',
-                    time: baseTime.valueOf()
-                }]
+                    time: baseTime.valueOf(),
+                }],
             };
             reporter.additionalCustomParams = { customParams: 'value' };
 
             reporter.addTestItemLog({ log: { level: 'level', file: null, message: 'message' } });
 
-            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+            expect(reporter.additionalCustomParams).toEqual(expectedAdditionalCustomParams);
         });
 
-        it('additionalCustomParams should be correct if we call addTestItemLog with logs few times', function() {
+        it('additionalCustomParams should be correct if we call addTestItemLog with logs few times', () => {
             const expectedAdditionalCustomParams = {
                 logs: [
-                    { level: 'level', file: null, message: 'message', time: baseTime.valueOf() },
-                    { level: 'level1', file: null, message: 'message1', time: baseTime.valueOf() }
-                ]
+                    {
+                        level: 'level', file: null, message: 'message', time: baseTime.valueOf(),
+                    },
+                    {
+                        level: 'level1', file: null, message: 'message1', time: baseTime.valueOf(),
+                    },
+                ],
             };
 
             reporter.addTestItemLog({ log: { level: 'level', file: null, message: 'message' } });
             reporter.addTestItemLog({ log: { level: 'level1', file: null, message: 'message1' } });
 
-            expect(reporter.additionalCustomParams ).toEqual(expectedAdditionalCustomParams);
+            expect(reporter.additionalCustomParams).toEqual(expectedAdditionalCustomParams);
         });
 
-        it('suiteLogs should not be empty if addTestItemLog\' parameter has suite property', function() {
+        it('suiteLogs should not be empty if addTestItemLog\' parameter has suite property', () => {
             const logs = { level: 'level', file: null, message: 'message' };
             const expectedSuiteLogs = new Map([['suite', [logs]]]);
 
@@ -359,7 +370,8 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.additionalCustomParams).toEqual({});
         });
 
-        it('suiteLogs should be correct if addTestItemLog\' parameter has suite property and we call addTestItemLog few times', function() {
+        it('suiteLogs should be correct if addTestItemLog\' parameter has suite property and we call'
+            + ' addTestItemLog few times', () => {
             const logsOne = { level: 'levelOne', file: null, message: 'message one' };
             const logsTwo = { level: 'levelTwo', file: null, message: 'message two' };
             const expectedSuiteLogs = new Map([['suite', [logsOne].concat([logsTwo])]]);
@@ -372,8 +384,8 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('sendLaunchLog', function() {
-        it('should call sendLog with tempLaunchId and log', function() {
+    describe('sendLaunchLog', () => {
+        it('should call sendLog with tempLaunchId and log', () => {
             const log = { level: 'level', file: null, message: 'message' };
             spyOn(reporter, 'sendLog');
 
@@ -383,8 +395,8 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('sendLog', function() {
-        it('should call client.sendLog with correct parameters', function() {
+    describe('sendLog', () => {
+        it('should call client.sendLog with correct parameters', () => {
             const log = { level: 'level', file: null, message: 'message' };
             spyOn(reporter.client, 'sendLog');
 
@@ -393,11 +405,11 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.client.sendLog).toHaveBeenCalledWith(tempLaunchId, {
                 message: 'message',
                 level: 'level',
-                time: baseTime.valueOf()
+                time: baseTime.valueOf(),
             }, null);
         });
 
-        it('should call client.sendLog with default parameters if sendLog doesn\'t have all parameter', function() {
+        it('should call client.sendLog with default parameters if sendLog doesn\'t have all parameter', () => {
             const log = { level: 'level' };
             spyOn(reporter.client, 'sendLog');
 
@@ -406,13 +418,13 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.client.sendLog).toHaveBeenCalledWith(tempLaunchId, {
                 message: '',
                 level: 'level',
-                time: baseTime.valueOf()
+                time: baseTime.valueOf(),
             }, undefined);
         });
     });
 
-    describe('getSuiteAttributesBySuite', function() {
-        it('should return correct array of suiteAttributes', function() {
+    describe('getSuiteAttributesBySuite', () => {
+        it('should return correct array of suiteAttributes', () => {
             const attributes = [{
                 key: 'key',
                 value: 'value',
@@ -424,7 +436,7 @@ describe('jasmine Report Portal reporter', function() {
             expect(suiteAttributes).toEqual([{ key: 'key', value: 'value' }]);
         });
 
-        it('should return undefined if there is no suitable suite', function() {
+        it('should return undefined if there is no suitable suite', () => {
             const attributes = [{
                 key: 'key',
                 value: 'value',
@@ -437,8 +449,8 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('getSuiteStatusBySuite', function() {
-        it('should return correct status of suiteStatuses', function() {
+    describe('getSuiteStatusBySuite', () => {
+        it('should return correct status of suiteStatuses', () => {
             reporter.suiteStatuses = new Map([['suite', 'passed']]);
 
             const suiteStatuses = reporter.getSuiteStatusBySuite('suite');
@@ -446,7 +458,7 @@ describe('jasmine Report Portal reporter', function() {
             expect(suiteStatuses).toEqual('passed');
         });
 
-        it('should return undefined if there is no suitable suite', function() {
+        it('should return undefined if there is no suitable suite', () => {
             reporter.suiteStatuses = new Map([['suite', 'passed']]);
 
             const suiteStatuses = reporter.getSuiteStatusBySuite('suite1');
@@ -455,8 +467,8 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('getSuiteDescriptionBySuite', function() {
-        it('should return correct array of suiteDescription', function() {
+    describe('getSuiteDescriptionBySuite', () => {
+        it('should return correct array of suiteDescription', () => {
             reporter.suiteDescription = new Map([['suite', 'text']]);
 
             const suiteDescription = reporter.getSuiteDescriptionBySuite('suite');
@@ -464,7 +476,7 @@ describe('jasmine Report Portal reporter', function() {
             expect(suiteDescription).toEqual('text');
         });
 
-        it('should return undefined if there is no suitable suite', function() {
+        it('should return undefined if there is no suitable suite', () => {
             reporter.suiteDescription = new Map([['suite', 'text']]);
 
             const suiteDescription = reporter.getSuiteDescriptionBySuite('suite1');
@@ -473,8 +485,8 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('getTopLevelType', function() {
-        it('should return level type \'test\' if parentsInfo is not empty', function() {
+    describe('getTopLevelType', () => {
+        it('should return level type \'test\' if parentsInfo is not empty', () => {
             reporter.parentsInfo = [0, 1];
 
             const levelType = reporter.getTopLevelType();
@@ -482,7 +494,7 @@ describe('jasmine Report Portal reporter', function() {
             expect(levelType).toBe('test');
         });
 
-        it('should return level type \'suite\' if parentsInfo is empty', function() {
+        it('should return level type \'suite\' if parentsInfo is empty', () => {
             reporter.parentsInfo = [];
 
             const levelType = reporter.getTopLevelType();
@@ -491,24 +503,24 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('suiteStarted', function() {
-        beforeEach(function() {
+    describe('suiteStarted', () => {
+        beforeEach(() => {
             spyOn(SpecificUtils, 'getCodeRef').and.returnValue(Promise.resolve('codeRef'));
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId: '3452',
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
         });
 
-        it('should send a request to the agent', function(done) {
+        it('should send a request to the agent', (done) => {
             const attributes = [{
                 key: 'key',
                 value: 'value',
             }];
             const logs = [{
-                level: 'level', file: null, message: 'message'
+                level: 'level', file: null, message: 'message',
             }, {
-                level: 'level', file: null, message: 'message'
+                level: 'level', file: null, message: 'message',
             }];
             reporter.suiteAttributes = new Map([['suite', attributes]]);
             reporter.suiteDescription = new Map([['suite', 'text description']]);
@@ -518,10 +530,10 @@ describe('jasmine Report Portal reporter', function() {
 
             const promise = reporter.suiteStarted({
                 description: 'suite',
-                fullName: 'test name'
+                fullName: 'test name',
             });
 
-            promise.then(function() {
+            promise.then(() => {
                 expect(reporter.client.startTestItem).toHaveBeenCalledWith({
                     type: 'suite',
                     name: 'suite',
@@ -529,7 +541,7 @@ describe('jasmine Report Portal reporter', function() {
                     description: 'text description',
                     testCaseId: 'testCaseId',
                     codeRef: 'codeRef',
-                    startTime: baseTime.valueOf()
+                    startTime: baseTime.valueOf(),
                 }, tempLaunchId, null);
                 expect(reporter.sendLog).toHaveBeenCalledTimes(2);
                 expect(reporter.sendLog).toHaveBeenCalledWith('3452', logs[0]);
@@ -539,13 +551,13 @@ describe('jasmine Report Portal reporter', function() {
             });
         });
 
-        it('should create an element in parentsInfo', function(done) {
+        it('should create an element in parentsInfo', (done) => {
             const promise = reporter.suiteStarted({
                 description: 'test description',
-                fullName: 'test name'
+                fullName: 'test name',
             });
 
-            promise.then(function() {
+            promise.then(() => {
                 expect(reporter.parentsInfo.length).toBe(1);
 
                 done();
@@ -553,22 +565,22 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('specStarted', function() {
-        beforeEach(function() {
+    describe('specStarted', () => {
+        beforeEach(() => {
             spyOn(SpecificUtils, 'getCodeRef').and.returnValue(Promise.resolve('codeRef'));
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId: '3452',
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
         });
 
-        it('should send a request to the agent', function(done) {
+        it('should send a request to the agent', (done) => {
             const promise = reporter.specStarted({
                 description: 'test description',
-                fullName: 'test name'
+                fullName: 'test name',
             });
 
-            promise.then(function() {
+            promise.then(() => {
                 expect(reporter.client.startTestItem).toHaveBeenCalledWith({
                     type: 'step',
                     description: 'test description',
@@ -581,7 +593,7 @@ describe('jasmine Report Portal reporter', function() {
             });
         });
 
-        it('should call setParentInfo with the appropriate parameter', function(done) {
+        it('should call setParentInfo with the appropriate parameter', (done) => {
             spyOn(reporter, 'setParentInfo');
 
             const promise = reporter.suiteStarted({
@@ -589,7 +601,7 @@ describe('jasmine Report Portal reporter', function() {
                 fullName: 'test name',
             });
 
-            promise.then(function() {
+            promise.then(() => {
                 expect(reporter.setParentInfo).toHaveBeenCalledWith({ tempId: '3452', startTime: baseTime.valueOf() });
 
                 done();
@@ -597,8 +609,8 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('getHookStartTime', function () {
-        it('should return reporter.itemStartTime minus one if hookType is BEFORE_SUITE', function() {
+    describe('getHookStartTime', () => {
+        it('should return reporter.itemStartTime minus one if hookType is BEFORE_SUITE', () => {
             reporter.itemStartTime = 1234567891234;
 
             const startTime = reporter.getHookStartTime('BEFORE_SUITE', null);
@@ -606,7 +618,7 @@ describe('jasmine Report Portal reporter', function() {
             expect(startTime).toEqual(1234567891233);
         });
 
-        it('should return reporter.itemStartTime minus one if hookType is BEFORE_METHOD', function() {
+        it('should return reporter.itemStartTime minus one if hookType is BEFORE_METHOD', () => {
             reporter.itemStartTime = 1234567891234;
 
             const startTime = reporter.getHookStartTime('BEFORE_METHOD', { startTime: 1234567891233 });
@@ -614,7 +626,7 @@ describe('jasmine Report Portal reporter', function() {
             expect(startTime).toEqual(1234567891233);
         });
 
-        it('should return reporter.itemStartTime', function() {
+        it('should return reporter.itemStartTime', () => {
             reporter.itemStartTime = 1234567891234;
 
             const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
@@ -622,7 +634,7 @@ describe('jasmine Report Portal reporter', function() {
             expect(startTime).toEqual(1234567891234);
         });
 
-        it('should call getTime if reporter.itemStartTime is null', function() {
+        it('should call getTime if reporter.itemStartTime is null', () => {
             spyOn(reporter, 'getTime').and.returnValue(1234567891234);
 
             const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
@@ -632,12 +644,47 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('hookStarted', function() {
-        it('should send a request to the agent, hookIds should be correct', function() {
+    describe('getHookStartTime', () => {
+        it('should return reporter.itemStartTime minus one if hookType is BEFORE_SUITE', () => {
+            reporter.itemStartTime = 1234567891234;
+
+            const startTime = reporter.getHookStartTime('BEFORE_SUITE', null);
+
+            expect(startTime).toEqual(1234567891233);
+        });
+
+        it('should return reporter.itemStartTime minus one if hookType is BEFORE_METHOD', () => {
+            reporter.itemStartTime = 1234567891234;
+
+            const startTime = reporter.getHookStartTime('BEFORE_METHOD', { startTime: 1234567891233 });
+
+            expect(startTime).toEqual(1234567891233);
+        });
+
+        it('should return reporter.itemStartTime', () => {
+            reporter.itemStartTime = 1234567891234;
+
+            const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
+
+            expect(startTime).toEqual(1234567891234);
+        });
+
+        it('should call getTime if reporter.itemStartTime is null', () => {
+            spyOn(reporter, 'getTime').and.returnValue(1234567891234);
+
+            const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
+
+            expect(reporter.getTime).toHaveBeenCalled();
+            expect(startTime).toEqual(1234567891234);
+        });
+    });
+
+    describe('hookStarted', () => {
+        it('should send a request to the agent, hookIds should be correct', () => {
             const expectedHookIds = new Map([['beforeAll', '3452']]);
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId: '3452',
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
             spyOn(reporter, 'getHookStartTime').and.returnValue(baseTime.valueOf());
 
@@ -646,17 +693,17 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.client.startTestItem).toHaveBeenCalledWith({
                 type: 'BEFORE_SUITE',
                 startTime: baseTime.valueOf(),
-                name: 'beforeAll'
+                name: 'beforeAll',
             }, tempLaunchId, null);
             expect(reporter.hookIds).toEqual(expectedHookIds);
         });
     });
 
-    describe('hookDone', function() {
-        it('should call finishTestItem with status PASSED if there is no status in parameter', function() {
+    describe('hookDone', () => {
+        it('should call finishTestItem with status PASSED if there is no status in parameter', () => {
             reporter.hookIds = new Map([['beforeAll', '3452']]);
             spyOn(reporter.client, 'finishTestItem').and.returnValue({
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
 
             reporter.hookDone('beforeAll');
@@ -668,10 +715,10 @@ describe('jasmine Report Portal reporter', function() {
             expect(reporter.itemStartTime).toEqual(null);
         });
 
-        it('should call finishTestItem with status FAILED if it gets from parameter', function() {
+        it('should call finishTestItem with status FAILED if it gets from parameter', () => {
             reporter.hookIds = new Map([['beforeAll', '3452']]);
             spyOn(reporter.client, 'finishTestItem').and.returnValue({
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
 
             reporter.hookDone('beforeAll', 'failed');
@@ -682,11 +729,11 @@ describe('jasmine Report Portal reporter', function() {
             });
         });
 
-        it('should call sendLog with message if we get error from parameter', function() {
+        it('should call sendLog with message if we get error from parameter', () => {
             reporter.hookIds = new Map([['beforeAll', '3452']]);
             spyOn(reporter, 'sendLog');
             spyOn(reporter.client, 'finishTestItem').and.returnValue({
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
 
             reporter.hookDone('beforeAll', 'failed', 'error');
@@ -697,10 +744,10 @@ describe('jasmine Report Portal reporter', function() {
             });
         });
 
-        it('should not call finishTestItem if there is no appropriate hook', function() {
+        it('should not call finishTestItem if there is no appropriate hook', () => {
             reporter.hookIds = new Map([['beforeAll', '3452']]);
             spyOn(reporter.client, 'finishTestItem').and.returnValue({
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
 
             reporter.hookDone('beforeEach');
@@ -709,23 +756,23 @@ describe('jasmine Report Portal reporter', function() {
         });
     });
 
-    describe('specDone', function() {
-        it('should call finishParent, additionalCustomParams should be empty object', function(done) {
+    describe('specDone', () => {
+        it('should call finishParent, additionalCustomParams should be empty object', (done) => {
             spyOn(reporter, 'finishParent');
             spyOn(reporter.client, 'sendLog').and.returnValue({
                 tempId: 'sendLog',
-                promise: Promise.resolve('ok')
+                promise: Promise.resolve('ok'),
             });
             spyOn(reporter.client, 'finishTestItem').and.returnValue({
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
 
             const promise = reporter.specDone({
                 fullName: 'full Name',
-                status: 'pending'
+                status: 'pending',
             });
 
-            promise.then(function() {
+            promise.then(() => {
                 expect(reporter.finishParent).toHaveBeenCalled();
                 expect(reporter.additionalCustomParams).toEqual({});
 
@@ -733,32 +780,32 @@ describe('jasmine Report Portal reporter', function() {
             });
         });
 
-        it('should call method sendLog with the appropriate parameter', function(done) {
+        it('should call method sendLog with the appropriate parameter', (done) => {
             spyOn(reporter.client, 'sendLog').and.returnValue({
                 tempId: 'sendLog',
-                promise: Promise.resolve('ok')
+                promise: Promise.resolve('ok'),
             });
             spyOn(reporter.client, 'finishTestItem').and.returnValue({
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
 
             const promise = reporter.specDone({
                 fullName: 'full Name',
-                status: 'pending'
+                status: 'pending',
             });
 
-            promise.then(function() {
+            promise.then(() => {
                 expect(reporter.client.sendLog).toHaveBeenCalledWith(null, {
                     message: 'full Name',
                     level: '',
-                    time: baseTime.valueOf()
+                    time: baseTime.valueOf(),
                 }, null);
 
                 done();
             });
         });
 
-        it('should call method finishTestItem with the appropriate parameter, status is pending', function(done) {
+        it('should call method finishTestItem with the appropriate parameter, status is pending', (done) => {
             reporter.additionalCustomParams = {
                 attributes: [{ key: 'key', value: 'value' }],
                 description: 'text description',
@@ -766,23 +813,23 @@ describe('jasmine Report Portal reporter', function() {
             };
             spyOn(reporter.client, 'sendLog').and.returnValue({
                 tempId: 'sendLog',
-                promise: Promise.resolve('ok')
+                promise: Promise.resolve('ok'),
             });
             spyOn(reporter.client, 'finishTestItem').and.returnValue({
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
 
             const promise = reporter.specDone({
                 fullName: 'full Name',
-                status: 'pending'
+                status: 'pending',
             });
 
-            promise.then(function() {
+            promise.then(() => {
                 expect(reporter.client.finishTestItem).toHaveBeenCalledWith(null, {
                     status: 'skipped',
                     attributes: [{ key: 'key', value: 'value' }],
                     description: 'text description',
-                    testCaseId: 'testCaseId'
+                    testCaseId: 'testCaseId',
                 });
                 expect(reporter.additionalCustomParams).toEqual({});
 
@@ -790,28 +837,28 @@ describe('jasmine Report Portal reporter', function() {
             });
         });
 
-        it('should call method finishTestItem with the appropriate parameter, status is disabled', function(done) {
+        it('should call method finishTestItem with the appropriate parameter, status is disabled', (done) => {
             reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }] };
             reporter.conf.skippedIssue = false;
             spyOn(reporter.client, 'sendLog').and.returnValue({
                 tempId: 'sendLog',
-                promise: Promise.resolve('ok')
+                promise: Promise.resolve('ok'),
             });
             spyOn(reporter.client, 'finishTestItem').and.returnValue({
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
 
             const promise = reporter.specDone({
                 fullName: 'full Name',
-                status: 'disabled'
+                status: 'disabled',
             });
 
-            promise.then(function() {
-                expect(reporter.client.finishTestItem).toHaveBeenCalledWith( null, {
+            promise.then(() => {
+                expect(reporter.client.finishTestItem).toHaveBeenCalledWith(null, {
                     status: 'skipped',
                     attributes: [{ key: 'key', value: 'value' }],
                     issue: {
-                        issueType: 'NOT_ISSUE'
+                        issueType: 'NOT_ISSUE',
                     },
                 });
                 expect(reporter.additionalCustomParams).toEqual({});
@@ -821,53 +868,57 @@ describe('jasmine Report Portal reporter', function() {
             });
         });
 
-        it('should call methods finishTestItem and sendLog with the appropriate parameter, status should be failed, message should not be empty', function(done) {
+        it('should call methods finishTestItem and sendLog with the appropriate parameter, status should be failed,'
+            + ' message should not be empty', (done) => {
             reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }] };
             spyOn(reporter.client, 'sendLog').and.returnValue({
                 tempId: 'sendLog',
-                promise: Promise.resolve('ok')
+                promise: Promise.resolve('ok'),
             });
             spyOn(reporter.client, 'finishTestItem').and.returnValue({
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
 
             const promise = reporter.specDone({
                 fullName: 'full Name',
                 status: 'failed',
-                failedExpectations: [{ message: 'error', stack: 'stack' }]
+                failedExpectations: [{ message: 'error', stack: 'stack' }],
             });
 
-            promise.then(function() {
+            promise.then(() => {
                 expect(reporter.client.sendLog).toHaveBeenCalledWith(null, {
                     message: `message: error
 stackTrace: stack`,
                     level: 'ERROR',
-                    time: baseTime.valueOf()
+                    time: baseTime.valueOf(),
                 }, null);
-                expect(reporter.client.finishTestItem).toHaveBeenCalledWith(null, { status: 'failed', attributes: [{ key: 'key', value: 'value' }] });
+                expect(reporter.client.finishTestItem).toHaveBeenCalledWith(null, {
+                    status: 'failed',
+                    attributes: [{ key: 'key', value: 'value' }],
+                });
                 expect(reporter.additionalCustomParams).toEqual({});
 
                 done();
             });
         });
 
-        it('should call SpecificUtils.takeScreenshot if attachPicturesToLogs is true', function(done) {
+        it('should call SpecificUtils.takeScreenshot if attachPicturesToLogs is true', (done) => {
             reporter.conf.attachPicturesToLogs = true;
             spyOn(SpecificUtils, 'takeScreenshot').and.returnValue(Promise.resolve(null));
             spyOn(reporter.client, 'sendLog').and.returnValue({
                 tempId: 'sendLog',
-                promise: Promise.resolve('ok')
+                promise: Promise.resolve('ok'),
             });
             spyOn(reporter.client, 'finishTestItem').and.returnValue({
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
 
             const promise = reporter.specDone({
                 fullName: 'full Name',
-                status: 'disabled'
+                status: 'disabled',
             });
 
-            promise.then(function() {
+            promise.then(() => {
                 expect(SpecificUtils.takeScreenshot).toHaveBeenCalledWith('full Name');
 
                 done();
@@ -875,26 +926,26 @@ stackTrace: stack`,
         });
     });
 
-    describe('suiteDone', function() {
-        beforeEach(function() {
+    describe('suiteDone', () => {
+        beforeEach(() => {
             const tempId = 'ferw3452';
             spyOn(SpecificUtils, 'getCodeRef').and.returnValue(Promise.resolve(null));
             spyOn(reporter.client, 'startTestItem').and.returnValue({
                 tempId,
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
             spyOn(reporter.client, 'finishTestItem').and.returnValue({
-                promise: Promise.resolve()
+                promise: Promise.resolve(),
             });
         });
 
-        it('should send a request to the agent', function(done) {
+        it('should send a request to the agent', (done) => {
             const promise = reporter.suiteStarted({
                 description: 'test description',
-                fullName: 'test name'
+                fullName: 'test name',
             });
 
-            promise.then(function() {
+            promise.then(() => {
                 reporter.suiteDone({ description: 'test description' });
 
                 expect(reporter.client.finishTestItem).toHaveBeenCalledWith('ferw3452', {});
@@ -903,14 +954,14 @@ stackTrace: stack`,
             });
         });
 
-        it('should call client.finishTestItem with status passed', function(done) {
+        it('should call client.finishTestItem with status passed', (done) => {
             reporter.suiteStatuses = new Map([['test description', 'passed']]);
             const promise = reporter.suiteStarted({
                 description: 'test description',
-                fullName: 'test name'
+                fullName: 'test name',
             });
 
-            promise.then(function() {
+            promise.then(() => {
                 reporter.suiteDone({ description: 'test description' });
 
                 expect(reporter.client.finishTestItem).toHaveBeenCalledWith('ferw3452', { status: 'passed' });
@@ -920,8 +971,8 @@ stackTrace: stack`,
         });
     });
 
-    describe('installHooks', function() {
-        it('should call SpecificUtils.makeHooksWrapper', function() {
+    describe('installHooks', () => {
+        it('should call SpecificUtils.makeHooksWrapper', () => {
             spyOn(SpecificUtils, 'makeHooksWrapper');
 
             reporter.installHooks();
