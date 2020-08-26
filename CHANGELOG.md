@@ -1,3 +1,5 @@
+### Fixed
+- Potential security vulnerabilities in dependencies.
 
 ## [5.0.0] - 2020-06-18
 ### Added
