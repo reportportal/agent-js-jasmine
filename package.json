@@ -14,7 +14,7 @@
   ],
   "main": "./lib/reportportal-agent",
   "dependencies": {
-    "@reportportal/client-javascript": "^5.0.4"
+    "@reportportal/client-javascript": "^5.0.6"
   },
   "devDependencies": {
     "codecov": "^3.7.1",
