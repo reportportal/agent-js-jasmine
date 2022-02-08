@@ -1,6 +1,9 @@
 ### Fixed
 - Potential security vulnerabilities in dependencies.
 
+### Changed
+- Package size reduced
+
 ## [5.0.0] - 2020-06-18
 ### Added
 - Full compatibility with ReportPortal version 5.* (see [reportportal releases](https://github.com/reportportal/reportportal/releases))

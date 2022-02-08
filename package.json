@@ -38,6 +38,9 @@
   },
   "author": "ReportPortal.io",
   "license": "Apache-2.0",
+  "files": [
+    "/lib"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/reportportal/agent-js-jasmine.git"
