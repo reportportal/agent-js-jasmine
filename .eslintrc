@@ -36,6 +36,9 @@
     "no-cond-assign": "off",
     "default-case": "off",
     "no-void": "off",
-    "implicit-arrow-linebreak": "off"
+    "implicit-arrow-linebreak": "off",
+    "prefer-object-spread": "off",
+    "import/no-useless-path-segments": "off",
+    "import/extensions": "off"
   }
 }
