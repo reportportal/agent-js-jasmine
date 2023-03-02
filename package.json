@@ -2,6 +2,39 @@
   "name": "@reportportal/agent-js-jasmine",
   "version": "5.0.0",
   "description": "Agent for integration Jasmine with ReportPortal.",
+  "main": "./lib/reportportal-agent",
+  "scripts": {
+    "lint": "eslint . --quiet",
+    "format": "npm run lint -- --fix",
+    "test": "nyc ./node_modules/jasmine/bin/jasmine.js",
+    "test:coverage": "nyc report --reporter=lcov --reporter=text-summary"
+  },
+  "dependencies": {
+    "@reportportal/client-javascript": "^5.0.8"
+  },
+  "devDependencies": {
+    "codecov": "^3.8.3",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "jasmine": "^3.10.0",
+    "nyc": "^15.1.0"
+  },
+  "files": [
+    "/lib"
+  ],
+  "nyc": {
+    "include": [
+      "lib/*.js"
+    ]
+  },
+  "author": "ReportPortal.io",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reportportal/agent-js-jasmine.git"
+  },
   "contributors": [
     {
       "name": "Alexey Krylov",
@@ -12,39 +45,6 @@
       "email": "to.polyakov.vova@gmail.com"
     }
   ],
-  "main": "./lib/reportportal-agent",
-  "dependencies": {
-    "@reportportal/client-javascript": "^5.0.6"
-  },
-  "devDependencies": {
-    "codecov": "^3.7.1",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-node": "^11.1.0",
-    "jasmine": "^3.5.0",
-    "nyc": "^15.1.0"
-  },
-  "scripts": {
-    "lint": "eslint . --quiet",
-    "format": "npm run lint -- --fix",
-    "test": "nyc ./node_modules/jasmine/bin/jasmine.js",
-    "test:coverage": "nyc report --reporter=lcov --reporter=text-summary"
-  },
-  "nyc": {
-    "include": [
-      "lib/*.js"
-    ]
-  },
-  "author": "ReportPortal.io",
-  "license": "Apache-2.0",
-  "files": [
-    "/lib"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/reportportal/agent-js-jasmine.git"
-  },
   "bugs": {
     "url": "https://github.com/reportportal/agent-js-jasmine/issues"
   },
