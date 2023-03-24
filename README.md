@@ -1,8 +1,8 @@
 # @reportportal/agent-js-jasmine
 
-Agent for integration Jasmine with ReportPortal.
-[ReportPortal](http://reportportal.io/)<br>
-[ReportPortal on GitHub](https://github.com/reportportal)
+Agent to integrate Jasmine with ReportPortal.
+* More about [Jasmine](https://jasmine.github.io/)
+* More about [ReportPortal](http://reportportal.io/)
 
 ### How to use
 1. Install the agent in your project:
