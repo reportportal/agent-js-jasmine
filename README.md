@@ -104,7 +104,8 @@ description | true | "string" - text description for your suite | "Your descript
 Parameter | Required | Description | Examples
 --------- | ----------- | ----------- | -----------
 attributes | true | attributes, pairs of key and value | [{ "key": "YourKey", "value": "YourValue" }]
-To integrate with Sauce Labs just add attributes:
+
+To integrate report with Sauce Labs just add attributes:
 
 ```javascript
 [{
