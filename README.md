@@ -7,7 +7,7 @@ Agent to integrate Jasmine with ReportPortal.
 ### How to use
 1. Install the agent in your project:
 ```cmd
-npm i @reportportal/agent-js-jasmine --save-dev
+npm install @reportportal/agent-js-jasmine --save-dev
 ```
 2. Create an agent instance:
 ```javascript
