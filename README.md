@@ -11,15 +11,13 @@ npm install @reportportal/agent-js-jasmine --save-dev
 ```
 2. Create an agent instance:
 ```javascript
-var ReportportalAgent = require('@reportportal/agent-js-jasmine');
+const ReportportalAgent = require('@reportportal/agent-js-jasmine');
 
-var agent = new ReportportalAgent({
-    // client settings
+const agent = new ReportportalAgent({
     token: "00000000-0000-0000-0000-000000000000",
     endpoint: "http://your.reportportal.server/api/v1",
     launch: "LAUNCH_NAME",
     project: "PROJECT_NAME",
-    // agent settings
     attachPicturesToLogs: true,
     attributes: [
         {
