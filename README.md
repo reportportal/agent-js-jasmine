@@ -1,25 +1,23 @@
 # @reportportal/agent-js-jasmine
 
-Agent for integration Jasmine with ReportPortal.
-[ReportPortal](http://reportportal.io/)<br>
-[ReportPortal on GitHub](https://github.com/reportportal)
+Agent to integrate Jasmine with ReportPortal.
+* More about [Jasmine](https://jasmine.github.io/)
+* More about [ReportPortal](http://reportportal.io/)
 
 ### How to use
 1. Install the agent in your project:
 ```cmd
-npm i @reportportal/agent-js-jasmine --save-dev
+npm install @reportportal/agent-js-jasmine --save-dev
 ```
 2. Create an agent instance:
 ```javascript
-var ReportportalAgent = require('@reportportal/agent-js-jasmine');
+const ReportportalAgent = require('@reportportal/agent-js-jasmine');
 
-var agent = new ReportportalAgent({
-    // client settings
+const agent = new ReportportalAgent({
     token: "00000000-0000-0000-0000-000000000000",
     endpoint: "http://your.reportportal.server/api/v1",
     launch: "LAUNCH_NAME",
     project: "PROJECT_NAME",
-    // agent settings
     attachPicturesToLogs: true,
     attributes: [
         {
@@ -106,7 +104,8 @@ description | true | "string" - text description for your suite | "Your descript
 Parameter | Required | Description | Examples
 --------- | ----------- | ----------- | -----------
 attributes | true | attributes, pairs of key and value | [{ "key": "YourKey", "value": "YourValue" }]
-To integrate with Sauce Labs just add attributes:
+
+To integrate report with Sauce Labs just add attributes:
 
 ```javascript
 [{
