@@ -1,3 +1,5 @@
+
+## [5.0.1] - 2023-04-18
 ### Fixed
 - Potential security vulnerabilities in dependencies.
 - [#64](https://github.com/reportportal/agent-js-jasmine/issues/64) Fixed error when cannot read property 'replace' of undefined while iterating over describe block
