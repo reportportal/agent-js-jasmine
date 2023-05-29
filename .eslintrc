@@ -1,5 +1,6 @@
 {
-  "extends": "airbnb-base",
+  "plugins": ["import", "prettier"],
+  "extends": ["airbnb-base", "plugin:import/recommended", "prettier"],
   "globals": {
     "expectAsync": true
   },
@@ -8,8 +9,10 @@
     "es6": true,
     "jasmine": true
   },
+  "root": true,
   "rules": {
-    "indent": ["error", 4],
+    "prettier/prettier": "error",
+    "indent": ["error", 2],
     "max-len": ["error", 120],
     "valid-jsdoc": ["error", { "requireReturn": false }],
     "consistent-return": 0,
