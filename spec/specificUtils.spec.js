@@ -353,5 +353,13 @@ describe('Specific Utils', () => {
         expect(isHookShouldBeCalled).toEqual(true);
       });
     });
+
+    describe('escapeMarkdown', () => {
+      it('should escape markdown', () => {
+        const escapeString = SpecificUtils.escapeMarkdown('_test*');
+
+        expect(escapeString).toBe('\\_test\\*');
+      });
+    });
   });
 });

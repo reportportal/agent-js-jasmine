@@ -55,12 +55,6 @@ describe('jasmine Report Portal reporter', () => {
     expect(reporter.parentsInfo.length).toBe(0);
   });
 
-  it('should escape markdown', () => {
-    const escapeString = reporter.escapeMarkdown('_test*');
-
-    expect(escapeString).toBe('\\_test\\*');
-  });
-
   describe('reportHooks', () => {
     it('should called installHooks method if conf.reportHooks is true', () => {
       spyOn(reporter, 'installHooks');
@@ -852,6 +846,7 @@ describe('jasmine Report Portal reporter', () => {
       const promise = reporter.specDone({
         fullName: 'full Name',
         status: 'pending',
+        failedExpectations: [{ message: 'error', stack: 'stack' }],
       });
 
       promise.then(() => {
@@ -874,14 +869,15 @@ describe('jasmine Report Portal reporter', () => {
       const promise = reporter.specDone({
         fullName: 'full Name',
         status: 'pending',
+        failedExpectations: [{ message: 'error', stack: 'stack' }],
       });
 
       promise.then(() => {
         expect(reporter.client.sendLog).toHaveBeenCalledWith(
           null,
           {
-            message: 'full Name',
-            level: '',
+            message: 'message: error\nstackTrace: stack',
+            level: 'ERROR',
             time: baseTime.valueOf(),
           },
           null
@@ -908,6 +904,7 @@ describe('jasmine Report Portal reporter', () => {
       const promise = reporter.specDone({
         fullName: 'full Name',
         status: 'pending',
+        failedExpectations: [{ message: 'error', stack: 'stack' }],
       });
 
       promise.then(() => {
@@ -937,6 +934,7 @@ describe('jasmine Report Portal reporter', () => {
       const promise = reporter.specDone({
         fullName: 'full Name',
         status: 'disabled',
+        failedExpectations: [{ message: 'error', stack: 'stack' }],
       });
 
       promise.then(() => {
@@ -977,8 +975,7 @@ describe('jasmine Report Portal reporter', () => {
           expect(reporter.client.sendLog).toHaveBeenCalledWith(
             null,
             {
-              message: `message: error
-stackTrace: stack`,
+              message: 'message: error\nstackTrace: stack',
               level: 'ERROR',
               time: baseTime.valueOf(),
             },
@@ -1009,6 +1006,7 @@ stackTrace: stack`,
       const promise = reporter.specDone({
         fullName: 'full Name',
         status: 'disabled',
+        failedExpectations: [{ message: 'error', stack: 'stack' }],
       });
 
       promise.then(() => {
