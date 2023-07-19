@@ -44,6 +44,6 @@
     "import/no-useless-path-segments": "off",
     "import/extensions": "off",
     "default-param-last": "off",
-    " prefer-regex-literals": "off"
+    "prefer-regex-literals": "off"
   }
 }
