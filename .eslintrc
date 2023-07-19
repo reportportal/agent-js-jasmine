@@ -42,6 +42,7 @@
     "implicit-arrow-linebreak": "off",
     "prefer-object-spread": "off",
     "import/no-useless-path-segments": "off",
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "default-param-last": "off"
   }
 }
