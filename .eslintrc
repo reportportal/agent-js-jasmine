@@ -43,6 +43,7 @@
     "prefer-object-spread": "off",
     "import/no-useless-path-segments": "off",
     "import/extensions": "off",
-    "default-param-last": "off"
+    "default-param-last": "off",
+    " prefer-regex-literals": "off"
   }
 }
