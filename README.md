@@ -13,7 +13,7 @@ npm install --save-dev @reportportal/agent-js-jasmine
 
 ## Configuration
 
-**1.** Create `reportportalConf.js` file with ReportPortal configuration:
+**1.** Create the `reportportalConf.js` file with ReportPortal configuration:
 ```javascript
 module.exports = {
   apiKey: "reportportalApiKey",
@@ -63,7 +63,7 @@ const agent = new ReportportalAgent(reportportalConfig);
 jasmine.addReporter(agent.getJasmineReporter());
 ```
 
-**3.** After Jasmine has completed its work, wait until the end of the agent's work:
+**3.** After the Jasmine completes its work, wait for the agent to finish:
 ```javascript
 agent.getExitPromise().then(() => {
     console.log('finish work');
