@@ -19,7 +19,7 @@ const JasmineReportportalReporter = require('../lib/jasmine-reportportal-reporte
 const SpecificUtils = require('../lib/specificUtils');
 
 const reporterOptions = {
-  token: '00000000-0000-0000-0000-000000000000',
+  apiKey: 'reportportalApiKey',
   endpoint: 'endpoint',
   project: 'projectName',
   launch: 'launcherName',
