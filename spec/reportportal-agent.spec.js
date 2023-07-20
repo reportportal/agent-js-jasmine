@@ -19,112 +19,112 @@ const JasmineReportportalReporter = require('../lib/jasmine-reportportal-reporte
 const SpecificUtils = require('../lib/specificUtils');
 
 const reporterOptions = {
-    token: '00000000-0000-0000-0000-000000000000',
-    endpoint: 'endpoint',
-    project: 'projectName',
-    launch: 'launcherName',
-    description: 'description',
-    attributes: [
-        {
-            key: 'YourKey',
-            value: 'YourValue',
-        },
-        {
-            value: 'YourValue',
-        },
-    ],
+  apiKey: 'reportportalApiKey',
+  endpoint: 'endpoint',
+  project: 'projectName',
+  launch: 'launcherName',
+  description: 'description',
+  attributes: [
+    {
+      key: 'YourKey',
+      value: 'YourValue',
+    },
+    {
+      value: 'YourValue',
+    },
+  ],
 };
 const options = Object.assign(reporterOptions, {
-    id: 'id',
-    rerun: true,
-    rerunOf: 'rerunOf',
+  id: 'id',
+  rerun: true,
+  rerunOf: 'rerunOf',
 });
 
 describe('Report Portal agent', () => {
-    let agent;
+  let agent;
 
-    beforeAll(() => {
-        agent = new ReportportalAgent(options);
+  beforeAll(() => {
+    agent = new ReportportalAgent(options);
+  });
+
+  afterEach(() => {
+    agent.launchStatus = undefined;
+    agent.tempLaunchId = null;
+  });
+
+  it('should be properly initialized', () => {
+    expect(agent.tempLaunchId).toBeDefined();
+    expect(agent.client).toBeDefined();
+  });
+
+  it('should call SpecificUtils.getLaunchObj and SpecificUtils.getAgentParams', () => {
+    spyOn(SpecificUtils, 'getLaunchObj').and.returnValue({
+      attributes: [],
+    });
+    spyOn(SpecificUtils, 'getAgentInfo').and.returnValue({
+      version: 'version',
+      name: 'name',
     });
 
-    afterEach(() => {
-        agent.launchStatus = undefined;
-        agent.tempLaunchId = null;
+    agent = new ReportportalAgent(options);
+
+    expect(SpecificUtils.getLaunchObj).toHaveBeenCalled();
+    expect(SpecificUtils.getAgentInfo).toHaveBeenCalled();
+  });
+
+  it('setLaunchStatus should set the status for launchStatus variable', () => {
+    agent.setLaunchStatus('passed');
+
+    expect(agent.launchStatus).toEqual('passed');
+  });
+
+  it('getJasmineReporter should return instance of JasmineReportportalReporter', () => {
+    const instanceJasmineReportportalReporter = agent.getJasmineReporter();
+
+    expect(instanceJasmineReportportalReporter).toEqual(jasmine.any(JasmineReportportalReporter));
+    expect(instanceJasmineReportportalReporter).toBeDefined();
+    expect(instanceJasmineReportportalReporter.client).toBeDefined();
+    expect(instanceJasmineReportportalReporter.parentsInfo).toEqual([]);
+  });
+
+  it('getLaunchStartPromise should return promise', () => {
+    spyOn(agent.launchInstance, 'promise').and.returnValue(Promise.resolve('ok'));
+
+    const launchStartPromise = agent.getLaunchStartPromise();
+
+    expect(launchStartPromise().then).toBeDefined();
+  });
+
+  it('getExitPromise should call client.finishLaunch without status', () => {
+    agent.tempLaunchId = 'tempLaunchId';
+    spyOn(agent.client, 'finishLaunch').and.returnValue({
+      promise: Promise.resolve(),
     });
 
-    it('should be properly initialized', () => {
-        expect(agent.tempLaunchId).toBeDefined();
-        expect(agent.client).toBeDefined();
+    agent.getExitPromise();
+
+    expect(agent.client.finishLaunch).toHaveBeenCalledWith('tempLaunchId', {});
+  });
+
+  it('getExitPromise should call client.finishLaunch with status passed', () => {
+    agent.tempLaunchId = 'tempLaunchId';
+    agent.launchStatus = 'passed';
+    spyOn(agent.client, 'finishLaunch').and.returnValue({
+      promise: Promise.resolve(),
     });
 
-    it('should call SpecificUtils.getLaunchObj and SpecificUtils.getAgentParams', () => {
-        spyOn(SpecificUtils, 'getLaunchObj').and.returnValue({
-            attributes: [],
-        });
-        spyOn(SpecificUtils, 'getAgentInfo').and.returnValue({
-            version: 'version',
-            name: 'name',
-        });
+    agent.getExitPromise();
 
-        agent = new ReportportalAgent(options);
+    expect(agent.client.finishLaunch).toHaveBeenCalledWith('tempLaunchId', { status: 'passed' });
+  });
 
-        expect(SpecificUtils.getLaunchObj).toHaveBeenCalled();
-        expect(SpecificUtils.getAgentInfo).toHaveBeenCalled();
+  it('getPromiseFinishAllItems should return client.getPromiseFinishAllItems', () => {
+    spyOn(agent.client, 'getPromiseFinishAllItems').and.returnValue({
+      promise: Promise.resolve('ok'),
     });
 
-    it('setLaunchStatus should set the status for launchStatus variable', () => {
-        agent.setLaunchStatus('passed');
+    agent.getPromiseFinishAllItems('launchTempId');
 
-        expect(agent.launchStatus).toEqual('passed');
-    });
-
-    it('getJasmineReporter should return instance of JasmineReportportalReporter', () => {
-        const instanceJasmineReportportalReporter = agent.getJasmineReporter();
-
-        expect(instanceJasmineReportportalReporter).toEqual(jasmine.any(JasmineReportportalReporter));
-        expect(instanceJasmineReportportalReporter).toBeDefined();
-        expect(instanceJasmineReportportalReporter.client).toBeDefined();
-        expect(instanceJasmineReportportalReporter.parentsInfo).toEqual([]);
-    });
-
-    it('getLaunchStartPromise should return promise', () => {
-        spyOn(agent.launchInstance, 'promise').and.returnValue(Promise.resolve('ok'));
-
-        const launchStartPromise = agent.getLaunchStartPromise();
-
-        expect(launchStartPromise().then).toBeDefined();
-    });
-
-    it('getExitPromise should call client.finishLaunch without status', () => {
-        agent.tempLaunchId = 'tempLaunchId';
-        spyOn(agent.client, 'finishLaunch').and.returnValue({
-            promise: Promise.resolve(),
-        });
-
-        agent.getExitPromise();
-
-        expect(agent.client.finishLaunch).toHaveBeenCalledWith('tempLaunchId', {});
-    });
-
-    it('getExitPromise should call client.finishLaunch with status passed', () => {
-        agent.tempLaunchId = 'tempLaunchId';
-        agent.launchStatus = 'passed';
-        spyOn(agent.client, 'finishLaunch').and.returnValue({
-            promise: Promise.resolve(),
-        });
-
-        agent.getExitPromise();
-
-        expect(agent.client.finishLaunch).toHaveBeenCalledWith('tempLaunchId', { status: 'passed' });
-    });
-
-    it('getPromiseFinishAllItems should return client.getPromiseFinishAllItems', () => {
-        spyOn(agent.client, 'getPromiseFinishAllItems').and.returnValue({
-            promise: Promise.resolve('ok'),
-        });
-
-        agent.getPromiseFinishAllItems('launchTempId');
-
-        expect(agent.client.getPromiseFinishAllItems).toHaveBeenCalledWith('launchTempId');
-    });
+    expect(agent.client.getPromiseFinishAllItems).toHaveBeenCalledWith('launchTempId');
+  });
 });

@@ -10,16 +10,19 @@
     "test:coverage": "nyc report --reporter=lcov --reporter=text-summary"
   },
   "dependencies": {
-    "@reportportal/client-javascript": "^5.0.8"
+    "@reportportal/client-javascript": "^5.0.12"
   },
   "devDependencies": {
     "codecov": "^3.8.3",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint": "^8.45.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "jasmine": "^3.10.0",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "prettier": "^2.8.8"
   },
   "files": [
     "/lib"
