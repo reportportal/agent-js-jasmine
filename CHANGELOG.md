@@ -1,3 +1,5 @@
+
+## [5.0.2] - 2023-07-20
 ### Fixed
 - Send error logs only in case when the test case has been marked as `failed` by the test runner.
 ### Changed
