@@ -1,5 +1,5 @@
 ### Fixed
-- Sending error logs only in cases when the test case has been marked as `failed` by the test runner
+- Send error logs only in case when the test case has been marked as `failed` by the test runner.
 ### Changed
 - `token` configuration option was renamed to `apiKey` to maintain common convention.
 - `@reportportal/client-javascript` bumped to version `5.0.12`.
