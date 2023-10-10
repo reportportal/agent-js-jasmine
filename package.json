@@ -4,13 +4,13 @@
   "description": "Agent for integration Jasmine with ReportPortal.",
   "main": "./lib/reportportal-agent",
   "scripts": {
-    "lint": "eslint . --quiet",
+    "lint": "eslint .",
     "format": "npm run lint -- --fix",
     "test": "nyc ./node_modules/jasmine/bin/jasmine.js",
     "test:coverage": "nyc report --reporter=lcov --reporter=text-summary"
   },
   "dependencies": {
-    "@reportportal/client-javascript": "^5.0.12"
+    "@reportportal/client-javascript": "^5.0.14"
   },
   "devDependencies": {
     "codecov": "^3.8.3",
