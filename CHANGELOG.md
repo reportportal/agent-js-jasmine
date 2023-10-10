@@ -1,3 +1,7 @@
+### Changed
+- `@reportportal/client-javascript` bumped to version `5.0.14`.
+### Fixed
+- [#86](https://github.com/reportportal/agent-js-jasmine/issues/86) `DEBUG` mode has no effect
 
 ## [5.0.2] - 2023-07-20
 ### Fixed
