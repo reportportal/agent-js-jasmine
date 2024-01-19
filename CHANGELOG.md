@@ -1,3 +1,9 @@
+### Changed
+- `@reportportal/client-javascript` bumped to version `5.0.15`.
+### Deprecated
+- Node.js 10 usage. This version is the latest that supports Node.js 10.
+### Fixed
+- [#86](https://github.com/reportportal/agent-js-jasmine/issues/86) `DEBUG` mode has no effect.
 
 ## [5.0.2] - 2023-07-20
 ### Fixed
