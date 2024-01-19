@@ -1,6 +1,5 @@
 ### Changed
 - **Breaking change** Drop support of Node.js 10. The version [5.0.3](https://github.com/reportportal/agent-js-jasmine/releases/tag/v5.0.3) is the latest that supports it.
-### Changed
 - `@reportportal/client-javascript` bumped to version `5.1.0`.
 
 ## [5.0.3] - 2024-01-19
