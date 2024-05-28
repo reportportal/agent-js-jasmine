@@ -24,6 +24,7 @@ describe('jasmine Report Portal reporter', () => {
   let baseTime;
 
   beforeEach(() => {
+    jest.useFakeTimers();
     const client = {
       startTestItem() {},
       finishTestItem() {},
@@ -31,8 +32,7 @@ describe('jasmine Report Portal reporter', () => {
     };
     const onSetLaunchStatus = function () {};
     baseTime = new Date(2020, 4, 8);
-
-    jasmine.clock().mockDate(baseTime);
+    jest.setSystemTime(baseTime);
     reporter = new Reporter(
       {
         client,
@@ -49,6 +49,7 @@ describe('jasmine Report Portal reporter', () => {
     reporter.additionalCustomParams = {};
     reporter.conf.attachPicturesToLogs = false;
     reporter.conf.reportHooks = false;
+    jest.restoreAllMocks();
   });
 
   it('should be properly initialized', () => {
@@ -57,7 +58,7 @@ describe('jasmine Report Portal reporter', () => {
 
   describe('reportHooks', () => {
     it('should called installHooks method if conf.reportHooks is true', () => {
-      spyOn(reporter, 'installHooks');
+      jest.spyOn(reporter, 'installHooks');
       reporter.conf.reportHooks = true;
 
       reporter.reportHooks();
@@ -66,7 +67,7 @@ describe('jasmine Report Portal reporter', () => {
     });
 
     it('should not called installHooks method if conf.reportHooks is false', () => {
-      spyOn(reporter, 'installHooks');
+      jest.spyOn(reporter, 'installHooks');
       reporter.conf.reportHooks = false;
 
       reporter.reportHooks();
@@ -427,7 +428,7 @@ describe('jasmine Report Portal reporter', () => {
   describe('sendLaunchLog', () => {
     it('should call sendLog with tempLaunchId and log', () => {
       const log = { level: 'level', file: null, message: 'message' };
-      spyOn(reporter, 'sendLog');
+      jest.spyOn(reporter, 'sendLog');
 
       reporter.sendLaunchLog(log);
 
@@ -438,7 +439,7 @@ describe('jasmine Report Portal reporter', () => {
   describe('sendLog', () => {
     it('should call client.sendLog with correct parameters', () => {
       const log = { level: 'level', file: null, message: 'message' };
-      spyOn(reporter.client, 'sendLog');
+      jest.spyOn(reporter.client, 'sendLog');
 
       reporter.sendLog(tempLaunchId, log);
 
@@ -455,7 +456,7 @@ describe('jasmine Report Portal reporter', () => {
 
     it("should call client.sendLog with default parameters if sendLog doesn't have all parameter", () => {
       const log = { level: 'level' };
-      spyOn(reporter.client, 'sendLog');
+      jest.spyOn(reporter.client, 'sendLog');
 
       reporter.sendLog(tempLaunchId, log);
 
@@ -557,8 +558,8 @@ describe('jasmine Report Portal reporter', () => {
 
   describe('suiteStarted', () => {
     beforeEach(() => {
-      spyOn(SpecificUtils, 'getCodeRef').and.returnValue(Promise.resolve('codeRef'));
-      spyOn(reporter.client, 'startTestItem').and.returnValue({
+      jest.spyOn(SpecificUtils, 'getCodeRef').mockResolvedValue(Promise.resolve('codeRef'));
+      jest.spyOn(reporter.client, 'startTestItem').mockReturnValue({
         tempId: '3452',
         promise: Promise.resolve(),
       });
@@ -587,7 +588,7 @@ describe('jasmine Report Portal reporter', () => {
       reporter.suiteDescription = new Map([['suite', 'text description']]);
       reporter.suiteTestCaseIds = new Map([['suite', 'testCaseId']]);
       reporter.suiteLogs = new Map([['suite', logs]]);
-      spyOn(reporter, 'sendLog');
+      jest.spyOn(reporter, 'sendLog');
 
       const promise = reporter.suiteStarted({
         description: 'suite',
@@ -632,8 +633,8 @@ describe('jasmine Report Portal reporter', () => {
 
   describe('specStarted', () => {
     beforeEach(() => {
-      spyOn(SpecificUtils, 'getCodeRef').and.returnValue(Promise.resolve('codeRef'));
-      spyOn(reporter.client, 'startTestItem').and.returnValue({
+      jest.spyOn(SpecificUtils, 'getCodeRef').mockResolvedValue(Promise.resolve('codeRef'));
+      jest.spyOn(reporter.client, 'startTestItem').mockReturnValue({
         tempId: '3452',
         promise: Promise.resolve(),
       });
@@ -663,7 +664,7 @@ describe('jasmine Report Portal reporter', () => {
     });
 
     it('should call setParentInfo with the appropriate parameter', (done) => {
-      spyOn(reporter, 'setParentInfo');
+      jest.spyOn(reporter, 'setParentInfo');
 
       const promise = reporter.suiteStarted({
         description: 'test description',
@@ -707,7 +708,7 @@ describe('jasmine Report Portal reporter', () => {
     });
 
     it('should call getTime if reporter.itemStartTime is null', () => {
-      spyOn(reporter, 'getTime').and.returnValue(1234567891234);
+      jest.spyOn(reporter, 'getTime').mockReturnValue(1234567891234);
 
       const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
 
@@ -742,7 +743,7 @@ describe('jasmine Report Portal reporter', () => {
     });
 
     it('should call getTime if reporter.itemStartTime is null', () => {
-      spyOn(reporter, 'getTime').and.returnValue(1234567891234);
+      jest.spyOn(reporter, 'getTime').mockReturnValue(1234567891234);
 
       const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
 
@@ -754,11 +755,11 @@ describe('jasmine Report Portal reporter', () => {
   describe('hookStarted', () => {
     it('should send a request to the agent, hookIds should be correct', () => {
       const expectedHookIds = new Map([['beforeAll', '3452']]);
-      spyOn(reporter.client, 'startTestItem').and.returnValue({
+      jest.spyOn(reporter.client, 'startTestItem').mockReturnValue({
         tempId: '3452',
         promise: Promise.resolve(),
       });
-      spyOn(reporter, 'getHookStartTime').and.returnValue(baseTime.valueOf());
+      jest.spyOn(reporter, 'getHookStartTime').mockReturnValue(baseTime.valueOf());
 
       reporter.hookStarted('beforeAll');
 
@@ -778,7 +779,7 @@ describe('jasmine Report Portal reporter', () => {
   describe('hookDone', () => {
     it('should call finishTestItem with status PASSED if there is no status in parameter', () => {
       reporter.hookIds = new Map([['beforeAll', '3452']]);
-      spyOn(reporter.client, 'finishTestItem').and.returnValue({
+      jest.spyOn(reporter.client, 'finishTestItem').mockReturnValue({
         promise: Promise.resolve(),
       });
 
@@ -793,7 +794,7 @@ describe('jasmine Report Portal reporter', () => {
 
     it('should call finishTestItem with status FAILED if it gets from parameter', () => {
       reporter.hookIds = new Map([['beforeAll', '3452']]);
-      spyOn(reporter.client, 'finishTestItem').and.returnValue({
+      jest.spyOn(reporter.client, 'finishTestItem').mockReturnValue({
         promise: Promise.resolve(),
       });
 
@@ -807,8 +808,8 @@ describe('jasmine Report Portal reporter', () => {
 
     it('should call sendLog with message if we get error from parameter', () => {
       reporter.hookIds = new Map([['beforeAll', '3452']]);
-      spyOn(reporter, 'sendLog');
-      spyOn(reporter.client, 'finishTestItem').and.returnValue({
+      jest.spyOn(reporter, 'sendLog');
+      jest.spyOn(reporter.client, 'finishTestItem').mockReturnValue({
         promise: Promise.resolve(),
       });
 
@@ -822,7 +823,7 @@ describe('jasmine Report Portal reporter', () => {
 
     it('should not call finishTestItem if there is no appropriate hook', () => {
       reporter.hookIds = new Map([['beforeAll', '3452']]);
-      spyOn(reporter.client, 'finishTestItem').and.returnValue({
+      jest.spyOn(reporter.client, 'finishTestItem').mockReturnValue({
         promise: Promise.resolve(),
       });
 
@@ -834,12 +835,12 @@ describe('jasmine Report Portal reporter', () => {
 
   describe('specDone', () => {
     it('should call finishParent, additionalCustomParams should be empty object', (done) => {
-      spyOn(reporter, 'finishParent');
-      spyOn(reporter.client, 'sendLog').and.returnValue({
+      jest.spyOn(reporter, 'finishParent');
+      jest.spyOn(reporter.client, 'sendLog').mockReturnValue({
         tempId: 'sendLog',
         promise: Promise.resolve('ok'),
       });
-      spyOn(reporter.client, 'finishTestItem').and.returnValue({
+      jest.spyOn(reporter.client, 'finishTestItem').mockReturnValue({
         promise: Promise.resolve(),
       });
 
@@ -858,11 +859,11 @@ describe('jasmine Report Portal reporter', () => {
     });
 
     it('should call method sendLog with the appropriate parameter', (done) => {
-      spyOn(reporter.client, 'sendLog').and.returnValue({
+      jest.spyOn(reporter.client, 'sendLog').mockReturnValue({
         tempId: 'sendLog',
         promise: Promise.resolve('ok'),
       });
-      spyOn(reporter.client, 'finishTestItem').and.returnValue({
+      jest.spyOn(reporter.client, 'finishTestItem').mockReturnValue({
         promise: Promise.resolve(),
       });
 
@@ -893,11 +894,11 @@ describe('jasmine Report Portal reporter', () => {
         description: 'text description',
         testCaseId: 'testCaseId',
       };
-      spyOn(reporter.client, 'sendLog').and.returnValue({
+      jest.spyOn(reporter.client, 'sendLog').mockReturnValue({
         tempId: 'sendLog',
         promise: Promise.resolve('ok'),
       });
-      spyOn(reporter.client, 'finishTestItem').and.returnValue({
+      jest.spyOn(reporter.client, 'finishTestItem').mockReturnValue({
         promise: Promise.resolve(),
       });
 
@@ -923,11 +924,11 @@ describe('jasmine Report Portal reporter', () => {
     it('should call method finishTestItem with the appropriate parameter, status is disabled', (done) => {
       reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }] };
       reporter.conf.skippedIssue = false;
-      spyOn(reporter.client, 'sendLog').and.returnValue({
+      jest.spyOn(reporter.client, 'sendLog').mockReturnValue({
         tempId: 'sendLog',
         promise: Promise.resolve('ok'),
       });
-      spyOn(reporter.client, 'finishTestItem').and.returnValue({
+      jest.spyOn(reporter.client, 'finishTestItem').mockReturnValue({
         promise: Promise.resolve(),
       });
 
@@ -957,11 +958,11 @@ describe('jasmine Report Portal reporter', () => {
         ' message should not be empty',
       (done) => {
         reporter.additionalCustomParams = { attributes: [{ key: 'key', value: 'value' }] };
-        spyOn(reporter.client, 'sendLog').and.returnValue({
+        jest.spyOn(reporter.client, 'sendLog').mockReturnValue({
           tempId: 'sendLog',
           promise: Promise.resolve('ok'),
         });
-        spyOn(reporter.client, 'finishTestItem').and.returnValue({
+        jest.spyOn(reporter.client, 'finishTestItem').mockReturnValue({
           promise: Promise.resolve(),
         });
 
@@ -994,12 +995,12 @@ describe('jasmine Report Portal reporter', () => {
 
     it('should call SpecificUtils.takeScreenshot if attachPicturesToLogs is true', (done) => {
       reporter.conf.attachPicturesToLogs = true;
-      spyOn(SpecificUtils, 'takeScreenshot').and.returnValue(Promise.resolve(null));
-      spyOn(reporter.client, 'sendLog').and.returnValue({
+      jest.spyOn(SpecificUtils, 'takeScreenshot').mockResolvedValue(Promise.resolve(null));
+      jest.spyOn(reporter.client, 'sendLog').mockReturnValue({
         tempId: 'sendLog',
         promise: Promise.resolve('ok'),
       });
-      spyOn(reporter.client, 'finishTestItem').and.returnValue({
+      jest.spyOn(reporter.client, 'finishTestItem').mockReturnValue({
         promise: Promise.resolve(),
       });
 
@@ -1020,12 +1021,12 @@ describe('jasmine Report Portal reporter', () => {
   describe('suiteDone', () => {
     beforeEach(() => {
       const tempId = 'ferw3452';
-      spyOn(SpecificUtils, 'getCodeRef').and.returnValue(Promise.resolve(null));
-      spyOn(reporter.client, 'startTestItem').and.returnValue({
+      jest.spyOn(SpecificUtils, 'getCodeRef').mockResolvedValue(Promise.resolve(null));
+      jest.spyOn(reporter.client, 'startTestItem').mockReturnValue({
         tempId,
         promise: Promise.resolve(),
       });
-      spyOn(reporter.client, 'finishTestItem').and.returnValue({
+      jest.spyOn(reporter.client, 'finishTestItem').mockReturnValue({
         promise: Promise.resolve(),
       });
     });
@@ -1066,7 +1067,7 @@ describe('jasmine Report Portal reporter', () => {
 
   describe('installHooks', () => {
     it('should call SpecificUtils.makeHooksWrapper', () => {
-      spyOn(SpecificUtils, 'makeHooksWrapper');
+      jest.spyOn(SpecificUtils, 'makeHooksWrapper');
 
       reporter.installHooks();
 

@@ -59,7 +59,7 @@ describe('PublicReportingAPI', () => {
     'should call clientPublicReportingApi.addAttributes method with attributes and undefined as parameter,' +
       " if suite doesn't set",
     () => {
-      spyOn(ClientPublicReportingAPI, 'addAttributes').and.returnValue(() => {});
+      jest.spyOn(ClientPublicReportingAPI, 'addAttributes').mockReturnValue(() => {});
 
       PublicReportingAPI.addAttributes([{ key: 'key', value: 'value' }]);
 
@@ -71,7 +71,7 @@ describe('PublicReportingAPI', () => {
   );
 
   it('should call clientPublicReportingApi.addAttributes method with attributes and suite as parameter', () => {
-    spyOn(ClientPublicReportingAPI, 'addAttributes').and.returnValue(() => {});
+    jest.spyOn(ClientPublicReportingAPI, 'addAttributes').mockReturnValue(() => {});
 
     PublicReportingAPI.addAttributes([{ key: 'key', value: 'value' }], 'suite');
 
@@ -85,7 +85,7 @@ describe('PublicReportingAPI', () => {
     'should call clientPublicReportingApi.setDescription method with text and undefined as parameters,' +
       " if suite doesn't set",
     () => {
-      spyOn(ClientPublicReportingAPI, 'setDescription').and.returnValue(() => {});
+      jest.spyOn(ClientPublicReportingAPI, 'setDescription').mockReturnValue(() => {});
 
       PublicReportingAPI.setDescription('text');
 
@@ -94,7 +94,7 @@ describe('PublicReportingAPI', () => {
   );
 
   it('should call clientPublicReportingApi.setDescription method with text and suite as parameters', () => {
-    spyOn(ClientPublicReportingAPI, 'setDescription').and.returnValue(() => {});
+    jest.spyOn(ClientPublicReportingAPI, 'setDescription').mockReturnValue(() => {});
 
     PublicReportingAPI.setDescription('text', 'suite');
 
@@ -105,7 +105,7 @@ describe('PublicReportingAPI', () => {
     'should call clientPublicReportingApi.setTestCaseId method with testCaseId and undefined as parameters,' +
       " if suite doesn't set",
     () => {
-      spyOn(ClientPublicReportingAPI, 'setTestCaseId').and.returnValue(() => {});
+      jest.spyOn(ClientPublicReportingAPI, 'setTestCaseId').mockReturnValue(() => {});
 
       PublicReportingAPI.setTestCaseId('testCaseId');
 
@@ -114,7 +114,7 @@ describe('PublicReportingAPI', () => {
   );
 
   it('should call clientPublicReportingApi.setTestCaseId method with testCaseId and suite as parameters', () => {
-    spyOn(ClientPublicReportingAPI, 'setTestCaseId').and.returnValue(() => {});
+    jest.spyOn(ClientPublicReportingAPI, 'setTestCaseId').mockReturnValue(() => {});
 
     PublicReportingAPI.setTestCaseId('testCaseId', 'suite');
 
@@ -122,7 +122,7 @@ describe('PublicReportingAPI', () => {
   });
 
   it('should call clientPublicReportingApi.addLog method with log and suite as parameters', () => {
-    spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
+    jest.spyOn(ClientPublicReportingAPI, 'addLog').mockReturnValue(() => {});
 
     PublicReportingAPI.log('INFO', 'message', null, 'suite');
 
@@ -133,7 +133,7 @@ describe('PublicReportingAPI', () => {
   });
 
   it('should call clientPublicReportingApi.addLog with default parameters if there are no custom ones', () => {
-    spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
+    jest.spyOn(ClientPublicReportingAPI, 'addLog').mockReturnValue(() => {});
 
     PublicReportingAPI.log();
 
@@ -146,7 +146,7 @@ describe('PublicReportingAPI', () => {
   publicReportingAPILogMethods.forEach((item) => {
     it(`should call clientPublicReportingApi.addLog method with ${item.level}
          level parameter if we run ${item.method} method`, () => {
-      spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
+      jest.spyOn(ClientPublicReportingAPI, 'addLog').mockReturnValue(() => {});
 
       PublicReportingAPI[item.method]('message', null, 'suite');
 
@@ -158,7 +158,7 @@ describe('PublicReportingAPI', () => {
   });
 
   it('should call clientPublicReportingApi.addLaunchLog method with default parameters', () => {
-    spyOn(ClientPublicReportingAPI, 'addLaunchLog').and.returnValue(() => {});
+    jest.spyOn(ClientPublicReportingAPI, 'addLaunchLog').mockReturnValue(() => {});
 
     PublicReportingAPI.launchLog();
 
@@ -172,7 +172,7 @@ describe('PublicReportingAPI', () => {
   publicReportingAPILaunchLogMethods.forEach((item) => {
     it(`should call clientPublicReportingApi.addLaunchLog method with ${item.level}
          level parameter if we run ${item.method} method`, () => {
-      spyOn(ClientPublicReportingAPI, 'addLaunchLog').and.returnValue(() => {});
+      jest.spyOn(ClientPublicReportingAPI, 'addLaunchLog').mockReturnValue(() => {});
 
       PublicReportingAPI[item.method]();
 
@@ -185,7 +185,7 @@ describe('PublicReportingAPI', () => {
   });
 
   it('should call clientPublicReportingApi.setStatus method', () => {
-    spyOn(ClientPublicReportingAPI, 'setStatus').and.returnValue(() => {});
+    jest.spyOn(ClientPublicReportingAPI, 'setStatus').mockReturnValue(() => {});
 
     PublicReportingAPI.setStatus();
 
@@ -195,7 +195,7 @@ describe('PublicReportingAPI', () => {
   publicReportingAPIStatusMethods.forEach((item) => {
     it(`should call clientPublicReportingApi.setStatus method with ${item.status}
          status parameter if we run ${item.method} method`, () => {
-      spyOn(ClientPublicReportingAPI, 'setStatus').and.returnValue(() => {});
+      jest.spyOn(ClientPublicReportingAPI, 'setStatus').mockReturnValue(() => {});
 
       PublicReportingAPI[item.method]();
 
@@ -204,7 +204,7 @@ describe('PublicReportingAPI', () => {
   });
 
   it('should call clientPublicReportingApi.setLaunchStatus method', () => {
-    spyOn(ClientPublicReportingAPI, 'setLaunchStatus').and.returnValue(() => {});
+    jest.spyOn(ClientPublicReportingAPI, 'setLaunchStatus').mockReturnValue(() => {});
 
     PublicReportingAPI.setLaunchStatus();
 
@@ -214,7 +214,7 @@ describe('PublicReportingAPI', () => {
   publicReportingAPILaunchStatusMethods.forEach((item) => {
     it(`should call clientPublicReportingApi.setStatus method with ${item.status}
          status parameter if we run ${item.method} method`, () => {
-      spyOn(ClientPublicReportingAPI, 'setLaunchStatus').and.returnValue(() => {});
+      jest.spyOn(ClientPublicReportingAPI, 'setLaunchStatus').mockReturnValue(() => {});
 
       PublicReportingAPI[item.method]();
 

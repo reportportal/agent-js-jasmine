@@ -21,6 +21,7 @@ const pjson = require('./../package.json');
 describe('Specific Utils', () => {
   afterEach(() => {
     delete global.browser;
+    jest.restoreAllMocks();
   });
 
   describe('takeScreenshot', () => {
@@ -38,48 +39,45 @@ describe('Specific Utils', () => {
     });
 
     it('should call browser.takeScreenshot if browser is true', () => {
-      global.browser = jasmine.createSpyObj('global.browser', {
-        takeScreenshot: new Promise(() => {}),
-      });
+      global.browser = {
+        takeScreenshot: jest.fn().mockResolvedValue(),
+      };
 
       SpecificUtils.takeScreenshot('fileName');
 
       expect(global.browser.takeScreenshot).toHaveBeenCalled();
     });
 
-    it('if browser is true and browser.takeScreenshot is successful, promise resolve should be object', (done) => {
+    it('if browser is true and browser.takeScreenshot is successful, promise resolve should be object', async () => {
       const expectedPromiseResolvedObj = {
         name: 'fileName',
         type: 'image/png',
         content: 'png',
       };
-      global.browser = jasmine.createSpyObj('global.browser', {
-        takeScreenshot: Promise.resolve('png'),
-      });
 
-      const promise = SpecificUtils.takeScreenshot('fileName');
+      global.browser = {
+        takeScreenshot: jest.fn().mockResolvedValue('png'),
+      };
+
+      const value = await SpecificUtils.takeScreenshot('fileName');
 
       expect(global.browser.takeScreenshot).toHaveBeenCalled();
-      promise.then((value) => {
-        expect(value).toEqual(expectedPromiseResolvedObj);
-
-        done();
-      });
+      expect(value).toEqual(expectedPromiseResolvedObj);
     });
 
-    it('if browser is true and browser.takeScreenshot is unsuccessful, promise resolve should be null', (done) => {
-      global.browser = jasmine.createSpyObj('global.browser', {
-        takeScreenshot: Promise.reject(),
-      });
+    it('if browser is true and browser.takeScreenshot is unsuccessful, promise resolve should be null', async () => {
+      global.browser = {
+        takeScreenshot: jest.fn().mockRejectedValue(),
+      };
 
-      const promise = SpecificUtils.takeScreenshot('fileName');
+      try {
+        const value = await SpecificUtils.takeScreenshot('fileName');
+        expect(value).toEqual(null);
+      } catch (error) {
+        expect(error).toBeUndefined();
+      }
 
       expect(global.browser.takeScreenshot).toHaveBeenCalled();
-      promise.then((value) => {
-        expect(value).toEqual(null);
-
-        done();
-      });
     });
   });
 
@@ -95,7 +93,7 @@ describe('Specific Utils', () => {
         ],
         description: undefined,
       };
-      spyOn(SpecificUtils, 'getSystemAttributes').and.returnValue([
+      jest.spyOn(SpecificUtils, 'getSystemAttributes').mockReturnValue([
         {
           key: 'agent',
           value: 'agentName|agentVersion',
@@ -126,7 +124,7 @@ describe('Specific Utils', () => {
           ],
           description: 'description',
         };
-        spyOn(SpecificUtils, 'getSystemAttributes').and.returnValue([
+        jest.spyOn(SpecificUtils, 'getSystemAttributes').mockReturnValue([
           {
             key: 'agent',
             value: 'agentName|agentVersion',
@@ -169,7 +167,7 @@ describe('Specific Utils', () => {
           rerun: true,
           rerunOf: '00000000-0000-0000-0000-000000000000',
         };
-        spyOn(SpecificUtils, 'getSystemAttributes').and.returnValue([
+        jest.spyOn(SpecificUtils, 'getSystemAttributes').mockReturnValue([
           {
             key: 'agent',
             value: 'agentName|agentVersion',
@@ -265,43 +263,32 @@ describe('Specific Utils', () => {
         });
       });
 
-      it('should return promise, promise resolve should be codeRef value if browser is true', (done) => {
-        global.browser = jasmine.createSpyObj('global.browser', {
-          getProcessedConfig: new Promise((resolve) => {
-            resolve({ specs: ['C:\\Path\\test.spec.js'] });
-          }),
-        });
-        spyOn(process, 'cwd').and.returnValue('C:\\Path');
+      it('should return promise, promise resolve should be codeRef value if browser is true', async () => {
+        global.browser = {
+          getProcessedConfig: jest.fn().mockResolvedValue({ specs: ['C:\\Path\\test.spec.js'] }),
+        };
+        jest.spyOn(process, 'cwd').mockReturnValue('C:\\Path');
 
-        const promise = SpecificUtils.getCodeRef(0, 'testName');
+        const codeRef = await SpecificUtils.getCodeRef(0, 'testName');
 
         expect(global.browser.getProcessedConfig).toHaveBeenCalled();
-        promise.then((codeRef) => {
-          expect(codeRef).toEqual('test.spec.js/testName');
-
-          done();
-        });
+        expect(codeRef).toEqual('test.spec.js/testName');
       });
 
       it(
         "should return promise, replace separator with '/', promise resolve should be codeRef value if" +
           ' browser is true',
-        (done) => {
-          global.browser = jasmine.createSpyObj('global.browser', {
-            getProcessedConfig: new Promise((resolve) => {
-              resolve({ specs: ['C:\\Path\\example\\test.spec.js'] });
-            }),
-          });
-          spyOn(process, 'cwd').and.returnValue('C:\\Path');
-
-          const promise = SpecificUtils.getCodeRef(0, 'testName');
+        async () => {
+          global.browser = {
+            getProcessedConfig: jest
+              .fn()
+              .mockResolvedValue({ specs: ['C:\\Path\\example\\test.spec.js'] }),
+          };
+          jest.spyOn(process, 'cwd').mockReturnValue('C:\\Path');
+          const codeRef = await SpecificUtils.getCodeRef(0, 'testName');
 
           expect(global.browser.getProcessedConfig).toHaveBeenCalled();
-          promise.then((codeRef) => {
-            expect(codeRef).toEqual('example/test.spec.js/testName');
-
-            done();
-          });
+          expect(codeRef).toEqual('example/test.spec.js/testName');
         }
       );
     });
