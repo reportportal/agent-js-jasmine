@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "format": "npm run lint -- --fix",
-    "test": "jest",
+    "test": "jest --detectOpenHandles --config ./jest.config.js",
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
@@ -27,14 +27,6 @@
   ],
   "engines": {
     "node": ">=12.x"
-  },
-  "jest": {
-    "collectCoverage": true,
-    "coverageReporters": ["lcov", "text-summary"],
-    "collectCoverageFrom": [
-      "lib/**/*.js",
-      "!lib/constants/**"
-    ]
   },
   "author": "ReportPortal.io",
   "license": "Apache-2.0",
