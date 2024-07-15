@@ -17,10 +17,7 @@
 module.exports = {
   moduleFileExtensions: ['js'],
   testRegex: '/__tests__/.*\\.spec.(js)$',
-  collectCoverageFrom: [
-    'lib/**',
-    '!lib/constants/**'
-  ],
+  collectCoverageFrom: ['lib/**', '!lib/constants/**'],
   coverageThreshold: {
     global: {
       branches: 80,
