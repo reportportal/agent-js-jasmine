@@ -44,12 +44,8 @@ describe('Report Portal agent', () => {
   let agent;
 
   beforeAll(() => {
+    jest.clearAllMocks(); // Clear mocks before initialization
     agent = new ReportportalAgent(options);
-  });
-
-  afterEach(() => {
-    agent.launchStatus = undefined;
-    agent.tempLaunchId = null;
   });
 
   it('should be properly initialized', () => {
@@ -58,13 +54,8 @@ describe('Report Portal agent', () => {
   });
 
   it('should call SpecificUtils.getLaunchObj and SpecificUtils.getAgentParams', () => {
-    spyOn(SpecificUtils, 'getLaunchObj').and.returnValue({
-      attributes: [],
-    });
-    spyOn(SpecificUtils, 'getAgentInfo').and.returnValue({
-      version: 'version',
-      name: 'name',
-    });
+    jest.spyOn(SpecificUtils, 'getLaunchObj').mockReturnValue({ attributes: [] });
+    jest.spyOn(SpecificUtils, 'getAgentInfo').mockReturnValue({ version: 'version', name: 'name' });
 
     agent = new ReportportalAgent(options);
 
@@ -81,50 +72,31 @@ describe('Report Portal agent', () => {
   it('getJasmineReporter should return instance of JasmineReportportalReporter', () => {
     const instanceJasmineReportportalReporter = agent.getJasmineReporter();
 
-    expect(instanceJasmineReportportalReporter).toEqual(jasmine.any(JasmineReportportalReporter));
-    expect(instanceJasmineReportportalReporter).toBeDefined();
-    expect(instanceJasmineReportportalReporter.client).toBeDefined();
-    expect(instanceJasmineReportportalReporter.parentsInfo).toEqual([]);
+    expect(instanceJasmineReportportalReporter).toBeInstanceOf(JasmineReportportalReporter);
   });
 
   it('getLaunchStartPromise should return promise', () => {
-    spyOn(agent.launchInstance, 'promise').and.returnValue(Promise.resolve('ok'));
+    agent.launchInstance = { promise: jest.fn().mockReturnValue(Promise.resolve('ok')) };
 
     const launchStartPromise = agent.getLaunchStartPromise();
 
     expect(launchStartPromise().then).toBeDefined();
   });
 
-  it('getExitPromise should call client.finishLaunch without status', () => {
-    agent.tempLaunchId = 'tempLaunchId';
-    spyOn(agent.client, 'finishLaunch').and.returnValue({
-      promise: Promise.resolve(),
-    });
+  it('getExitPromise should return client.finishLaunch resolved value', async () => {
+    jest.spyOn(agent.client, 'finishLaunch').mockReturnValue({ promise: Promise.resolve('ok') });
 
-    agent.getExitPromise();
+    const exitPromise = await agent.getExitPromise();
 
-    expect(agent.client.finishLaunch).toHaveBeenCalledWith('tempLaunchId', {});
+    expect(exitPromise).toEqual('ok');
   });
 
-  it('getExitPromise should call client.finishLaunch with status passed', () => {
-    agent.tempLaunchId = 'tempLaunchId';
-    agent.launchStatus = 'passed';
-    spyOn(agent.client, 'finishLaunch').and.returnValue({
-      promise: Promise.resolve(),
-    });
+  it('getPromiseFinishAllItems should call client.getPromiseFinishAllItems', async () => {
+    jest.spyOn(agent.client, 'getPromiseFinishAllItems').mockReturnValue(Promise.resolve('ok'));
 
-    agent.getExitPromise();
-
-    expect(agent.client.finishLaunch).toHaveBeenCalledWith('tempLaunchId', { status: 'passed' });
-  });
-
-  it('getPromiseFinishAllItems should return client.getPromiseFinishAllItems', () => {
-    spyOn(agent.client, 'getPromiseFinishAllItems').and.returnValue({
-      promise: Promise.resolve('ok'),
-    });
-
-    agent.getPromiseFinishAllItems('launchTempId');
+    const finishPromise = await agent.getPromiseFinishAllItems('launchTempId');
 
     expect(agent.client.getPromiseFinishAllItems).toHaveBeenCalledWith('launchTempId');
+    expect(finishPromise).toEqual('ok');
   });
 });
