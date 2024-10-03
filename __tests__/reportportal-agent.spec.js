@@ -49,7 +49,7 @@ describe('Report Portal agent', () => {
 
   beforeEach(() => {
     jest.clearAllMocks(); // Clear mocks before initialization
-  })
+  });
 
   it('should be properly initialized', () => {
     expect(agent.tempLaunchId).toBeDefined();

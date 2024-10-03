@@ -16,41 +16,39 @@
  */
 
 class RPClientMock {
-  config;
-
   constructor(config) {
     this.config = config;
+
+    this.startLaunch = jest.fn().mockReturnValue({
+      promise: Promise.resolve('ok'),
+      tempId: 'tempLaunchId',
+    });
+
+    this.finishLaunch = jest.fn().mockReturnValue({
+      promise: Promise.resolve('ok'),
+    });
+
+    this.startTestItem = jest.fn().mockReturnValue({
+      promise: Promise.resolve('ok'),
+      tempId: 'testItemId',
+    });
+
+    this.finishTestItem = jest.fn().mockReturnValue({
+      promise: Promise.resolve('ok'),
+    });
+
+    this.sendLog = jest.fn().mockReturnValue({
+      promise: Promise.resolve('ok'),
+    });
+
+    this.getPromiseFinishAllItems = jest.fn().mockResolvedValue({
+      promise: Promise.resolve('ok'),
+    });
+
+    this.checkConnect = jest.fn().mockReturnValue({
+      promise: Promise.resolve('ok'),
+    });
   }
-
-  startLaunch = jest.fn().mockReturnValue({
-    promise: Promise.resolve('ok'),
-    tempId: 'tempLaunchId',
-  });
-
-  finishLaunch = jest.fn().mockReturnValue({
-    promise: Promise.resolve('ok'),
-  });
-
-  startTestItem = jest.fn().mockReturnValue({
-    promise: Promise.resolve('ok'),
-    tempId: 'tempTestItemId',
-  });
-
-  finishTestItem = jest.fn().mockReturnValue({
-    promise: Promise.resolve('ok'),
-  });
-
-  getPromiseFinishAllItems = jest.fn().mockReturnValue({
-    promise: Promise.resolve('ok'),
-  });
-
-  sendLog = jest.fn().mockReturnValue({
-    promise: Promise.resolve('ok'),
-  });
-
-  checkConnect = jest.fn().mockReturnValue({
-    promise: Promise.resolve('ok'),
-  });
 }
 
 module.exports = RPClientMock;
