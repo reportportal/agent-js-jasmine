@@ -3,6 +3,8 @@
 - The agent now supports reporting the time for launches, test items and logs with microsecond precision in the ISO string format.
 For logs, microsecond precision is available on the UI from ReportPortal [version 24.2](https://reportportal.io/docs/releases/Version24.2/#:~:text=import%20plugin.-,Microseconds,-added%20to%20timestamps).
 - `@reportportal/client-javascript` bumped to version `5.3.0`.
+### Security
+- Updated versions of vulnerable packages (micromatch).
 
 ## [5.1.0] - 2024-07-16
 ### Added

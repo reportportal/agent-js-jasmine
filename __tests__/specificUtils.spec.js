@@ -348,5 +348,33 @@ describe('Specific Utils', () => {
         expect(escapeString).toBe('\\_test\\*');
       });
     });
+
+    describe('convertIsoStringToMicroseconds', () => {
+      it('converts ISO string with microseconds correctly', () => {
+        const isoString = '2024-09-20T14:32:35.304456Z';
+        const expectedMicroseconds = 1726842755304456;
+        expect(SpecificUtils.convertIsoStringToMicroseconds(isoString)).toBe(expectedMicroseconds);
+      });
+
+      it('handles microseconds accurately', () => {
+        const isoString = '2021-03-15T12:00:00.000001Z';
+        const expectedMicroseconds = 1615809600000001;
+        expect(SpecificUtils.convertIsoStringToMicroseconds(isoString)).toBe(expectedMicroseconds);
+      });
+
+      it('returns correct microseconds at epoch start', () => {
+        const isoString = '1970-01-01T00:00:00.000001Z';
+        const expectedMicroseconds = 1;
+        expect(SpecificUtils.convertIsoStringToMicroseconds(isoString)).toBe(expectedMicroseconds);
+      });
+    });
+
+    describe('getBeforeHookStartTime', () => {
+      it('should return the start time for the hook as reduced time from test item start by 1 millisecond', () => {
+        const itemStartTime = '2024-09-20T14:32:35.304456Z';
+        const expectedHookStartTime = '2024-09-20T14:32:35.303456Z';
+        expect(SpecificUtils.getBeforeHookStartTime(itemStartTime)).toBe(expectedHookStartTime);
+      });
+    });
   });
 });

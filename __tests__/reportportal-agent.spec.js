@@ -20,7 +20,7 @@ const SpecificUtils = require('../lib/specificUtils');
 
 const reporterOptions = {
   apiKey: 'reportportalApiKey',
-  endpoint: 'endpoint',
+  endpoint: 'http://reportportal.example.com/api/v1',
   project: 'projectName',
   launch: 'launcherName',
   description: 'description',
@@ -44,9 +44,12 @@ describe('Report Portal agent', () => {
   let agent;
 
   beforeAll(() => {
-    jest.clearAllMocks(); // Clear mocks before initialization
     agent = new ReportportalAgent(options);
   });
+
+  beforeEach(() => {
+    jest.clearAllMocks(); // Clear mocks before initialization
+  })
 
   it('should be properly initialized', () => {
     expect(agent.tempLaunchId).toBeDefined();
