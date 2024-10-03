@@ -13,26 +13,27 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+const helpers = require('@reportportal/client-javascript/lib/helpers');
+const Reporter = require('../lib/jasmine-reportportal-reporter');
+const SpecificUtils = require('../lib/specificUtils');
+
+const mockedDate = '2024-09-23T12:20:59.392987Z';
 
 describe('jasmine Report Portal reporter', () => {
-  const Reporter = require('../lib/jasmine-reportportal-reporter');
-  const SpecificUtils = require('../lib/specificUtils');
-
   let reporter;
   const tempLaunchId = 'ewrf35432r';
   let promise;
-  let baseTime;
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    jest.spyOn(helpers, 'now').mockReturnValue(mockedDate);
+    // TODO: should be replaced with unregistering specific listeners only
+    process.removeAllListeners();
     const client = {
       startTestItem() {},
       finishTestItem() {},
       sendLog() {},
     };
     const onSetLaunchStatus = function () {};
-    baseTime = new Date(2020, 4, 8);
-    jest.setSystemTime(baseTime);
     reporter = new Reporter(
       {
         client,
@@ -363,7 +364,7 @@ describe('jasmine Report Portal reporter', () => {
             level: 'level',
             file: null,
             message: 'message',
-            time: baseTime.valueOf(),
+            time: mockedDate,
           },
         ],
       };
@@ -381,13 +382,13 @@ describe('jasmine Report Portal reporter', () => {
             level: 'level',
             file: null,
             message: 'message',
-            time: baseTime.valueOf(),
+            time: mockedDate,
           },
           {
             level: 'level1',
             file: null,
             message: 'message1',
-            time: baseTime.valueOf(),
+            time: mockedDate,
           },
         ],
       };
@@ -448,7 +449,7 @@ describe('jasmine Report Portal reporter', () => {
         {
           message: 'message',
           level: 'level',
-          time: baseTime.valueOf(),
+          time: mockedDate,
         },
         null
       );
@@ -465,7 +466,7 @@ describe('jasmine Report Portal reporter', () => {
         {
           message: '',
           level: 'level',
-          time: baseTime.valueOf(),
+          time: mockedDate,
         },
         undefined
       );
@@ -604,7 +605,7 @@ describe('jasmine Report Portal reporter', () => {
             description: 'text description',
             testCaseId: 'testCaseId',
             codeRef: 'codeRef',
-            startTime: baseTime.valueOf(),
+            startTime: mockedDate,
           },
           tempLaunchId,
           null
@@ -653,7 +654,7 @@ describe('jasmine Report Portal reporter', () => {
             description: 'test description',
             name: 'test description',
             codeRef: 'codeRef',
-            startTime: baseTime.valueOf(),
+            startTime: mockedDate,
           },
           tempLaunchId,
           null
@@ -674,7 +675,7 @@ describe('jasmine Report Portal reporter', () => {
       promise.then(() => {
         expect(reporter.setParentInfo).toHaveBeenCalledWith({
           tempId: '3452',
-          startTime: baseTime.valueOf(),
+          startTime: mockedDate,
         });
 
         done();
@@ -759,14 +760,14 @@ describe('jasmine Report Portal reporter', () => {
         tempId: '3452',
         promise: Promise.resolve(),
       });
-      jest.spyOn(reporter, 'getHookStartTime').mockReturnValue(baseTime.valueOf());
+      jest.spyOn(reporter, 'getHookStartTime').mockReturnValue(mockedDate);
 
       reporter.hookStarted('beforeAll');
 
       expect(reporter.client.startTestItem).toHaveBeenCalledWith(
         {
           type: 'BEFORE_SUITE',
-          startTime: baseTime.valueOf(),
+          startTime: mockedDate,
           name: 'beforeAll',
         },
         tempLaunchId,
@@ -787,7 +788,7 @@ describe('jasmine Report Portal reporter', () => {
 
       expect(reporter.client.finishTestItem).toHaveBeenCalledWith('3452', {
         status: 'passed',
-        endTime: baseTime.valueOf(),
+        endTime: mockedDate,
       });
       expect(reporter.itemStartTime).toEqual(null);
     });
@@ -802,7 +803,7 @@ describe('jasmine Report Portal reporter', () => {
 
       expect(reporter.client.finishTestItem).toHaveBeenCalledWith('3452', {
         status: 'failed',
-        endTime: baseTime.valueOf(),
+        endTime: mockedDate,
       });
     });
 
@@ -879,7 +880,7 @@ describe('jasmine Report Portal reporter', () => {
           {
             message: 'message: error\nstackTrace: stack',
             level: 'ERROR',
-            time: baseTime.valueOf(),
+            time: mockedDate,
           },
           null
         );
@@ -978,7 +979,7 @@ describe('jasmine Report Portal reporter', () => {
             {
               message: 'message: error\nstackTrace: stack',
               level: 'ERROR',
-              time: baseTime.valueOf(),
+              time: mockedDate,
             },
             null
           );
