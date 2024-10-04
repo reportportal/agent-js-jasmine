@@ -369,11 +369,11 @@ describe('Specific Utils', () => {
       });
     });
 
-    describe('getBeforeHookStartTime', () => {
+    describe('getBeforeHookStartTimeInMicroseconds', () => {
       it('should return the start time for the hook as reduced time from test item start by 1 millisecond', () => {
         const itemStartTime = '2024-09-20T14:32:35.304456Z';
-        const expectedHookStartTime = '2024-09-20T14:32:35.303456Z';
-        expect(SpecificUtils.getBeforeHookStartTime(itemStartTime)).toBe(expectedHookStartTime);
+        const expectedHookStartTime = 1726842755303456;
+        expect(SpecificUtils.getBeforeHookStartTimeInMicroseconds(itemStartTime)).toBe(expectedHookStartTime);
       });
     });
   });

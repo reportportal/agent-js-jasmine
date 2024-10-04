@@ -17,7 +17,8 @@ const helpers = require('@reportportal/client-javascript/lib/helpers');
 const Reporter = require('../lib/jasmine-reportportal-reporter');
 const SpecificUtils = require('../lib/specificUtils');
 
-const mockedDate = '2024-09-23T12:20:59.392987Z';
+const mockedDate = '2024-09-20T14:32:35.304456Z';
+const mockedDateWithout1Millisecond = '2024-09-20T14:32:35.303456Z';
 
 describe('jasmine Report Portal reporter', () => {
   let reporter;
@@ -685,71 +686,38 @@ describe('jasmine Report Portal reporter', () => {
 
   describe('getHookStartTime', () => {
     it('should return reporter.itemStartTime minus one if hookType is BEFORE_SUITE', () => {
-      reporter.itemStartTime = 1234567891234;
+      reporter.itemStartTime = mockedDate;
 
       const startTime = reporter.getHookStartTime('BEFORE_SUITE', null);
 
-      expect(startTime).toEqual(1234567891233);
+      expect(startTime).toEqual(mockedDateWithout1Millisecond);
     });
 
     it('should return reporter.itemStartTime minus one if hookType is BEFORE_METHOD', () => {
-      reporter.itemStartTime = 1234567891234;
+      reporter.itemStartTime = mockedDate;
 
-      const startTime = reporter.getHookStartTime('BEFORE_METHOD', { startTime: 1234567891233 });
+      const startTime = reporter.getHookStartTime('BEFORE_METHOD', {
+        startTime: mockedDateWithout1Millisecond,
+      });
 
-      expect(startTime).toEqual(1234567891233);
+      expect(startTime).toEqual(mockedDateWithout1Millisecond);
     });
 
     it('should return reporter.itemStartTime', () => {
-      reporter.itemStartTime = 1234567891234;
+      reporter.itemStartTime = mockedDate;
 
       const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
 
-      expect(startTime).toEqual(1234567891234);
+      expect(startTime).toEqual(mockedDate);
     });
 
     it('should call getTime if reporter.itemStartTime is null', () => {
-      jest.spyOn(reporter, 'getTime').mockReturnValue(1234567891234);
+      jest.spyOn(reporter, 'getTime').mockReturnValue(mockedDateWithout1Millisecond);
 
       const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
 
       expect(reporter.getTime).toHaveBeenCalled();
-      expect(startTime).toEqual(1234567891234);
-    });
-  });
-
-  describe('getHookStartTime', () => {
-    it('should return reporter.itemStartTime minus one if hookType is BEFORE_SUITE', () => {
-      reporter.itemStartTime = 1234567891234;
-
-      const startTime = reporter.getHookStartTime('BEFORE_SUITE', null);
-
-      expect(startTime).toEqual(1234567891233);
-    });
-
-    it('should return reporter.itemStartTime minus one if hookType is BEFORE_METHOD', () => {
-      reporter.itemStartTime = 1234567891234;
-
-      const startTime = reporter.getHookStartTime('BEFORE_METHOD', { startTime: 1234567891233 });
-
-      expect(startTime).toEqual(1234567891233);
-    });
-
-    it('should return reporter.itemStartTime', () => {
-      reporter.itemStartTime = 1234567891234;
-
-      const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
-
-      expect(startTime).toEqual(1234567891234);
-    });
-
-    it('should call getTime if reporter.itemStartTime is null', () => {
-      jest.spyOn(reporter, 'getTime').mockReturnValue(1234567891234);
-
-      const startTime = reporter.getHookStartTime('AFTER_SUITE', null);
-
-      expect(reporter.getTime).toHaveBeenCalled();
-      expect(startTime).toEqual(1234567891234);
+      expect(startTime).toEqual(mockedDateWithout1Millisecond);
     });
   });
 
