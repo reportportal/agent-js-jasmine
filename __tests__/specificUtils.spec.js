@@ -258,10 +258,14 @@ describe('Specific Utils', () => {
 
       it('should fall back to "not_set" when jasmine package is not found', () => {
         jest.resetModules();
-        jest.doMock('jasmine/package.json', () => {
-          // eslint-disable-next-line no-throw-literal
-          throw { code: 'MODULE_NOT_FOUND' };
-        });
+        jest.doMock(
+          'jasmine/package.json',
+          () => {
+            // eslint-disable-next-line no-throw-literal
+            throw { code: 'MODULE_NOT_FOUND' };
+          },
+          { virtual: true }
+        );
         // eslint-disable-next-line global-require
         const FreshSpecificUtils = require('../lib/specificUtils');
         const agentParams = FreshSpecificUtils.getAgentInfo();
