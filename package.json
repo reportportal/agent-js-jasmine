@@ -4,6 +4,7 @@
   "description": "Agent for integration Jasmine with ReportPortal.",
   "main": "./lib/reportportal-agent",
   "scripts": {
+    "codegraph": "bash scripts/codegraph.sh",
     "lint": "eslint .",
     "format": "npm run lint -- --fix",
     "test": "jest",
