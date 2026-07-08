@@ -410,6 +410,4 @@ Link to the jasmine issue, that it doesn't work well with async functions
 Licensed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
 license (see the LICENSE.txt file).
 
-## Code knowledge graph
 
-See [DEV_GUIDE.md](DEV_GUIDE.md#code-knowledge-graph) for details on the local code knowledge graph used by contributor tooling.
