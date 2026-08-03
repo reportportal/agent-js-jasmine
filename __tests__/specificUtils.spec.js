@@ -248,6 +248,40 @@ describe('Specific Utils', () => {
         expect(Object.keys(agentParams)).toContain('version');
         expect(Object.keys(agentParams)).toContain('name');
       });
+
+      it('should contain framework_version property of string type', () => {
+        const agentParams = SpecificUtils.getAgentInfo();
+
+        expect(Object.keys(agentParams)).toContain('framework_version');
+        expect(typeof agentParams.framework_version).toBe('string');
+      });
+
+      it('should fall back to "not_set" when jasmine package is not found', () => {
+        jest.resetModules();
+        jest.doMock(
+          'jasmine/package.json',
+          () => {
+            // eslint-disable-next-line no-throw-literal
+            throw { code: 'MODULE_NOT_FOUND' };
+          },
+          { virtual: true }
+        );
+        // eslint-disable-next-line global-require
+        const FreshSpecificUtils = require('../lib/specificUtils');
+        const agentParams = FreshSpecificUtils.getAgentInfo();
+
+        expect(agentParams.framework_version).toBe('not_set');
+      });
+
+      it('should fall back to "not_set" when jasmine package.json has no version', () => {
+        jest.resetModules();
+        jest.doMock('jasmine/package.json', () => ({ version: '' }), { virtual: true });
+        // eslint-disable-next-line global-require
+        const FreshSpecificUtils = require('../lib/specificUtils');
+        const agentParams = FreshSpecificUtils.getAgentInfo();
+
+        expect(agentParams.framework_version).toBe('not_set');
+      });
     });
 
     describe('getCodeRef', () => {
