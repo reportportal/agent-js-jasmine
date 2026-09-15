@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-const helpers = require('@reportportal/client-javascript/lib/helpers');
+const helpers = require('@reportportal/client-javascript/helpers');
 const Reporter = require('../lib/jasmine-reportportal-reporter');
 const SpecificUtils = require('../lib/specificUtils');
 
